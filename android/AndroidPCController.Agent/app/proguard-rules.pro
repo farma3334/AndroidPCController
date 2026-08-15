@@ -1,0 +1,9 @@
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.androidpccontroller.agent.connection.Protocol$* { *; }
+-keep class com.androidpccontroller.agent.connection.Protocol { *; }
+-keep class com.google.gson.stream.** { *; }
+-keep class com.google.gson.** { *; }
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**

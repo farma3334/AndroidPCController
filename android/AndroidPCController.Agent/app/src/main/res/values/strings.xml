@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PC Controller Agent</string>
+    <string name="agent_service_channel">Agent Service</string>
+    <string name="screen_capture_channel">Screen Capture</string>
+    <string name="notification_agent_title">PC Controller Agent</string>
+    <string name="notification_agent_text">Connected to PC controller</string>
+    <string name="notification_agent_disconnected">Disconnected from PC controller</string>
+    <string name="notification_screen_capture">Streaming screen to PC</string>
+    <string name="btn_start_service">Start Service</string>
+    <string name="btn_stop_service">Stop Service</string>
+    <string name="btn_request_permissions">Grant Permissions</string>
+    <string name="btn_enable_accessibility">Enable Accessibility</string>
+    <string name="status_connected">Connected</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_connecting">Connecting...</string>
+    <string name="label_device_id">Device ID</string>
+    <string name="label_pc_address">PC Address</string>
+    <string name="label_pc_port">PC Port</string>
+    <string name="label_permission_status">Permission Status</string>
+    <string name="label_notification_permission">Notification Permission</string>
+    <string name="label_accessibility_service">Accessibility Service</string>
+    <string name="label_media_projection">Screen Capture</string>
+    <string name="label_storage_permission">Storage Access</string>
+    <string name="granted">Granted</string>
+    <string name="not_granted">Not Granted</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="status_streaming">Streaming Screen</string>
+    <string name="status_not_streaming">Not Streaming</string>
+    <string name="btn_grant_notification">Grant Notification Permission</string>
+    <string name="btn_enable_accessibility_service">Enable Accessibility Service</string>
+    <string name="btn_request_screen_capture">Request Screen Capture</string>
+    <string name="service_started">Service started</string>
+    <string name="service_stopped">Service stopped</string>
+</resources>

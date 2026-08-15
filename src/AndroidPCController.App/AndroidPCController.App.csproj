@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\AndroidPCController.Core\AndroidPCController.Core.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Infrastructure\AndroidPCController.Infrastructure.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Adb\AndroidPCController.Adb.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Devices\AndroidPCController.Devices.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Streaming\AndroidPCController.Streaming.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Input\AndroidPCController.Input.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Files\AndroidPCController.Files.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Security\AndroidPCController.Security.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.*" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.*" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+</Project>

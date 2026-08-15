@@ -1,0 +1,179 @@
+<UserControl x:Class="AndroidPCController.App.Pages.TerminalPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:AndroidPCController.App.Pages"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="900"
+             Background="#1a1a2e">
+
+    <UserControl.Resources>
+        <Style x:Key="PanelStyle" TargetType="Border">
+            <Setter Property="Background" Value="#16213e"/>
+            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+        </Style>
+
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="#0f3460"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
+                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ComboStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="#0f3460"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,4"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Style="{StaticResource PanelStyle}" Padding="12" Margin="0,0,0,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Terminal" FontSize="18" FontWeight="Bold"
+                           Foreground="#e0e0e0" VerticalAlignment="Center" Margin="0,0,16,0"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Device:" FontSize="13" Foreground="#a0a0a0"
+                               VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <ComboBox x:Name="DeviceSelector" Style="{StaticResource ComboStyle}" Width="220"
+                              ItemsSource="{Binding AvailableDevices}"
+                              SelectedItem="{Binding SelectedDevice}"
+                              DisplayMemberPath="Model"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <CheckBox x:Name="AutoScrollCheckBox" Content="Auto-scroll" Foreground="#e0e0e0"
+                              IsChecked="{Binding AutoScroll}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <Button Style="{StaticResource ActionBtn}"
+                            Command="{Binding ClearCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="DeleteSweep" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                            <TextBlock Text="Clear" FontSize="12" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource ActionBtn}"
+                            Command="{Binding ExportCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Export" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                            <TextBlock Text="Export" FontSize="12" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Style="{StaticResource PanelStyle}" Padding="0" ClipToBounds="True">
+            <ScrollViewer x:Name="OutputScroller" VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto">
+                <RichTextBox x:Name="OutputBox" Background="#0a0a1a" Foreground="#e0e0e0"
+                             BorderThickness="0" IsReadOnly="True" FontFamily="Cascadia Code,Consolas,Courier New"
+                             FontSize="13" Padding="12,8"
+                             VerticalScrollBarVisibility="Disabled"
+                             IsDocumentEnabled="True">
+                    <RichTextBox.Resources>
+                        <Style TargetType="ContextMenu">
+                            <Setter Property="Background" Value="#16213e"/>
+                            <Setter Property="Foreground" Value="#e0e0e0"/>
+                            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+                        </Style>
+                    </RichTextBox.Resources>
+                </RichTextBox>
+            </ScrollViewer>
+        </Border>
+
+        <Border Grid.Row="2" Style="{StaticResource PanelStyle}" Padding="8" Margin="0,8,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="$" FontSize="15" FontWeight="Bold"
+                           Foreground="#00d2ff" VerticalAlignment="Center" Margin="0,0,8,0"/>
+
+                <TextBox x:Name="CommandInput" Grid.Column="1"
+                         Background="#0a0a1a" Foreground="#e0e0e0"
+                         BorderBrush="#1a1a4e" BorderThickness="1"
+                         FontFamily="Cascadia Code,Consolas,Courier New" FontSize="13"
+                         Padding="8,6" VerticalContentAlignment="Center"
+                         CaretBrush="#00d2ff"
+                         KeyDown="CommandInput_KeyDown"
+                         Text="{Binding CurrentCommand, UpdateSourceTrigger=PropertyChanged}"
+                         materialDesign:HintAssist.Hint="Enter shell command..."/>
+
+                <Button Grid.Column="2" Style="{StaticResource ActionBtn}" Margin="8,0,0,0"
+                        Padding="16,6"
+                        Command="{Binding ExecuteCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Play" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <TextBlock Text="Execute" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="3" Style="{StaticResource PanelStyle}" Padding="8,6" Margin="0,8,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse Width="8" Height="8" Fill="#00e676" Margin="0,0,6,0"/>
+                    <TextBlock x:Name="StatusText" Text="Ready" FontSize="12" Foreground="#a0a0a0"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <TextBlock Grid.Column="2" FontSize="11" Foreground="#a0a0a0" VerticalAlignment="Center">
+                    <Run Text="History: "/>
+                    <Run x:Name="HistoryCountText" Text="0"/>
+                    <Run Text=" commands"/>
+                </TextBlock>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

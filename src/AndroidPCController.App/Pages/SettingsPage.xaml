@@ -1,0 +1,325 @@
+<UserControl x:Class="AndroidPCController.App.Pages.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:AndroidPCController.App.Pages"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="900"
+             Background="#1a1a2e">
+
+    <UserControl.Resources>
+        <Style x:Key="PanelStyle" TargetType="Border">
+            <Setter Property="Background" Value="#16213e"/>
+            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+        </Style>
+
+        <Style x:Key="CategoryBtn" TargetType="RadioButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#a0a0a0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="14,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="GroupName" Value="SettingsCategory"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}" CornerRadius="6" Margin="4,2">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0f3460"/>
+                                <Setter Property="Foreground" Value="#00d2ff"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0f3460"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FormFieldLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#a0a0a0"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="ComboStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="#0f3460"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,4"/>
+        </Style>
+
+        <Style x:Key="InputStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#0f3460"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="#0f3460"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
+                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Style="{StaticResource PanelStyle}" Padding="8">
+            <StackPanel>
+                <TextBlock Text="Settings" FontSize="18" FontWeight="Bold"
+                           Foreground="#e0e0e0" Margin="8,8,8,16"/>
+
+                <RadioButton x:Name="GeneralCategory" Style="{StaticResource CategoryBtn}"
+                             IsChecked="True" Tag="General"
+                             Checked="Category_Checked">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="CogOutline" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="General" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="ConnectionCategory" Style="{StaticResource CategoryBtn}"
+                             Tag="Connection" Checked="Category_Checked">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Lan" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="Connection" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="StreamingCategory" Style="{StaticResource CategoryBtn}"
+                             Tag="Streaming" Checked="Category_Checked">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="MonitorScreenshot" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="Streaming" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="InputCategory" Style="{StaticResource CategoryBtn}"
+                             Tag="Input" Checked="Category_Checked">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="GamepadVariant" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="Input" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="FilesCategory" Style="{StaticResource CategoryBtn}"
+                             Tag="Files" Checked="Category_Checked">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Folder" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="Files" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="PrivacyCategory" Style="{StaticResource CategoryBtn}"
+                             Tag="Privacy" Checked="Category_Checked">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ShieldLockOutline" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="Privacy" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="AdvancedCategory" Style="{StaticResource CategoryBtn}"
+                             Tag="Advanced" Checked="Category_Checked">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Tune" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="Advanced" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </RadioButton>
+            </StackPanel>
+        </Border>
+
+        <GridSplitter Grid.Column="1" Width="6" HorizontalAlignment="Center"
+                      Background="#1a1a4e" Cursor="SizeWE"/>
+
+        <Border Grid.Column="2" Style="{StaticResource PanelStyle}" Padding="20">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="SettingsContent">
+                    <TextBlock x:Name="CategoryTitle" Text="General" FontSize="18" FontWeight="Bold"
+                               Foreground="#e0e0e0" Margin="0,0,0,20"/>
+
+                    <StackPanel x:Name="GeneralPanel">
+                        <TextBlock Text="Theme" Style="{StaticResource FormFieldLabel}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                            <RadioButton x:Name="ThemeDark" Content="Dark" Foreground="#e0e0e0"
+                                         IsChecked="True" GroupName="Theme" Margin="0,0,16,0"/>
+                            <RadioButton x:Name="ThemeLight" Content="Light" Foreground="#e0e0e0"
+                                         GroupName="Theme"/>
+                        </StackPanel>
+
+                        <TextBlock Text="Language" Style="{StaticResource FormFieldLabel}"/>
+                        <ComboBox Style="{StaticResource ComboStyle}" Width="200" Margin="0,0,0,14"
+                                  ItemsSource="{Binding AvailableLanguages}"
+                                  SelectedItem="{Binding Language}"/>
+
+                        <CheckBox Content="Start minimized" Foreground="#e0e0e0"
+                                  IsChecked="{Binding StartMinimized}" Margin="0,0,0,8"/>
+                        <CheckBox Content="Minimize to system tray" Foreground="#e0e0e0"
+                                  IsChecked="{Binding MinimizeToTray}" Margin="0,0,0,8"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="ConnectionPanel" Visibility="Collapsed">
+                        <CheckBox Content="Auto-reconnect on disconnect" Foreground="#e0e0e0"
+                                  IsChecked="{Binding AutoReconnect}" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="Connection timeout (ms)" Style="{StaticResource FormFieldLabel}"/>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" Minimum="3000" Maximum="30000"
+                                    Value="{Binding ConnectionTimeout}"
+                                    Foreground="#00d2ff" Background="#1a1a4e"/>
+                            <TextBlock Grid.Column="1" Text="{Binding ConnectionTimeout}"
+                                       FontSize="12" Foreground="#00d2ff" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel x:Name="StreamingPanel" Visibility="Collapsed">
+                        <TextBlock Text="Default FPS" Style="{StaticResource FormFieldLabel}"/>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" Minimum="10" Maximum="120"
+                                    Value="{Binding DefaultFps}"
+                                    Foreground="#00d2ff" Background="#1a1a4e"/>
+                            <TextBlock Grid.Column="1" Text="{Binding DefaultFps}"
+                                       FontSize="12" Foreground="#00d2ff" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock Text="Default Bitrate (Mbps)" Style="{StaticResource FormFieldLabel}"/>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" Minimum="1" Maximum="50"
+                                    Value="{Binding DefaultBitrateMbps}"
+                                    Foreground="#00d2ff" Background="#1a1a4e"/>
+                            <TextBlock Grid.Column="1" Text="{Binding DefaultBitrateMbps}"
+                                       FontSize="12" Foreground="#00d2ff" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock Text="Default Resolution" Style="{StaticResource FormFieldLabel}"/>
+                        <ComboBox Style="{StaticResource ComboStyle}" Width="200" Margin="0,0,0,14"
+                                  ItemsSource="{Binding AvailableResolutions}"
+                                  SelectedItem="{Binding DefaultResolution}"/>
+
+                        <TextBlock Text="Default Codec" Style="{StaticResource FormFieldLabel}"/>
+                        <ComboBox Style="{StaticResource ComboStyle}" Width="200" Margin="0,0,0,14"
+                                  ItemsSource="{Binding AvailableCodecs}"
+                                  SelectedItem="{Binding DefaultCodec}"/>
+
+                        <CheckBox Content="Hardware acceleration" Foreground="#e0e0e0"
+                                  IsChecked="{Binding HardwareAcceleration}"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="InputPanel" Visibility="Collapsed">
+                        <TextBlock Text="Input settings will be configured here." Foreground="#a0a0a0"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="FilesPanel" Visibility="Collapsed">
+                        <TextBlock Text="Download directory" Style="{StaticResource FormFieldLabel}"/>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Style="{StaticResource InputStyle}"
+                                     Text="{Binding DownloadDirectory}" IsReadOnly="True"/>
+                            <Button Grid.Column="1" Style="{StaticResource ActionBtn}" Margin="8,0,0,0"
+                                    Command="{Binding BrowseDownloadDirectoryCommand}">
+                                <materialDesign:PackIcon Kind="FolderOpen" Width="16" Height="16"/>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel x:Name="PrivacyPanel" Visibility="Collapsed">
+                        <CheckBox Content="Clipboard sync" Foreground="#e0e0e0"
+                                  IsChecked="{Binding ClipboardSync}" Margin="0,0,0,8"/>
+                        <CheckBox Content="Notification sync" Foreground="#e0e0e0"
+                                  IsChecked="{Binding NotificationSync}" Margin="0,0,0,8"/>
+                        <CheckBox Content="Usage analytics" Foreground="#e0e0e0"
+                                  IsChecked="{Binding UsageAnalytics}" Margin="0,0,0,8"/>
+                        <CheckBox Content="Crash reports" Foreground="#e0e0e0"
+                                  IsChecked="{Binding CrashReports}" Margin="0,0,0,8"/>
+                        <CheckBox Content="Device history" Foreground="#e0e0e0"
+                                  IsChecked="{Binding DeviceHistory}"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="AdvancedPanel" Visibility="Collapsed">
+                        <TextBlock Text="ADB path" Style="{StaticResource FormFieldLabel}"/>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Style="{StaticResource InputStyle}"
+                                     Text="{Binding AdbPath}" IsReadOnly="True"/>
+                            <Button Grid.Column="1" Style="{StaticResource ActionBtn}" Margin="8,0,0,0"
+                                    Command="{Binding BrowseAdbPathCommand}">
+                                <materialDesign:PackIcon Kind="FolderOpen" Width="16" Height="16"/>
+                            </Button>
+                        </Grid>
+
+                        <CheckBox Content="Debug logging" Foreground="#e0e0e0"
+                                  IsChecked="{Binding DebugLogging}"/>
+                    </StackPanel>
+
+                    <Separator Background="#1a1a4e" Margin="0,20,0,16"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Background="#00d2ff" Foreground="#1a1a2e" FontWeight="SemiBold"
+                                Padding="20,8" Cursor="Hand"
+                                Command="{Binding SaveSettingsCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="ContentSave" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Save" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

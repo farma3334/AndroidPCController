@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AndroidPCController.Core\AndroidPCController.Core.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Adb\AndroidPCController.Adb.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Devices\AndroidPCController.Devices.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Streaming\AndroidPCController.Streaming.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Input\AndroidPCController.Input.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Files\AndroidPCController.Files.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Security\AndroidPCController.Security.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Infrastructure\AndroidPCController.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
