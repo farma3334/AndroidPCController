@@ -71,10 +71,13 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
+    public event EventHandler<string>? NavigationRequested;
+
     [RelayCommand]
     private void Navigate(string page)
     {
         CurrentPageTitle = page;
+        NavigationRequested?.Invoke(this, page);
         _logService.Debug("Navigation", $"Navigated to {page}");
     }
 

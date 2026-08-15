@@ -3,15 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:AndroidPCController.App"
+             xmlns:conv="clr-namespace:AndroidPCController.App.Converters"
              ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DefaultDark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.MaterialDesignColors.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Colors.xaml" />
+                <md:BundledTheme BaseTheme="Dark"
+                                 PrimaryColor="Cyan"
+                                 SecondaryColor="LightBlue" />
 
                 <ResourceDictionary>
+                    <conv:StringToColorConverter x:Key="StringToColorConverter" />
+
                     <Color x:Key="PrimaryAccent">#00D2FF</Color>
                     <Color x:Key="PrimaryAccentDark">#0099CC</Color>
                     <Color x:Key="PrimaryAccentLight">#33DDFF</Color>
@@ -110,7 +113,7 @@
                         </Setter>
                     </Style>
 
-                    <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource WindowButtonStyle}">
+                    <Style x:Key="CloseButtonStyle" TargetType="Button">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="Button">

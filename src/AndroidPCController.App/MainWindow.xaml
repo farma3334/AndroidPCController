@@ -142,6 +142,15 @@
 
                                 <RadioButton Style="{StaticResource SidebarButtonStyle}"
                                              Command="{Binding NavigateCommand}"
+                                             CommandParameter="PhoneDesktop">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE703;" FontFamily="Segoe MDL2 Assets" Width="24" VerticalAlignment="Center" />
+                                        <TextBlock Text="Phone Desktop" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <RadioButton Style="{StaticResource SidebarButtonStyle}"
+                                             Command="{Binding NavigateCommand}"
                                              CommandParameter="Files">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="&#xE7C3;" FontFamily="Segoe MDL2 Assets" Width="24" VerticalAlignment="Center" />
@@ -191,6 +200,15 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text=";&#xE7BA;" FontFamily="Segoe MDL2 Assets" Width="24" VerticalAlignment="Center" />
                                         <TextBlock Text="Logs" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <RadioButton Style="{StaticResource SidebarButtonStyle}"
+                                             Command="{Binding NavigateCommand}"
+                                             CommandParameter="Developer">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE756;" FontFamily="Segoe MDL2 Assets" Width="24" VerticalAlignment="Center" />
+                                        <TextBlock Text="Developer" Margin="10,0,0,0" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </RadioButton>
 
@@ -282,6 +300,15 @@
                                FontSize="11"
                                Foreground="{StaticResource TextSecondaryBrush}"
                                VerticalAlignment="Center" />
+
+                    <Button Grid.Column="1"
+                            Content="&#xE74A;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Style="{StaticResource WindowButtonStyle}"
+                            Foreground="{StaticResource TextSecondaryBrush}"
+                            Click="MiniWindowButton_Click"
+                            ToolTip="Mini Phone Window"
+                            Margin="8,0,0,0" />
                 </Grid>
             </Border>
         </Grid>

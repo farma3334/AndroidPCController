@@ -82,6 +82,18 @@ public partial class App : Application
         });
 
         services.AddTransient<MainViewModel>();
+        services.AddTransient<DashboardViewModel>();
+        services.AddTransient<DevicesViewModel>();
+        services.AddTransient<ControllerViewModel>();
+        services.AddTransient<FilesViewModel>();
+        services.AddTransient<AppsViewModel>();
+        services.AddTransient<TerminalViewModel>();
+        services.AddTransient<LogsViewModel>();
+        services.AddTransient<SettingsViewModel>();
+        services.AddTransient<ScreenshotsViewModel>();
+        services.AddTransient<ScreenRecorderViewModel>();
+        services.AddTransient<DeveloperViewModel>();
+        services.AddSingleton<MiniPhoneViewModel>();
     }
 
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -89,11 +101,7 @@ public partial class App : Application
         var logService = _serviceProvider?.GetService<ILogService>();
         logService?.Critical("App", $"Unhandled UI exception: {e.Exception.Message}", e.Exception);
 
-        MessageBox.Show(
-            $"An unexpected error occurred:\n\n{e.Exception.Message}\n\nThe application will continue.",
-            "Unexpected Error",
-            MessageBoxButton.OK,
-            MessageBoxImage.Warning);
+        Console.WriteLine($"UNHANDLED UI EXCEPTION: {e.Exception}");
 
         e.Handled = true;
     }

@@ -798,6 +798,8 @@ public sealed class AdbClient : IAdbClient
             Path.Combine(baseDir, "platform-tools", exeName),
             Path.Combine(baseDir, "adb", exeName),
             Path.Combine(baseDir, "..", "tools", "platform-tools", exeName),
+            Path.Combine(baseDir, "..", "..", "..", "..", "..", "..", "tools", "platform-tools", exeName),
+            Path.Combine(baseDir, "..", "..", "..", "..", "..", "tools", "platform-tools", exeName),
         };
 
         foreach (var candidate in candidates)

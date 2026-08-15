@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using AndroidPCController.App.Pages;
 using AndroidPCController.App.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +24,9 @@ public partial class MainWindow : Window
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        ViewModel.NavigationRequested += OnNavigationRequested;
+        NavigateToPage("Dashboard");
+
         var settings = App.Services.GetRequiredService<Core.Interfaces.ISettingsService>();
         var startMinimized = settings.Get<bool>(Core.Interfaces.SettingKeys.StartMinimized, false);
         if (startMinimized)
@@ -30,6 +35,34 @@ public partial class MainWindow : Window
             Hide();
             _isMinimizedToTray = true;
         }
+    }
+
+    private void OnNavigationRequested(object? sender, string pageName)
+    {
+        NavigateToPage(pageName);
+    }
+
+    private void NavigateToPage(string pageName)
+    {
+        var services = App.Services;
+        UserControl page = pageName switch
+        {
+            "Dashboard" => new DashboardPage { DataContext = services.GetRequiredService<DashboardViewModel>() },
+            "Devices" => new DevicesPage { DataContext = services.GetRequiredService<DevicesViewModel>() },
+            "Controller" => new ControllerPage { DataContext = services.GetRequiredService<ControllerViewModel>() },
+            "Files" => new FilesPage { DataContext = services.GetRequiredService<FilesViewModel>() },
+            "Apps" => new AppsPage { DataContext = services.GetRequiredService<AppsViewModel>() },
+            "ScreenRecorder" => new ScreenRecorderPage { DataContext = services.GetRequiredService<ScreenRecorderViewModel>() },
+            "Screenshots" => new ScreenshotsPage { DataContext = services.GetRequiredService<ScreenshotsViewModel>() },
+            "Terminal" => new TerminalPage { DataContext = services.GetRequiredService<TerminalViewModel>() },
+            "Logs" => new LogsPage { DataContext = services.GetRequiredService<LogsViewModel>() },
+            "Developer" => new DeveloperPage { DataContext = services.GetRequiredService<DeveloperViewModel>() },
+            "Settings" => new SettingsPage { DataContext = services.GetRequiredService<SettingsViewModel>() },
+            _ => new DashboardPage { DataContext = services.GetRequiredService<DashboardViewModel>() }
+        };
+
+        ContentFrame.Content = page;
+        PlaceholderText.Visibility = Visibility.Collapsed;
     }
 
     private void MainWindow_StateChanged(object? sender, EventArgs e)
@@ -69,6 +102,12 @@ public partial class MainWindow : Window
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void MiniWindowButton_Click(object sender, RoutedEventArgs e)
+    {
+        var miniWindow = new MiniPhoneWindow();
+        miniWindow.Show();
     }
 
     private void ToggleMaximize()

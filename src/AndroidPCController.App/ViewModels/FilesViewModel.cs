@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Text.RegularExpressions;
+using AndroidPCController.App.Models;
 using AndroidPCController.Core.Interfaces;
 using AndroidPCController.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -36,6 +38,24 @@ public partial class FilesViewModel : IAsyncDisposable
 
     [ObservableProperty]
     private string _statusText = "Ready";
+
+    [ObservableProperty]
+    private long _storageUsedBytes;
+
+    [ObservableProperty]
+    private long _storageTotalBytes;
+
+    [ObservableProperty]
+    private ObservableCollection<StorageCategory> _storageCategories = [];
+
+    [ObservableProperty]
+    private bool _isStorageLoading;
+
+    [ObservableProperty]
+    private string _storageInfoText = "Used 0 B / 0 B (0%)";
+
+    [ObservableProperty]
+    private double _storagePercentage;
 
     public FilesViewModel(IDeviceManager deviceManager, ISettingsService settingsService, ILogService logService)
     {
@@ -302,6 +322,106 @@ public partial class FilesViewModel : IAsyncDisposable
     private async Task RefreshAsync()
     {
         await NavigateToPathAsync(CurrentPath);
+    }
+
+    [RelayCommand]
+    private async Task RefreshStorageAsync()
+    {
+        if (_currentSession is null) return;
+
+        try
+        {
+            IsStorageLoading = true;
+
+            var dfOutput = await _currentSession.ExecuteShellCommandAsync("df /data");
+            var lines = dfOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length >= 2)
+            {
+                var parts = lines[1].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length >= 4)
+                {
+                    long.TryParse(parts[1], out var total);
+                    long.TryParse(parts[2], out var used);
+                    StorageTotalBytes = total * 1024;
+                    StorageUsedBytes = used * 1024;
+                }
+            }
+
+            var categories = new List<StorageCategory>();
+
+            var videoSize = await GetCategorySizeAsync("find /sdcard/DCIM /sdcard/Movies -type f \\( -name '*.mp4' -o -name '*.avi' -o -name '*.mkv' \\) 2>/dev/null | xargs du -sb 2>/dev/null | tail -1");
+            categories.Add(new StorageCategory { Name = "Videos", SizeBytes = videoSize, Icon = "Video", Color = "#FF5722" });
+
+            var photoSize = await GetCategorySizeAsync("find /sdcard/DCIM/Camera /sdcard/Pictures -type f \\( -name '*.jpg' -o -name '*.jpeg' -o -name '*.png' -o -name '*.gif' \\) 2>/dev/null | xargs du -sb 2>/dev/null | tail -1");
+            categories.Add(new StorageCategory { Name = "Photos", SizeBytes = photoSize, Icon = "Image", Color = "#9C27B0" });
+
+            var apkSize = await GetCategorySizeAsync("find /sdcard -name '*.apk' 2>/dev/null | xargs du -sb 2>/dev/null | tail -1");
+            categories.Add(new StorageCategory { Name = "Apps", SizeBytes = apkSize, Icon = "Android", Color = "#2196F3" });
+
+            var downloadSize = await GetCategorySizeAsync("du -sb /sdcard/Downloads 2>/dev/null | tail -1");
+            categories.Add(new StorageCategory { Name = "Downloads", SizeBytes = downloadSize, Icon = "Download", Color = "#FF9800" });
+
+            var musicSize = await GetCategorySizeAsync("find /sdcard/Music -type f \\( -name '*.mp3' -o -name '*.wav' -o -name '*.flac' \\) 2>/dev/null | xargs du -sb 2>/dev/null | tail -1");
+            categories.Add(new StorageCategory { Name = "Music", SizeBytes = musicSize, Icon = "Music", Color = "#E91E63" });
+
+            var docSize = await GetCategorySizeAsync("find /sdcard/Documents -type f 2>/dev/null | xargs du -sb 2>/dev/null | tail -1");
+            categories.Add(new StorageCategory { Name = "Documents", SizeBytes = docSize, Icon = "FileDocument", Color = "#607D8B" });
+
+            long categorizedTotal = categories.Sum(c => c.SizeBytes);
+            long otherSize = StorageUsedBytes > categorizedTotal ? StorageUsedBytes - categorizedTotal : 0;
+            categories.Add(new StorageCategory { Name = "Other", SizeBytes = otherSize, Icon = "DotsHorizontal", Color = "#757575" });
+
+            var totalForPercent = StorageUsedBytes > 0 ? StorageUsedBytes : 1;
+            var result = categories.Select(c => new StorageCategory
+            {
+                Name = c.Name,
+                SizeBytes = c.SizeBytes,
+                Icon = c.Icon,
+                Color = c.Color,
+                Percentage = Math.Round((double)c.SizeBytes / totalForPercent * 100, 1)
+            }).ToList();
+
+            await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                StorageCategories.Clear();
+                foreach (var cat in result)
+                {
+                    StorageCategories.Add(cat);
+                }
+
+                var usedGB = StorageUsedBytes / (1024.0 * 1024 * 1024);
+                var totalGB = StorageTotalBytes / (1024.0 * 1024 * 1024);
+                var pct = StorageTotalBytes > 0 ? (double)StorageUsedBytes / StorageTotalBytes * 100 : 0;
+                StoragePercentage = pct;
+                StorageInfoText = $"Used {usedGB:F2} GB / {totalGB:F2} GB ({pct:F1}%)";
+            });
+        }
+        catch (Exception ex)
+        {
+            StatusText = $"Storage analysis failed: {ex.Message}";
+            _logService.Error("Files", $"Storage analysis failed: {ex.Message}", ex);
+        }
+        finally
+        {
+            IsStorageLoading = false;
+        }
+    }
+
+    private async Task<long> GetCategorySizeAsync(string command)
+    {
+        try
+        {
+            var result = await _currentSession!.ExecuteShellCommandAsync(command);
+            var match = Regex.Match(result, @"(\d+)");
+            if (match.Success && long.TryParse(match.Groups[1].Value, out var size))
+            {
+                return size;
+            }
+        }
+        catch
+        {
+        }
+        return 0;
     }
 
     public void OpenItem(object item)

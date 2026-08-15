@@ -4,33 +4,68 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:local="clr-namespace:AndroidPCController.App.Pages"
+             xmlns:vm="clr-namespace:AndroidPCController.App.ViewModels"
+             xmlns:cvt="clr-namespace:AndroidPCController.App.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="900"
+             d:DesignHeight="700" d:DesignWidth="1000"
              Background="#1a1a2e">
 
+    <UserControl.DataContext>
+        <vm:DashboardViewModel />
+    </UserControl.DataContext>
+
     <UserControl.Resources>
-        <Style x:Key="CardStyle" TargetType="Border">
+        <Style x:Key="CardBorder" TargetType="Border">
             <Setter Property="Background" Value="#16213e"/>
             <Setter Property="BorderBrush" Value="#1a1a4e"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="Padding" Value="16"/>
-            <Setter Property="Margin" Value="8"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
             <Setter Property="Effect">
                 <Setter.Value>
-                    <DropShadowEffect BlurRadius="10" Opacity="0.3" ShadowDepth="2" Color="#000000"/>
+                    <DropShadowEffect BlurRadius="12" Opacity="0.25" ShadowDepth="2" Color="#000000"/>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <Style x:Key="ActionButton" TargetType="Button">
+        <Style x:Key="SubCard" TargetType="Border">
             <Setter Property="Background" Value="#0f3460"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <Style x:Key="CardTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#00d2ff"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+
+        <Style x:Key="StatLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="#a0a0a0"/>
+        </Style>
+
+        <Style x:Key="StatValue" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+        </Style>
+
+        <Style x:Key="StatValueSmall" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+        </Style>
+
+        <Style x:Key="QuickActionButton" TargetType="Button">
+            <Setter Property="Background" Value="#16213e"/>
             <Setter Property="Foreground" Value="#e0e0e0"/>
             <Setter Property="BorderBrush" Value="#1a1a4e"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Padding" Value="16,12"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -38,24 +73,19 @@
                         <Border x:Name="border" Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                CornerRadius="10" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#00d2ff"/>
                                 <Setter Property="Foreground" Value="#1a1a2e"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>
-
-        <Style x:Key="BadgeStyle" TargetType="Border">
-            <Setter Property="CornerRadius" Value="10"/>
-            <Setter Property="Padding" Value="8,3"/>
-            <Setter Property="Margin" Value="4,0"/>
         </Style>
     </UserControl.Resources>
 
@@ -65,22 +95,73 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="#16213e" Padding="16,12" BorderBrush="#1a1a4e" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Background="#16213e" Padding="24,16" BorderBrush="#1a1a4e" BorderThickness="0,0,0,1">
             <Grid>
-                <TextBlock Text="Dashboard" FontSize="22" FontWeight="Bold" Foreground="#e0e0e0"
-                           VerticalAlignment="Center"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <Button Style="{StaticResource ActionButton}" Command="{Binding RefreshCommand}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="42" Height="42" CornerRadius="21" Background="#0f3460" Margin="0,0,14,0"
+                            VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="ViewDashboard" Width="24" Height="24"
+                                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                Foreground="#00d2ff"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Smart Control Center" FontSize="20" FontWeight="Bold"
+                                   Foreground="#e0e0e0"/>
+                        <TextBlock Text="{Binding DeviceName}" FontSize="12" Foreground="#a0a0a0"
+                                   Margin="0,2,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Background="#1a1a2e" CornerRadius="8" Padding="10,6" Margin="0,0,10,0"
+                            VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Refresh" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                            <TextBlock Text="Refresh" VerticalAlignment="Center"/>
+                            <Ellipse Width="8" Height="8" Margin="0,0,8,0" VerticalAlignment="Center">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="#ef4444"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDeviceConnected}" Value="True">
+                                                <Setter Property="Fill" Value="#22c55e"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                            <TextBlock Text="{Binding ConnectionStatusText}" FontSize="12"
+                                       Foreground="#a0a0a0" VerticalAlignment="Center"/>
                         </StackPanel>
+                    </Border>
+
+                    <Border Background="#1a1a2e" CornerRadius="8" Padding="12,6" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Health" FontSize="11" Foreground="#a0a0a0"
+                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <Border Width="28" Height="28" CornerRadius="14" VerticalAlignment="Center">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{Binding DeviceHealthScore, Converter={x:Static cvt:HealthScoreToColorConverter.Instance}}"/>
+                                </Border.Background>
+                                <TextBlock Text="{Binding DeviceHealthScore}" FontSize="11" FontWeight="Bold"
+                                           Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Style="{StaticResource QuickActionButton}" Command="{Binding RefreshCommand}"
+                            Margin="6,0,0,0" Padding="10,6">
+                        <materialDesign:PackIcon Kind="Refresh" Width="16" Height="16"/>
                     </Button>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1" Margin="16">
+        <Grid Grid.Row="1" Margin="20,16">
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Style.Triggers>
@@ -90,150 +171,389 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
-            <ItemsControl ItemsSource="{Binding Devices}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Style="{StaticResource CardStyle}" Width="320" Margin="8">
-                            <StackPanel>
-                                <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,6,0">
+                <StackPanel>
+
+                    <Border Style="{StaticResource CardBorder}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardTitle}">
+                                <Run Text="&#xE703;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
+                                <Run Text=" Device Info" FontSize="13"/>
+                            </TextBlock>
+
+                            <Border Style="{StaticResource SubCard}">
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-
-                                    <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24"
-                                            Background="#0f3460" Margin="0,0,12,0">
-                                        <materialDesign:PackIcon Kind="Cellphone" Width="28" Height="28"
-                                                                  VerticalAlignment="Center" HorizontalAlignment="Center"
-                                                                  Foreground="#00d2ff"/>
+                                    <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20"
+                                            Background="#16213e" Margin="0,0,12,0">
+                                        <materialDesign:PackIcon Kind="Cellphone" Width="22" Height="22"
+                                                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                                Foreground="#00d2ff"/>
                                     </Border>
-
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Model}" FontSize="15" FontWeight="SemiBold"
-                                                   Foreground="#e0e0e0"/>
-                                        <TextBlock Foreground="#a0a0a0" FontSize="12">
-                                            <Run Text="{Binding Manufacturer, Mode=OneWay}"/>
-                                            <Run Text=" · "/>
-                                            <Run Text="{Binding AndroidVersion, Mode=OneWay}"/>
+                                        <TextBlock Text="{Binding SelectedDevice.Model, FallbackValue='N/A'}"
+                                                   FontSize="15" FontWeight="SemiBold" Foreground="#e0e0e0"/>
+                                        <TextBlock FontSize="11" Foreground="#a0a0a0">
+                                            <Run Text="{Binding SelectedDevice.Manufacturer, Mode=OneWay}"/>
+                                            <Run Text=" "/>
+                                            <Run Text="{Binding SelectedDevice.AndroidVersion, Mode=OneWay, StringFormat='Android {0}'}"/>
                                         </TextBlock>
                                     </StackPanel>
-
-                                    <Border Grid.Column="2" Style="{StaticResource BadgeStyle}"
-                                            Background="{Binding ConnectionType, Converter={StaticResource ConnectionTypeToBrushConverter}}">
-                                        <TextBlock Text="{Binding ConnectionType}" FontSize="11" FontWeight="SemiBold"
-                                                   Foreground="#ffffff"/>
-                                    </Border>
                                 </Grid>
+                            </Border>
 
-                                <Separator Background="#1a1a4e" Margin="0,0,0,12"/>
+                            <Grid Margin="0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Text="Battery" FontSize="11" Foreground="#a0a0a0"/>
-                                        <ProgressBar Value="{Binding BatteryLevel}" Maximum="100" Height="6"
-                                                     Margin="0,4,0,0">
+                                <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,6">
+                                    <TextBlock Style="{StaticResource StatLabel}" Text="Serial"/>
+                                    <TextBlock Style="{StaticResource StatValueSmall}"
+                                               Text="{Binding SelectedDevice.Serial, FallbackValue='N/A'}" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,6">
+                                    <TextBlock Style="{StaticResource StatLabel}" Text="Connection Type"/>
+                                    <TextBlock Style="{StaticResource StatValueSmall}">
+                                        <Run Text="{Binding SelectedDevice.ConnectionType, Mode=OneWay}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,6">
+                                    <TextBlock Style="{StaticResource StatLabel}" Text="Resolution"/>
+                                    <TextBlock Style="{StaticResource StatValueSmall}">
+                                        <Run Text="{Binding SelectedDevice.ScreenWidth, Mode=OneWay}"/>
+                                        <Run Text=" x "/>
+                                        <Run Text="{Binding SelectedDevice.ScreenHeight, Mode=OneWay}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,6">
+                                    <TextBlock Style="{StaticResource StatLabel}" Text="API Level"/>
+                                    <TextBlock Style="{StaticResource StatValueSmall}"
+                                               Text="{Binding SelectedDevice.ApiLevel, Mode=OneWay}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,6">
+                                    <TextBlock Style="{StaticResource StatLabel}" Text="Density"/>
+                                    <TextBlock Style="{StaticResource StatValueSmall}">
+                                        <Run Text="{Binding SelectedDevice.ScreenDensity, Mode=OneWay}"/>
+                                        <Run Text=" dpi"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,6">
+                                    <TextBlock Style="{StaticResource StatLabel}" Text="IP Address"/>
+                                    <TextBlock Style="{StaticResource StatValueSmall}"
+                                               Text="{Binding SelectedDevice.IpAddress, FallbackValue='N/A'}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,6">
+                                    <TextBlock Style="{StaticResource StatLabel}" Text="Storage"/>
+                                    <TextBlock Style="{StaticResource StatValueSmall}">
+                                        <Run Text="{Binding StorageUsedBytes, Converter={x:Static cvt:BytesToSizeConverter.Instance}, Mode=OneWay}"/>
+                                        <Run Text=" / "/>
+                                        <Run Text="{Binding StorageTotalBytes, Converter={x:Static cvt:BytesToSizeConverter.Instance}, Mode=OneWay}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Grid.Row="3" Grid.Column="1" Margin="0,6">
+                                    <TextBlock Style="{StaticResource StatLabel}" Text="Current App"/>
+                                    <TextBlock Style="{StaticResource StatValueSmall}"
+                                               Text="{Binding CurrentApp, FallbackValue='N/A'}" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorder}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardTitle}">
+                                <Run Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
+                                <Run Text=" Quick Actions" FontSize="13"/>
+                            </TextBlock>
+
+                            <UniformGrid Columns="3">
+                                <Button Style="{StaticResource QuickActionButton}"
+                                        Command="{Binding TakeScreenshotCommand}" Margin="0,0,4,4">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="Camera" Width="20" Height="20"
+                                                                HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Screenshot" FontSize="10" Margin="0,6,0,0"
+                                                   HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource QuickActionButton}"
+                                        Command="{Binding StartRecordingCommand}" Margin="2,0,2,4">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="Record" Width="20" Height="20"
+                                                                HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Record" FontSize="10" Margin="0,6,0,0"
+                                                   HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource QuickActionButton}"
+                                        Command="{Binding OpenTerminalCommand}" Margin="4,0,0,4">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="Console" Width="20" Height="20"
+                                                                HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Terminal" FontSize="10" Margin="0,6,0,0"
+                                                   HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource QuickActionButton}"
+                                        Command="{Binding OpenFileBrowserCommand}" Margin="0,0,4,0">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="Folder" Width="20" Height="20"
+                                                                HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Files" FontSize="10" Margin="0,6,0,0"
+                                                   HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource QuickActionButton}"
+                                        Command="{Binding OpenControlCommand}" Margin="2,0,2,0">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="RemoteDesktop" Width="20" Height="20"
+                                                                HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Control" FontSize="10" Margin="0,6,0,0"
+                                                   HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource QuickActionButton}" Margin="4,0,0,0">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="CellphoneScreenshot" Width="20" Height="20"
+                                                                HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Cast" FontSize="10" Margin="0,6,0,0"
+                                                   HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="6,0,0,0">
+                <StackPanel>
+
+                    <Border Style="{StaticResource CardBorder}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardTitle}">
+                                <Run Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
+                                <Run Text=" Performance" FontSize="13"/>
+                            </TextBlock>
+
+                            <Border Style="{StaticResource SubCard}">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Style="{StaticResource StatLabel}"
+                                                   Text="CPU Usage" Width="80"/>
+                                        <ProgressBar Grid.Column="1" Value="{Binding CpuUsage}" Maximum="100"
+                                                     Height="8" Margin="10,0" VerticalAlignment="Center">
                                             <ProgressBar.Foreground>
-                                                <SolidColorBrush Color="{Binding BatteryLevel, Converter={StaticResource BatteryToColorConverter}}"/>
+                                                <SolidColorBrush Color="{Binding CpuUsage, Converter={x:Static cvt:CpuUsageToColorConverter.Instance}}"/>
                                             </ProgressBar.Foreground>
                                         </ProgressBar>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="1" VerticalAlignment="Bottom" FontSize="13"
-                                               Foreground="#e0e0e0" Margin="8,0,0,2">
-                                        <Run Text="{Binding BatteryLevel, Mode=OneWay}"/>
-                                        <Run Text="%"/>
-                                    </TextBlock>
-                                </Grid>
+                                        <TextBlock Grid.Column="2" Style="{StaticResource StatValueSmall}" Width="50"
+                                                   TextAlignment="Right">
+                                            <Run Text="{Binding CpuUsage, Mode=OneWay, StringFormat='{}{0:F1}'}"/>
+                                            <Run Text="%"/>
+                                        </TextBlock>
+                                    </Grid>
 
-                                <Grid Margin="0,0,0,12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                                        <TextBlock Text="Latency" FontSize="10" Foreground="#a0a0a0"
-                                                   HorizontalAlignment="Center"/>
-                                        <TextBlock Text="{Binding Latency, StringFormat='{}{0}ms'}" FontSize="13"
-                                                   FontWeight="SemiBold" Foreground="#00d2ff"
-                                                   HorizontalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                                        <TextBlock Text="Resolution" FontSize="10" Foreground="#a0a0a0"
-                                                   HorizontalAlignment="Center"/>
-                                        <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#e0e0e0"
-                                                   HorizontalAlignment="Center">
-                                            <Run Text="{Binding ScreenWidth, Mode=OneWay}"/>
-                                            <Run Text="x"/>
-                                            <Run Text="{Binding ScreenHeight, Mode=OneWay}"/>
+                                    <Grid Margin="0,6,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Style="{StaticResource StatLabel}"
+                                                   Text="RAM Usage" Width="80"/>
+                                        <ProgressBar Grid.Column="1" Value="{Binding RamUsage}" Maximum="100"
+                                                     Height="8" Margin="10,0" VerticalAlignment="Center">
+                                            <ProgressBar.Foreground>
+                                                <SolidColorBrush Color="{Binding RamUsage, Converter={x:Static cvt:RamUsageToColorConverter.Instance}}"/>
+                                            </ProgressBar.Foreground>
+                                        </ProgressBar>
+                                        <TextBlock Grid.Column="2" Style="{StaticResource StatValueSmall}" Width="120"
+                                                   TextAlignment="Right">
+                                            <Run Text="{Binding RamUsedBytes, Converter={x:Static cvt:BytesToSizeConverter.Instance}, Mode=OneWay}"/>
+                                            <Run Text=" / "/>
+                                            <Run Text="{Binding RamTotalBytes, Converter={x:Static cvt:BytesToSizeConverter.Instance}, Mode=OneWay}"/>
+                                        </TextBlock>
+                                    </Grid>
+
+                                    <Grid Margin="0,6,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Style="{StaticResource StatLabel}"
+                                                   Text="Battery" Width="80"/>
+                                        <ProgressBar Grid.Column="1" Value="{Binding BatteryLevel}" Maximum="100"
+                                                     Height="8" Margin="10,0" VerticalAlignment="Center">
+                                            <ProgressBar.Foreground>
+                                                <SolidColorBrush Color="{Binding BatteryLevel, Converter={x:Static cvt:BatteryLevelToColorConverter.Instance}}"/>
+                                            </ProgressBar.Foreground>
+                                        </ProgressBar>
+                                        <TextBlock Grid.Column="2" Style="{StaticResource StatValueSmall}" Width="120"
+                                                   TextAlignment="Right">
+                                            <Run Text="{Binding BatteryLevel, Mode=OneWay}"/>
+                                            <Run Text="% "/>
+                                            <Run Text="{Binding BatteryState, Mode=OneWay}"/>
+                                        </TextBlock>
+                                    </Grid>
+
+                                    <Grid Margin="0,6,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Style="{StaticResource StatLabel}"
+                                                   Text="Temperature" Width="80"/>
+                                        <TextBlock Grid.Column="1" Style="{StaticResource StatValueSmall}">
+                                            <Run Text="{Binding Temperature, Mode=OneWay, StringFormat='{}{0:F1}'}"/>
+                                            <Run Text="&#x00B0;C"/>
+                                        </TextBlock>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorder}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardTitle}">
+                                <Run Text="&#xE968;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
+                                <Run Text=" Connection" FontSize="13"/>
+                            </TextBlock>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource SubCard}" Margin="0,0,4,0">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <TextBlock Style="{StaticResource StatLabel}" HorizontalAlignment="Center"
+                                                   Text="Latency"/>
+                                        <TextBlock Style="{StaticResource StatValue}" HorizontalAlignment="Center">
+                                            <Run Text="{Binding NetworkLatency, Mode=OneWay, StringFormat='{}{0:F0}'}"/>
+                                            <Run Text="ms"/>
                                         </TextBlock>
                                     </StackPanel>
-                                    <StackPanel Grid.Column="2" HorizontalAlignment="Center">
-                                        <TextBlock Text="Status" FontSize="10" Foreground="#a0a0a0"
-                                                   HorizontalAlignment="Center"/>
-                                        <Ellipse Width="10" Height="10" HorizontalAlignment="Center" Margin="0,4,0,0">
-                                            <Ellipse.Style>
-                                                <Style TargetType="Ellipse">
-                                                    <Setter Property="Fill" Value="#ff5252"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ConnectionState}" Value="Connected">
-                                                            <Setter Property="Fill" Value="#00e676"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ConnectionState}" Value="Unauthorized">
-                                                            <Setter Property="Fill" Value="#ffc107"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Ellipse.Style>
-                                        </Ellipse>
+                                </Border>
+                                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource SubCard}" Margin="2,0">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <TextBlock Style="{StaticResource StatLabel}" HorizontalAlignment="Center"
+                                                   Text="FPS"/>
+                                        <TextBlock Style="{StaticResource StatValue}" HorizontalAlignment="Center"
+                                                   Text="{Binding CurrentFps, Mode=OneWay, StringFormat='{}{0:F0}'}"/>
                                     </StackPanel>
-                                </Grid>
+                                </Border>
+                                <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource SubCard}" Margin="4,0,0,0">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <TextBlock Style="{StaticResource StatLabel}" HorizontalAlignment="Center"
+                                                   Text="Bandwidth"/>
+                                        <TextBlock Style="{StaticResource StatValue}" HorizontalAlignment="Center">
+                                            <Run Text="{Binding BandwidthMbps, Mode=OneWay, StringFormat='{}{0:F1}'}"/>
+                                            <Run Text="Mb"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
 
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Style="{StaticResource ActionButton}" Content="Control"
-                                            Command="{Binding DataContext.ControlDeviceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding Serial}"/>
-                                    <Button Style="{StaticResource ActionButton}" Content="Files"
-                                            Command="{Binding DataContext.OpenFilesCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding Serial}"/>
-                                    <Button Style="{StaticResource ActionButton}" Content="Details"
-                                            Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding Serial}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                        Style="{StaticResource SubCard}" Margin="0,4,0,0">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Style="{StaticResource StatLabel}" VerticalAlignment="Center"
+                                                   Text="Connection Quality:" Margin="0,0,10,0"/>
+                                        <Border CornerRadius="12" Padding="14,5">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{Binding ConnectionQuality, Converter={x:Static cvt:ConnectionQualityToColorConverter.Instance}}"/>
+                                            </Border.Background>
+                                            <TextBlock Text="{Binding ConnectionQuality}" FontSize="13"
+                                                       FontWeight="SemiBold" Foreground="White"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
 
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,40,0,0">
-                <StackPanel.Style>
-                    <Style TargetType="StackPanel">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Devices.Count}" Value="0">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Style>
-                <materialDesign:PackIcon Kind="CellphoneOff" Width="80" Height="80"
-                                         HorizontalAlignment="Center" Foreground="#1a1a4e"/>
-                <TextBlock Text="No devices connected" FontSize="18" FontWeight="SemiBold"
-                           Foreground="#a0a0a0" HorizontalAlignment="Center" Margin="0,16,0,6"/>
-                <TextBlock Text="Connect a device via USB or Wi-Fi to get started"
-                           FontSize="13" Foreground="#a0a0a0" HorizontalAlignment="Center"
-                           Opacity="0.7"/>
-            </StackPanel>
+                                <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                                        Style="{StaticResource SubCard}" Margin="0,4,0,0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Width="36" Height="36" CornerRadius="18"
+                                                Margin="0,0,12,0" VerticalAlignment="Center">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{Binding DeviceHealthScore, Converter={x:Static cvt:HealthScoreToColorConverter.Instance}}"/>
+                                            </Border.Background>
+                                            <TextBlock Text="{Binding DeviceHealthScore}" FontSize="14"
+                                                       FontWeight="Bold" Foreground="White"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="Device Health Score" FontSize="13"
+                                                       FontWeight="SemiBold" Foreground="#e0e0e0"/>
+                                            <ProgressBar Value="{Binding DeviceHealthScore}" Maximum="100"
+                                                         Height="6" Margin="0,4,0,0">
+                                                <ProgressBar.Foreground>
+                                                    <SolidColorBrush Color="{Binding DeviceHealthScore, Converter={x:Static cvt:HealthScoreToColorConverter.Instance}}"/>
+                                                </ProgressBar.Foreground>
+                                            </ProgressBar>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
+
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,40,0,0">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Devices.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+            <materialDesign:PackIcon Kind="CellphoneOff" Width="80" Height="80"
+                                     HorizontalAlignment="Center" Foreground="#1a1a4e"/>
+            <TextBlock Text="No devices connected" FontSize="18" FontWeight="SemiBold"
+                       Foreground="#a0a0a0" HorizontalAlignment="Center" Margin="0,16,0,6"/>
+            <TextBlock Text="Connect a device via USB or Wi-Fi to get started"
+                       FontSize="13" Foreground="#a0a0a0" HorizontalAlignment="Center"
+                       Opacity="0.7"/>
+        </StackPanel>
     </Grid>
 </UserControl>
