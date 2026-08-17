@@ -52,7 +52,7 @@ public sealed class CpuUsageToColorConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         double usage = value is double d ? d : 0;
-        if (usage < 50) return Color.FromRgb(0, 210, 255);
+        if (usage < 50) return Color.FromRgb(0x22, 0xD3, 0xEE);
         if (usage < 75) return Color.FromRgb(245, 158, 11);
         return Color.FromRgb(239, 68, 68);
     }
@@ -68,7 +68,7 @@ public sealed class RamUsageToColorConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         double usage = value is double d ? d : 0;
-        if (usage < 60) return Color.FromRgb(0, 210, 255);
+        if (usage < 60) return Color.FromRgb(0x22, 0xD3, 0xEE);
         if (usage < 80) return Color.FromRgb(245, 158, 11);
         return Color.FromRgb(239, 68, 68);
     }
@@ -103,7 +103,7 @@ public sealed class ConnectionQualityToColorConverter : IValueConverter
         return quality switch
         {
             "Excellent" => Color.FromRgb(34, 197, 94),
-            "Good" => Color.FromRgb(0, 210, 255),
+            "Good" => Color.FromRgb(0x22, 0xD3, 0xEE),
             "Fair" => Color.FromRgb(245, 158, 11),
             "Poor" => Color.FromRgb(249, 115, 22),
             "Critical" => Color.FromRgb(239, 68, 68),
@@ -125,7 +125,7 @@ public sealed class ConnectionTypeToBrushConverter : IValueConverter
         return type switch
         {
             "Usb" => new SolidColorBrush(Color.FromRgb(34, 197, 94)),
-            "Wireless" => new SolidColorBrush(Color.FromRgb(0, 210, 255)),
+            "Wireless" => new SolidColorBrush(Color.FromRgb(0x22, 0xD3, 0xEE)),
             _ => new SolidColorBrush(Color.FromRgb(128, 128, 128))
         };
     }
@@ -174,7 +174,7 @@ public sealed class StringToColorConverter : IValueConverter
             "Poor" or "Critical" or "Disconnected" or "Error" => new SolidColorBrush(Color.FromRgb(239, 68, 68)),
             "Unauthorized" => new SolidColorBrush(Color.FromRgb(255, 193, 7)),
             "USB" or "Usb" => new SolidColorBrush(Color.FromRgb(34, 197, 94)),
-            "Wireless" => new SolidColorBrush(Color.FromRgb(0, 210, 255)),
+            "Wireless" => new SolidColorBrush(Color.FromRgb(0x22, 0xD3, 0xEE)),
             _ => new SolidColorBrush(Colors.Gray)
         };
     }

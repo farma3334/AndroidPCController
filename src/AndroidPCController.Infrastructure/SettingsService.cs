@@ -119,8 +119,17 @@ public sealed class SettingsService : ISettingsService
         Set(SettingKeys.HardwareAcceleration, defaults.HardwareAcceleration);
         Set(SettingKeys.ClipboardSync, defaults.ClipboardSync);
         Set(SettingKeys.NotificationSync, defaults.NotificationSync);
+        Set(SettingKeys.UsageAnalytics, defaults.UsageAnalytics);
+        Set(SettingKeys.CrashReports, defaults.CrashReports);
+        Set(SettingKeys.DeviceHistory, defaults.DeviceHistory);
         Set(SettingKeys.DownloadDirectory, defaults.DownloadDirectory);
         Set(SettingKeys.AdbPath, defaults.AdbPath ?? string.Empty);
         Set(SettingKeys.DebugLogging, defaults.DebugLogging);
+        Set(SettingKeys.MouseSensitivity, 1.0);
+        Set(SettingKeys.ScrollSensitivity, 1.0);
+        Set(SettingKeys.DoubleTapTimeout, 300);
+        Set(SettingKeys.LongPressDuration, 500);
+        Set(SettingKeys.ShowTouchFeedback, true);
+        Set(SettingKeys.EnableGestures, true);
     }
 }

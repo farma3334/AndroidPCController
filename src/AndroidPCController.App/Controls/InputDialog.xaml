@@ -7,20 +7,20 @@
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
         ResizeMode="NoResize"
-        Background="#1a1a2e"
+        Background="{StaticResource SurfaceDarkBrush}"
         ShowInTaskbar="False">
     <StackPanel Margin="16">
-        <TextBlock x:Name="PromptText" FontSize="13" Foreground="#a0a0a0" Margin="0,0,0,10"
+        <TextBlock x:Name="PromptText" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,10"
                    TextWrapping="Wrap"/>
         <TextBox x:Name="ValueTextBox"
-                 Background="#0f3460" Foreground="#e0e0e0" BorderBrush="#1a1a4e"
+                 Background="{StaticResource SurfaceLightBrush}" Foreground="{StaticResource TextPrimaryBrush}" BorderBrush="{StaticResource BorderSubtleBrush}"
                  FontSize="13" Padding="8" KeyDown="ValueTextBox_KeyDown"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
             <Button Content="OK" Width="90" Margin="0,0,8,0" Padding="8,6"
-                    Background="#00d2ff" Foreground="#1a1a2e" FontWeight="SemiBold" Cursor="Hand"
+                    Background="{StaticResource PrimaryAccentBrush}" Foreground="{StaticResource SurfaceDarkBrush}" FontWeight="SemiBold" Cursor="Hand"
                     IsDefault="True" Click="OkButton_Click"/>
             <Button Content="Cancel" Width="90" Padding="8,6"
-                    Background="#0f3460" Foreground="#e0e0e0" Cursor="Hand"
+                    Background="{StaticResource SurfaceLightBrush}" Foreground="{StaticResource TextPrimaryBrush}" Cursor="Hand"
                     IsCancel="True" Click="CancelButton_Click"/>
         </StackPanel>
     </StackPanel>

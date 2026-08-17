@@ -9,68 +9,11 @@
              xmlns:cvt="clr-namespace:AndroidPCController.App.Converters"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="1100"
-             Background="#1a1a2e">
+             Background="{StaticResource SurfaceDarkBrush}">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
         <cvt:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisConverter"/>
-        <Style x:Key="ToolButton" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Width" Value="36"/>
-            <Setter Property="Height" Value="36"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="ToolTip" Value="{Binding Tag, RelativeSource={RelativeSource Self}}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="SettingsPanel" TargetType="Border">
-            <Setter Property="Background" Value="#16213e"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="8"/>
-        </Style>
-
-        <Style x:Key="SliderStyle" TargetType="Slider">
-            <Setter Property="Minimum" Value="0"/>
-            <Setter Property="Foreground" Value="#00d2ff"/>
-            <Setter Property="Background" Value="#1a1a4e"/>
-            <Setter Property="Height" Value="24"/>
-        </Style>
-
-        <Style x:Key="ComboStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="8,4"/>
-        </Style>
-
-        <Style x:Key="StatusTextStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#a0a0a0"/>
-            <Setter Property="FontSize" Value="11"/>
-            <Setter Property="Margin" Value="0,0,12,0"/>
-        </Style>
     </UserControl.Resources>
 
     <Grid Margin="12">
@@ -87,115 +30,126 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Style="{StaticResource SettingsPanel}" Padding="8" Margin="0,0,0,8">
+            <!-- Toolbar -->
+            <Border Grid.Row="0" Style="{StaticResource SettingsPanel}" Padding="10" Margin="0,0,0,8">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource ToolButton}" Content="&#x2190;" Tag="Back"
-                            Command="{Binding PressBackCommand}"/>
-                    <Button Style="{StaticResource ToolButton}" Tag="Home"
-                            Command="{Binding PressHomeCommand}">
-                        <materialDesign:PackIcon Kind="Home" Width="18" Height="18"/>
-                    </Button>
-                    <Button Style="{StaticResource ToolButton}" Tag="Recent Apps"
-                            Command="{Binding PressRecentCommand}">
-                        <materialDesign:PackIcon Kind="Application" Width="18" Height="18"/>
-                    </Button>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Style="{StaticResource ToolButton}" Content="&#x2190;" Tag="Back"
+                                Command="{Binding PressBackCommand}"/>
+                        <Button Style="{StaticResource ToolButton}" Tag="Home"
+                                Command="{Binding PressHomeCommand}">
+                            <materialDesign:PackIcon Kind="Home" Width="18" Height="18"/>
+                        </Button>
+                        <Button Style="{StaticResource ToolButton}" Tag="Recent Apps"
+                                Command="{Binding PressRecentCommand}">
+                            <materialDesign:PackIcon Kind="Application" Width="18" Height="18"/>
+                        </Button>
 
-                    <Border Width="1" Background="#1a1a4e" Margin="8,4"/>
+                        <Border Width="1" Background="{StaticResource BorderSubtleBrush}" Margin="8,4"/>
 
-                    <Button Style="{StaticResource ToolButton}" Tag="Rotate"
-                            Command="{Binding RotateScreenCommand}">
-                        <materialDesign:PackIcon Kind="RotateRight" Width="18" Height="18"/>
-                    </Button>
-                    <Button Style="{StaticResource ToolButton}" Tag="Screenshot"
-                            Command="{Binding ScreenshotButtonCommand}">
-                        <materialDesign:PackIcon Kind="Camera" Width="18" Height="18"/>
-                    </Button>
-                    <Button Style="{StaticResource ToolButton}" Tag="Record"
-                            Command="{Binding RecordButtonCommand}">
-                        <materialDesign:PackIcon Kind="Record" Width="18" Height="18"/>
-                    </Button>
-                    <Button Style="{StaticResource ToolButton}" Tag="Clipboard"
-                            Command="{Binding OpenClipboardCommand}">
-                        <materialDesign:PackIcon Kind="ContentCopy" Width="18" Height="18"/>
-                    </Button>
-                    <Button Style="{StaticResource ToolButton}" Tag="Keyboard"
-                            Command="{Binding OpenKeyboardCommand}">
-                        <materialDesign:PackIcon Kind="Keyboard" Width="18" Height="18"/>
-                    </Button>
+                        <Button Style="{StaticResource ToolButton}" Tag="Rotate"
+                                Command="{Binding RotateScreenCommand}">
+                            <materialDesign:PackIcon Kind="RotateRight" Width="18" Height="18"/>
+                        </Button>
+                        <Button Style="{StaticResource ToolButton}" Tag="Screenshot"
+                                Command="{Binding ScreenshotButtonCommand}">
+                            <materialDesign:PackIcon Kind="Camera" Width="18" Height="18"/>
+                        </Button>
+                        <Button Style="{StaticResource ToolButton}" Tag="Record"
+                                Command="{Binding RecordButtonCommand}">
+                            <materialDesign:PackIcon Kind="Record" Width="18" Height="18"/>
+                        </Button>
+                        <Button Style="{StaticResource ToolButton}" Tag="Clipboard"
+                                Command="{Binding OpenClipboardCommand}">
+                            <materialDesign:PackIcon Kind="ContentCopy" Width="18" Height="18"/>
+                        </Button>
+                        <Button Style="{StaticResource ToolButton}" Tag="Keyboard"
+                                Command="{Binding OpenKeyboardCommand}">
+                            <materialDesign:PackIcon Kind="Keyboard" Width="18" Height="18"/>
+                        </Button>
 
-                    <Border Width="1" Background="#1a1a4e" Margin="8,4"/>
+                        <Border Width="1" Background="{StaticResource BorderSubtleBrush}" Margin="8,4"/>
 
-                    <Button Style="{StaticResource ToolButton}" Tag="Power"
-                            Command="{Binding PowerCommand}">
-                        <materialDesign:PackIcon Kind="Power" Width="18" Height="18"/>
-                    </Button>
-                    <Button Style="{StaticResource ToolButton}" Tag="Volume Up"
-                            Command="{Binding VolumeUpCommand}">
-                        <materialDesign:PackIcon Kind="VolumeHigh" Width="18" Height="18"/>
-                    </Button>
-                    <Button Style="{StaticResource ToolButton}" Tag="Volume Down"
-                            Command="{Binding VolumeDownCommand}">
-                        <materialDesign:PackIcon Kind="VolumeMedium" Width="18" Height="18"/>
-                    </Button>
+                        <Button Style="{StaticResource ToolButton}" Tag="Power"
+                                Command="{Binding PowerCommand}">
+                            <materialDesign:PackIcon Kind="Power" Width="18" Height="18"/>
+                        </Button>
+                        <Button Style="{StaticResource ToolButton}" Tag="Volume Up"
+                                Command="{Binding VolumeUpCommand}">
+                            <materialDesign:PackIcon Kind="VolumeHigh" Width="18" Height="18"/>
+                        </Button>
+                        <Button Style="{StaticResource ToolButton}" Tag="Volume Down"
+                                Command="{Binding VolumeDownCommand}">
+                            <materialDesign:PackIcon Kind="VolumeMedium" Width="18" Height="18"/>
+                        </Button>
 
-                    <Border Width="1" Background="#1a1a4e" Margin="8,4"/>
+                        <Border Width="1" Background="{StaticResource BorderSubtleBrush}" Margin="8,4"/>
 
-                    <Button x:Name="FullscreenButton" Style="{StaticResource ToolButton}"
-                            Tag="Fullscreen" Click="FullscreenButton_Click">
-                        <materialDesign:PackIcon x:Name="FullscreenIcon" Kind="Fullscreen" Width="18" Height="18"/>
-                    </Button>
-                </StackPanel>
+                        <Button x:Name="FullscreenButton" Style="{StaticResource ToolButton}"
+                                Tag="Fullscreen" Click="FullscreenButton_Click">
+                            <materialDesign:PackIcon x:Name="FullscreenIcon" Kind="Fullscreen" Width="18" Height="18"/>
+                        </Button>
+                    </StackPanel>
 
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
-                    <Button Padding="16,6" FontWeight="SemiBold" Cursor="Hand"
-                            Foreground="#1a1a2e"
-                            Command="{Binding StartStreamCommand}"
-                            Visibility="{Binding IsStreaming, Converter={StaticResource InverseBoolToVisConverter}}">
-                        <Button.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Color="#00d2ff" Offset="0"/>
-                                <GradientStop Color="#4dffb8" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Button.Background>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Play" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                            <TextBlock Text="Start" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Padding="16,6" FontWeight="SemiBold" Cursor="Hand"
-                            Background="#ff5252" Foreground="White"
-                            Command="{Binding StopStreamCommand}"
-                            Visibility="{Binding IsStreaming, Converter={StaticResource BoolToVisConverter}}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Stop" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                            <TextBlock Text="Stop" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                        <Button Padding="18,8" FontWeight="SemiBold" Cursor="Hand"
+                                Foreground="White" FontSize="13"
+                                Command="{Binding StartStreamCommand}"
+                                Visibility="{Binding IsStreaming, Converter={StaticResource InverseBoolToVisConverter}}">
+                            <Button.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#8B5CF6" Offset="0"/>
+                                    <GradientStop Color="#D946EF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Play" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Start Stream" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Padding="18,8" FontWeight="SemiBold" Cursor="Hand"
+                                Foreground="White" FontSize="13"
+                                Command="{Binding StopStreamCommand}"
+                                Visibility="{Binding IsStreaming, Converter={StaticResource BoolToVisConverter}}">
+                            <Button.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#EF4444" Offset="0"/>
+                                    <GradientStop Color="#FB7185" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Stop" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Stop Stream" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </Border>
 
-            <Border Grid.Row="1" Background="#000000" CornerRadius="4"
+            <!-- Stream View -->
+            <Border Grid.Row="1" Background="#000000" CornerRadius="12"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinWidth="480" MinHeight="360" Margin="0,0,0,8">
-                <Border x:Name="StreamContainer" ClipToBounds="True">
+                    MinWidth="480" MinHeight="360" Margin="0,0,0,8"
+                    BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1">
+                <Border x:Name="StreamContainer" ClipToBounds="True" CornerRadius="12">
                     <Grid>
                         <Image x:Name="StreamImage" Stretch="Uniform"
                                MouseLeftButtonDown="StreamImage_MouseLeftButtonDown"
                                MouseMove="StreamImage_MouseMove"
                                MouseRightButtonDown="StreamImage_MouseRightButtonDown"
+                               MouseWheel="StreamImage_MouseWheel"
                                RenderOptions.BitmapScalingMode="HighQuality"
                                Visibility="{Binding IsScrcpyActive, Converter={StaticResource InverseBoolToVisConverter}}"/>
 
                         <controls:ScrcpyHost x:Name="ScrcpyHost"
                                              Visibility="{Binding IsScrcpyActive, Converter={StaticResource BoolToVisConverter}}"/>
 
+                        <!-- Empty State -->
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
                                     IsHitTestVisible="False">
                             <StackPanel.Style>
@@ -209,23 +163,25 @@
                                 </Style>
                             </StackPanel.Style>
                             <materialDesign:PackIcon Kind="MonitorScreenshot" Width="64" Height="64"
-                                                     Foreground="#1a1a4e"/>
-                            <TextBlock Text="No active stream" FontSize="16" Foreground="#a0a0a0"
+                                                     Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="No active stream" FontSize="16" Foreground="{StaticResource TextSecondaryBrush}"
                                        HorizontalAlignment="Center" Margin="0,12,0,0"/>
-                            <TextBlock Text="Click Start to begin screen mirroring" FontSize="12"
-                                       Foreground="#a0a0a0" HorizontalAlignment="Center" Margin="0,4,0,0"
-                                       Opacity="0.7"/>
+                            <TextBlock Text="Click Start Stream to begin screen mirroring" FontSize="12"
+                                       Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,4,0,0"/>
                         </StackPanel>
 
-<StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
-                    VerticalAlignment="Top" Margin="8">
-            <Border Background="#000000" Opacity="0.6" CornerRadius="4" Padding="6,3">
-                <TextBlock Text="{Binding LiveOverlayText}" FontSize="11"
-                           Foreground="#00d2ff" FontWeight="SemiBold"/>
-            </Border>
-        </StackPanel>
+                        <!-- Live Stats Overlay -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                                    VerticalAlignment="Top" Margin="10">
+                            <Border Background="#CC000000" CornerRadius="10" Padding="10,5"
+                                    BorderBrush="#338B5CF6" BorderThickness="1">
+                                <TextBlock Text="{Binding LiveOverlayText}" FontSize="11"
+                                           Foreground="{StaticResource PrimaryAccentLightBrush}" FontWeight="SemiBold"/>
+                            </Border>
+                        </StackPanel>
 
-                        <Ellipse x:Name="RecordingIndicator" Width="12" Height="12" Fill="#ff5252"
+                        <!-- Recording Indicator -->
+                        <Ellipse x:Name="RecordingIndicator" Width="12" Height="12" Fill="{StaticResource RoseAccentBrush}"
                                  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,12,0,0"
                                  Visibility="Collapsed">
                             <Ellipse.Triggers>
@@ -244,86 +200,95 @@
                 </Border>
             </Border>
 
-            <Border Grid.Row="2" Style="{StaticResource SettingsPanel}" Padding="8,6" Margin="0,8,0,0">
+            <!-- Status Bar -->
+            <Border Grid.Row="2" Style="{StaticResource SettingsPanel}" Padding="10,6" Margin="0,8,0,0">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource StatusTextStyle}">
                         <Run Text="FPS: "/>
-                        <Run Text="{Binding LiveFpsText, Mode=OneWay}" Foreground="#00d2ff"/>
+                        <Run Text="{Binding LiveFpsText, Mode=OneWay}" Foreground="{StaticResource PrimaryAccentLightBrush}"/>
                     </TextBlock>
                     <TextBlock Style="{StaticResource StatusTextStyle}">
                         <Run Text="Bitrate: "/>
-                        <Run Text="{Binding LiveBitrateText, Mode=OneWay}" Foreground="#00d2ff"/>
+                        <Run Text="{Binding LiveBitrateText, Mode=OneWay}" Foreground="{StaticResource PrimaryAccentLightBrush}"/>
                     </TextBlock>
                     <TextBlock Style="{StaticResource StatusTextStyle}">
                         <Run Text="Latency: "/>
-                        <Run x:Name="LatencyText" Text="--" Foreground="#00d2ff"/>
+                        <Run x:Name="LatencyText" Text="--" Foreground="{StaticResource PrimaryAccentLightBrush}"/>
                     </TextBlock>
                     <TextBlock Style="{StaticResource StatusTextStyle}">
                         <Run Text="Resolution: "/>
-                        <Run Text="{Binding LiveResolutionText, Mode=OneWay}" Foreground="#00d2ff"/>
+                        <Run Text="{Binding LiveResolutionText, Mode=OneWay}" Foreground="{StaticResource PrimaryAccentLightBrush}"/>
                     </TextBlock>
                 </StackPanel>
             </Border>
         </Grid>
 
         <GridSplitter Grid.Column="1" Width="6" HorizontalAlignment="Center"
-                      Background="#1a1a4e" Cursor="SizeWE"/>
+                      Background="{StaticResource BorderSubtleBrush}" Cursor="SizeWE"/>
 
-        <Border Grid.Column="2" Style="{StaticResource SettingsPanel}" Padding="14">
+        <!-- Settings Panel -->
+        <Border Grid.Column="2" Style="{StaticResource SettingsPanel}" Padding="18">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel>
                     <TextBlock Text="Stream Settings" FontSize="16" FontWeight="Bold"
-                               Foreground="#e0e0e0" Margin="0,0,0,14"/>
+                               Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,16"/>
 
-                    <TextBlock Text="FPS" FontSize="12" Foreground="#a0a0a0" Margin="0,0,0,4"/>
-                    <Grid Margin="0,0,0,12">
+                    <TextBlock Text="FPS" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                    <Grid Margin="0,0,0,14">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="45"/>
                         </Grid.ColumnDefinitions>
                         <Slider Grid.Column="0" Style="{StaticResource SliderStyle}"
                                 Minimum="10" Maximum="240"
                                 Value="{Binding Fps, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBlock Grid.Column="1" Text="{Binding StreamFps}" FontSize="12"
-                                   Foreground="#00d2ff" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                   Foreground="{StaticResource PrimaryAccentLightBrush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
 
-                    <TextBlock Text="Resolution" FontSize="12" Foreground="#a0a0a0" Margin="0,0,0,4"/>
-                    <ComboBox Style="{StaticResource ComboStyle}" Margin="0,0,0,12"
+                    <TextBlock Text="Resolution" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                    <ComboBox Style="{StaticResource ComboStyle}" Margin="0,0,0,14"
                               SelectedItem="{Binding Resolution}"
                               ItemsSource="{Binding AvailableResolutions}"/>
 
-                    <TextBlock Text="Bitrate (Mbps)" FontSize="12" Foreground="#a0a0a0" Margin="0,0,0,4"/>
-                    <Grid Margin="0,0,0,12">
+                    <TextBlock Text="Bitrate (Mbps)" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                    <Grid Margin="0,0,0,14">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="45"/>
                         </Grid.ColumnDefinitions>
                         <Slider Grid.Column="0" Style="{StaticResource SliderStyle}"
                                 Minimum="1" Maximum="50"
                                 Value="{Binding BitrateMbps, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBlock Grid.Column="1" Text="{Binding BitrateMbps}" FontSize="12"
-                                   Foreground="#00d2ff" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                   Foreground="{StaticResource PrimaryAccentLightBrush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
 
-                    <TextBlock Text="Codec" FontSize="12" Foreground="#a0a0a0" Margin="0,0,0,4"/>
-                    <ComboBox Style="{StaticResource ComboStyle}" Margin="0,0,0,16"
+                    <TextBlock Text="Codec" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                    <ComboBox Style="{StaticResource ComboStyle}" Margin="0,0,0,18"
                               SelectedItem="{Binding StreamCodec}"
                               ItemsSource="{Binding AvailableCodecs}"/>
 
-                    <Separator Background="#1a1a4e" Margin="0,0,0,14"/>
+                    <Separator Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,16"/>
 
                     <TextBlock Text="Options" FontSize="14" FontWeight="SemiBold"
-                               Foreground="#e0e0e0" Margin="0,0,0,10"/>
+                               Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12"/>
 
-                    <CheckBox Content="Low Latency" Foreground="#e0e0e0"
-                              IsChecked="{Binding LowLatency}" Margin="0,0,0,8"/>
-                    <CheckBox Content="Audio" Foreground="#e0e0e0"
-                              IsChecked="{Binding AudioEnabled}" Margin="0,0,0,16"/>
+                    <CheckBox Content="Low Latency" Foreground="{StaticResource TextPrimaryBrush}"
+                              IsChecked="{Binding LowLatency}" Margin="0,0,0,10"/>
+                    <CheckBox Content="Audio" Foreground="{StaticResource TextPrimaryBrush}"
+                              IsChecked="{Binding AudioEnabled}" Margin="0,0,0,18"/>
 
-                    <Button Background="#00d2ff" Foreground="#1a1a2e" FontWeight="SemiBold"
-                            Padding="16,8" HorizontalAlignment="Stretch"
-                            Command="{Binding ApplySettingsCommand}" Cursor="Hand">
+                    <Button FontWeight="SemiBold" FontSize="13"
+                            Padding="18,10" HorizontalAlignment="Stretch"
+                            Command="{Binding ApplySettingsCommand}" Cursor="Hand"
+                            Foreground="White">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#8B5CF6" Offset="0"/>
+                                <GradientStop Color="#D946EF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <materialDesign:PackIcon Kind="Check" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
                             <TextBlock Text="Apply Settings" VerticalAlignment="Center"/>

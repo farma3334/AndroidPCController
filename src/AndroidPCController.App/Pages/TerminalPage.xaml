@@ -7,20 +7,20 @@
              xmlns:local="clr-namespace:AndroidPCController.App.Pages"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
-             Background="#1a1a2e">
+             Background="{StaticResource SurfaceDarkBrush}">
 
     <UserControl.Resources>
         <Style x:Key="PanelStyle" TargetType="Border">
-            <Setter Property="Background" Value="#16213e"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
         </Style>
 
         <Style x:Key="ActionBtn" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,6"/>
             <Setter Property="Margin" Value="3,0"/>
@@ -36,8 +36,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -46,9 +46,9 @@
         </Style>
 
         <Style x:Key="ComboStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,4"/>
         </Style>
@@ -71,10 +71,10 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="Terminal" FontSize="18" FontWeight="Bold"
-                           Foreground="#e0e0e0" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,16,0"/>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Device:" FontSize="13" Foreground="#a0a0a0"
+                    <TextBlock Text="Device:" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"
                                VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <ComboBox x:Name="DeviceSelector" Style="{StaticResource ComboStyle}" Width="220"
                               ItemsSource="{Binding AvailableDevices}"
@@ -83,7 +83,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <CheckBox x:Name="AutoScrollCheckBox" Content="Auto-scroll" Foreground="#e0e0e0"
+                    <CheckBox x:Name="AutoScrollCheckBox" Content="Auto-scroll" Foreground="{StaticResource TextPrimaryBrush}"
                               IsChecked="{Binding AutoScroll}" VerticalAlignment="Center" Margin="0,0,12,0"/>
                     <Button Style="{StaticResource ActionBtn}"
                             Command="{Binding ClearCommand}">
@@ -106,16 +106,16 @@
         <Border Grid.Row="1" Style="{StaticResource PanelStyle}" Padding="0" ClipToBounds="True">
             <ScrollViewer x:Name="OutputScroller" VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Auto">
-                <RichTextBox x:Name="OutputBox" Background="#0a0a1a" Foreground="#e0e0e0"
+                <RichTextBox x:Name="OutputBox" Background="{StaticResource SurfaceDarkBrush}" Foreground="{StaticResource TextPrimaryBrush}"
                              BorderThickness="0" IsReadOnly="True" FontFamily="Cascadia Code,Consolas,Courier New"
                              FontSize="13" Padding="12,8"
                              VerticalScrollBarVisibility="Disabled"
                              IsDocumentEnabled="True">
                     <RichTextBox.Resources>
                         <Style TargetType="ContextMenu">
-                            <Setter Property="Background" Value="#16213e"/>
-                            <Setter Property="Foreground" Value="#e0e0e0"/>
-                            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+                            <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
                         </Style>
                     </RichTextBox.Resources>
                 </RichTextBox>
@@ -131,14 +131,14 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="$" FontSize="15" FontWeight="Bold"
-                           Foreground="#00d2ff" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                           Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
 
                 <TextBox x:Name="CommandInput" Grid.Column="1"
-                         Background="#0a0a1a" Foreground="#e0e0e0"
-                         BorderBrush="#1a1a4e" BorderThickness="1"
+                         Background="{StaticResource SurfaceDarkBrush}" Foreground="{StaticResource TextPrimaryBrush}"
+                         BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1"
                          FontFamily="Cascadia Code,Consolas,Courier New" FontSize="13"
                          Padding="8,6" VerticalContentAlignment="Center"
-                         CaretBrush="#00d2ff"
+                         CaretBrush="{StaticResource PrimaryAccentBrush}"
                          KeyDown="CommandInput_KeyDown"
                          Text="{Binding CommandText, UpdateSourceTrigger=PropertyChanged}"
                          materialDesign:HintAssist.Hint="Enter shell command..."/>
@@ -163,12 +163,12 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Ellipse Width="8" Height="8" Fill="#00e676" Margin="0,0,6,0"/>
-                    <TextBlock x:Name="StatusText" Text="Ready" FontSize="12" Foreground="#a0a0a0"
+                    <Ellipse Width="8" Height="8" Fill="{StaticResource SuccessGreenBrush}" Margin="0,0,6,0"/>
+                    <TextBlock x:Name="StatusText" Text="Ready" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"
                                VerticalAlignment="Center"/>
                 </StackPanel>
 
-                <TextBlock Grid.Column="2" FontSize="11" Foreground="#a0a0a0" VerticalAlignment="Center">
+                <TextBlock Grid.Column="2" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center">
                     <Run Text="History: "/>
                     <Run x:Name="HistoryCountText" Text="0"/>
                     <Run Text=" commands"/>

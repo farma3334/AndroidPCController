@@ -7,19 +7,19 @@
              xmlns:local="clr-namespace:AndroidPCController.App.Pages"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
-             Background="#1a1a2e">
+             Background="{StaticResource SurfaceDarkBrush}">
 
     <UserControl.Resources>
         <Style x:Key="PanelStyle" TargetType="Border">
-            <Setter Property="Background" Value="#16213e"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
         </Style>
 
         <Style x:Key="CategoryBtn" TargetType="RadioButton">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#a0a0a0"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="14,10"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -34,11 +34,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#0f3460"/>
-                                <Setter Property="Foreground" Value="#00d2ff"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource PrimaryAccentBrush}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#0f3460"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -48,31 +48,31 @@
 
         <Style x:Key="FormFieldLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Foreground" Value="#a0a0a0"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
             <Setter Property="Margin" Value="0,0,0,4"/>
         </Style>
 
         <Style x:Key="ComboStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,4"/>
         </Style>
 
         <Style x:Key="InputStyle" TargetType="TextBox">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,6"/>
             <Setter Property="FontSize" Value="13"/>
         </Style>
 
         <Style x:Key="ActionBtn" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,6"/>
             <Setter Property="Margin" Value="3,0"/>
@@ -88,8 +88,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -108,7 +108,7 @@
         <Border Grid.Column="0" Style="{StaticResource PanelStyle}" Padding="8">
             <StackPanel>
                 <TextBlock Text="Settings" FontSize="18" FontWeight="Bold"
-                           Foreground="#e0e0e0" Margin="8,8,8,16"/>
+                           Foreground="{StaticResource TextPrimaryBrush}" Margin="8,8,8,16"/>
 
                 <RadioButton x:Name="GeneralCategory" Style="{StaticResource CategoryBtn}"
                              IsChecked="True" Tag="General"
@@ -164,20 +164,20 @@
         </Border>
 
         <GridSplitter Grid.Column="1" Width="6" HorizontalAlignment="Center"
-                      Background="#1a1a4e" Cursor="SizeWE"/>
+                      Background="{StaticResource BorderSubtleBrush}" Cursor="SizeWE"/>
 
         <Border Grid.Column="2" Style="{StaticResource PanelStyle}" Padding="20">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel x:Name="SettingsContent">
                     <TextBlock x:Name="CategoryTitle" Text="General" FontSize="18" FontWeight="Bold"
-                               Foreground="#e0e0e0" Margin="0,0,0,20"/>
+                               Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,20"/>
 
                     <StackPanel x:Name="GeneralPanel">
                         <TextBlock Text="Theme" Style="{StaticResource FormFieldLabel}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                            <RadioButton x:Name="ThemeDark" Content="Dark" Foreground="#e0e0e0"
+                            <RadioButton x:Name="ThemeDark" Content="Dark" Foreground="{StaticResource TextPrimaryBrush}"
                                          IsChecked="True" GroupName="Theme" Margin="0,0,16,0"/>
-                            <RadioButton x:Name="ThemeLight" Content="Light" Foreground="#e0e0e0"
+                            <RadioButton x:Name="ThemeLight" Content="Light" Foreground="{StaticResource TextPrimaryBrush}"
                                          GroupName="Theme"/>
                         </StackPanel>
 
@@ -186,14 +186,14 @@
                                   ItemsSource="{Binding AvailableLanguages}"
                                   SelectedItem="{Binding Language}"/>
 
-                        <CheckBox Content="Start minimized" Foreground="#e0e0e0"
+                        <CheckBox Content="Start minimized" Foreground="{StaticResource TextPrimaryBrush}"
                                   IsChecked="{Binding StartMinimized}" Margin="0,0,0,8"/>
-                        <CheckBox Content="Minimize to system tray" Foreground="#e0e0e0"
+                        <CheckBox Content="Minimize to system tray" Foreground="{StaticResource TextPrimaryBrush}"
                                   IsChecked="{Binding MinimizeToTray}" Margin="0,0,0,8"/>
                     </StackPanel>
 
                     <StackPanel x:Name="ConnectionPanel" Visibility="Collapsed">
-                        <CheckBox Content="Auto-reconnect on disconnect" Foreground="#e0e0e0"
+                        <CheckBox Content="Auto-reconnect on disconnect" Foreground="{StaticResource TextPrimaryBrush}"
                                   IsChecked="{Binding AutoReconnect}" Margin="0,0,0,12"/>
 
                         <TextBlock Text="Connection timeout (ms)" Style="{StaticResource FormFieldLabel}"/>
@@ -204,9 +204,9 @@
                             </Grid.ColumnDefinitions>
                             <Slider Grid.Column="0" Minimum="3000" Maximum="30000"
                                     Value="{Binding ConnectionTimeout}"
-                                    Foreground="#00d2ff" Background="#1a1a4e"/>
+                                    Foreground="{StaticResource PrimaryAccentBrush}" Background="{StaticResource BorderSubtleBrush}"/>
                             <TextBlock Grid.Column="1" Text="{Binding ConnectionTimeout}"
-                                       FontSize="12" Foreground="#00d2ff" VerticalAlignment="Center"
+                                       FontSize="12" Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center"
                                        HorizontalAlignment="Center"/>
                         </Grid>
                     </StackPanel>
@@ -220,9 +220,9 @@
                             </Grid.ColumnDefinitions>
                             <Slider Grid.Column="0" Minimum="10" Maximum="240"
                                     Value="{Binding DefaultFps}"
-                                    Foreground="#00d2ff" Background="#1a1a4e"/>
+                                    Foreground="{StaticResource PrimaryAccentBrush}" Background="{StaticResource BorderSubtleBrush}"/>
                             <TextBlock Grid.Column="1" Text="{Binding DefaultFps}"
-                                       FontSize="12" Foreground="#00d2ff" VerticalAlignment="Center"
+                                       FontSize="12" Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center"
                                        HorizontalAlignment="Center"/>
                         </Grid>
 
@@ -234,9 +234,9 @@
                             </Grid.ColumnDefinitions>
                             <Slider Grid.Column="0" Minimum="1" Maximum="50"
                                     Value="{Binding DefaultBitrateMbps}"
-                                    Foreground="#00d2ff" Background="#1a1a4e"/>
+                                    Foreground="{StaticResource PrimaryAccentBrush}" Background="{StaticResource BorderSubtleBrush}"/>
                             <TextBlock Grid.Column="1" Text="{Binding DefaultBitrateMbps}"
-                                       FontSize="12" Foreground="#00d2ff" VerticalAlignment="Center"
+                                       FontSize="12" Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center"
                                        HorizontalAlignment="Center"/>
                         </Grid>
 
@@ -252,7 +252,62 @@
                     </StackPanel>
 
                     <StackPanel x:Name="InputPanel" Visibility="Collapsed">
-                        <TextBlock Text="Input settings will be configured here." Foreground="#a0a0a0"/>
+                        <TextBlock Text="Mouse Sensitivity" Style="{StaticResource FormFieldLabel}"/>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" Minimum="0.25" Maximum="3.0" Value="{Binding MouseSensitivity}"
+                                    Foreground="{StaticResource PrimaryAccentBrush}" Background="{StaticResource BorderSubtleBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding MouseSensitivity, StringFormat='{}{0:F2}x'}"
+                                       FontSize="12" Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock Text="Scroll Sensitivity" Style="{StaticResource FormFieldLabel}"/>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" Minimum="0.25" Maximum="3.0" Value="{Binding ScrollSensitivity}"
+                                    Foreground="{StaticResource PrimaryAccentBrush}" Background="{StaticResource BorderSubtleBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding ScrollSensitivity, StringFormat='{}{0:F2}x'}"
+                                       FontSize="12" Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock Text="Double-tap Timeout (ms)" Style="{StaticResource FormFieldLabel}"/>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" Minimum="100" Maximum="800" Value="{Binding DoubleTapTimeout}"
+                                    Foreground="{StaticResource PrimaryAccentBrush}" Background="{StaticResource BorderSubtleBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding DoubleTapTimeout}"
+                                       FontSize="12" Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock Text="Long Press Duration (ms)" Style="{StaticResource FormFieldLabel}"/>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" Minimum="200" Maximum="1500" Value="{Binding LongPressDuration}"
+                                    Foreground="{StaticResource PrimaryAccentBrush}" Background="{StaticResource BorderSubtleBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding LongPressDuration}"
+                                       FontSize="12" Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+                        </Grid>
+
+                        <CheckBox Content="Show touch feedback" Foreground="{StaticResource TextPrimaryBrush}"
+                                  IsChecked="{Binding ShowTouchFeedback}" Margin="0,0,0,8"/>
+                        <CheckBox Content="Enable gestures (swipe, pinch, etc.)" Foreground="{StaticResource TextPrimaryBrush}"
+                                  IsChecked="{Binding EnableGestures}" Margin="0,0,0,8"/>
                     </StackPanel>
 
                     <StackPanel x:Name="FilesPanel" Visibility="Collapsed">
@@ -272,15 +327,15 @@
                     </StackPanel>
 
                     <StackPanel x:Name="PrivacyPanel" Visibility="Collapsed">
-                        <CheckBox Content="Clipboard sync" Foreground="#e0e0e0"
+                        <CheckBox Content="Clipboard sync" Foreground="{StaticResource TextPrimaryBrush}"
                                   IsChecked="{Binding ClipboardSync}" Margin="0,0,0,8"/>
-                        <CheckBox Content="Notification sync" Foreground="#e0e0e0"
+                        <CheckBox Content="Notification sync" Foreground="{StaticResource TextPrimaryBrush}"
                                   IsChecked="{Binding NotificationSync}" Margin="0,0,0,8"/>
-                        <CheckBox Content="Usage analytics" Foreground="#e0e0e0"
+                        <CheckBox Content="Usage analytics" Foreground="{StaticResource TextPrimaryBrush}"
                                   IsChecked="{Binding UsageAnalytics}" Margin="0,0,0,8"/>
-                        <CheckBox Content="Crash reports" Foreground="#e0e0e0"
+                        <CheckBox Content="Crash reports" Foreground="{StaticResource TextPrimaryBrush}"
                                   IsChecked="{Binding CrashReports}" Margin="0,0,0,8"/>
-                        <CheckBox Content="Device history" Foreground="#e0e0e0"
+                        <CheckBox Content="Device history" Foreground="{StaticResource TextPrimaryBrush}"
                                   IsChecked="{Binding DeviceHistory}"/>
                     </StackPanel>
 
@@ -299,14 +354,14 @@
                             </Button>
                         </Grid>
 
-                        <CheckBox Content="Debug logging" Foreground="#e0e0e0"
+                        <CheckBox Content="Debug logging" Foreground="{StaticResource TextPrimaryBrush}"
                                   IsChecked="{Binding DebugLogging}"/>
                     </StackPanel>
 
-                    <Separator Background="#1a1a4e" Margin="0,20,0,16"/>
+                    <Separator Background="{StaticResource BorderSubtleBrush}" Margin="0,20,0,16"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Background="#00d2ff" Foreground="#1a1a2e" FontWeight="SemiBold"
+                        <Button Background="{StaticResource PrimaryAccentBrush}" Foreground="{StaticResource SurfaceDarkBrush}" FontWeight="SemiBold"
                                 Padding="20,8" Cursor="Hand"
                                 Command="{Binding SaveCommand}">
                             <StackPanel Orientation="Horizontal">

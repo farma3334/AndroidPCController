@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:AndroidPCController.App.Pages"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
-             Background="#1a1a2e"
+             Background="{StaticResource SurfaceDarkBrush}"
              AllowDrop="True" Drop="FilesPage_Drop" DragOver="FilesPage_DragOver"
              DragLeave="FilesPage_DragLeave">
 
@@ -15,16 +15,16 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
 
         <Style x:Key="PanelStyle" TargetType="Border">
-            <Setter Property="Background" Value="#16213e"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
         </Style>
 
         <Style x:Key="ActionBtn" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,6"/>
             <Setter Property="Margin" Value="3,0"/>
@@ -40,8 +40,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -51,7 +51,7 @@
 
         <Style x:Key="BreadcrumbButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#00d2ff"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryAccentBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="2,0"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -59,11 +59,11 @@
         </Style>
 
         <Style x:Key="ColumnHeader" TargetType="GridViewColumnHeader">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#a0a0a0"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="Padding" Value="8,6"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
         </Style>
@@ -87,10 +87,10 @@
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="Files" FontSize="18" FontWeight="Bold"
-                               Foreground="#e0e0e0" VerticalAlignment="Center"/>
-                    <Border Width="1" Height="20" Background="#1a1a4e" Margin="12,0"/>
+                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                    <Border Width="1" Height="20" Background="{StaticResource BorderSubtleBrush}" Margin="12,0"/>
                     <TextBlock x:Name="DeviceLabel" Text="No device selected" FontSize="13"
-                               Foreground="#a0a0a0" VerticalAlignment="Center"/>
+                               Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -143,9 +143,9 @@
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Cursor="Hand"
                                 MouseLeftButtonDown="StorageToggle_Click">
                         <materialDesign:PackIcon x:Name="StorageChevron" Kind="ChevronDown" Width="16" Height="16"
-                                                 Foreground="#a0a0a0" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                 Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                         <TextBlock Text="Storage Analyzer" FontSize="14" FontWeight="SemiBold"
-                                   Foreground="#e0e0e0" VerticalAlignment="Center"/>
+                                   Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
@@ -178,14 +178,14 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" x:Name="StorageInfoText"
                                        Text="{Binding StorageInfoText}" FontSize="12"
-                                       Foreground="#a0a0a0" Margin="0,0,0,4"/>
+                                       Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                             <ProgressBar Grid.Row="1" x:Name="StorageBar" Value="{Binding StoragePercentage}" Maximum="100"
-                                         Height="8" Background="#1a1a4e" Foreground="#00d2ff"
-                                         BorderBrush="#1a1a4e" BorderThickness="0"/>
+                                         Height="8" Background="{StaticResource BorderSubtleBrush}" Foreground="{StaticResource PrimaryAccentBrush}"
+                                         BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0"/>
                         </Grid>
 
                         <TextBlock Grid.Column="1" x:Name="StorageLoadingText" Text="Loading..."
-                                   FontSize="12" Foreground="#a0a0a0" VerticalAlignment="Center"
+                                   FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"
                                    Visibility="{Binding IsStorageLoading, Converter={StaticResource BoolToVisConverter}}"/>
                     </Grid>
 
@@ -202,21 +202,21 @@
 
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                                         <Border Width="8" Height="8" CornerRadius="4" Background="{Binding Color}" Margin="0,0,6,0"/>
-                                        <TextBlock Text="{Binding Name}" FontSize="12" Foreground="#e0e0e0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Name}" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                                     </StackPanel>
 
                                     <Grid Grid.Column="1" VerticalAlignment="Center" Margin="8,0">
-                                        <Border Height="6" Background="#1a1a4e" CornerRadius="3"/>
+                                        <Border Height="6" Background="{StaticResource BorderSubtleBrush}" CornerRadius="3"/>
                                         <Border Height="6" CornerRadius="3" HorizontalAlignment="Left"
                                                 Background="{Binding Color}"
                                                 Width="{Binding Percentage, Converter={x:Static local:FilesPage.PercentageToWidthConverter}}"/>
                                     </Grid>
 
-                                    <TextBlock Grid.Column="2" FontSize="11" Foreground="#a0a0a0"
+                                    <TextBlock Grid.Column="2" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"
                                                VerticalAlignment="Center" HorizontalAlignment="Right"
                                                Text="{Binding SizeBytes, Converter={x:Static local:FilesPage.BytesToStringConverter}}"/>
 
-                                    <TextBlock Grid.Column="3" FontSize="11" Foreground="#a0a0a0"
+                                    <TextBlock Grid.Column="3" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"
                                                VerticalAlignment="Center" HorizontalAlignment="Right"
                                                Text="{Binding Percentage, StringFormat='{}{0:F1}%'}"/>
                                 </Grid>
@@ -248,15 +248,15 @@
                                             Content="{Binding Name}"
                                             Command="{Binding DataContext.NavigateToBreadcrumbCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding Path}"/>
-                                    <TextBlock Text="/" Foreground="#a0a0a0" Margin="4,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="/" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
 
-                <TextBox Grid.Column="1" Width="220" Background="#0f3460" Foreground="#e0e0e0"
-                         BorderBrush="#1a1a4e" BorderThickness="1" Padding="8,4" FontSize="12"
+                <TextBox Grid.Column="1" Width="220" Background="{StaticResource SurfaceLightBrush}" Foreground="{StaticResource TextPrimaryBrush}"
+                         BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1" Padding="8,4" FontSize="12"
                          VerticalContentAlignment="Center"
                          Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                          materialDesign:HintAssist.Hint="Search files..."/>
@@ -266,7 +266,7 @@
         <Grid Grid.Row="3">
             <Border Style="{StaticResource PanelStyle}" Padding="0" ClipToBounds="True">
                 <ListView x:Name="FileListView" ItemsSource="{Binding Files}"
-                          Background="Transparent" Foreground="#e0e0e0"
+                          Background="Transparent" Foreground="{StaticResource TextPrimaryBrush}"
                           BorderThickness="0" FontSize="13"
                           SelectionMode="Extended"
                            SelectionChanged="FileListView_SelectionChanged"
@@ -274,15 +274,15 @@
                     <ListView.Resources>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="#e0e0e0"/>
+                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
                             <Setter Property="Padding" Value="8,6"/>
                             <Setter Property="BorderThickness" Value="0"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#0f3460"/>
+                                    <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#0f3460"/>
+                                    <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -291,11 +291,11 @@
                         <GridView x:Name="FileListViewStyle">
                             <GridView.ColumnHeaderContainerStyle>
                                 <Style TargetType="GridViewColumnHeader">
-                                    <Setter Property="Background" Value="#0f3460"/>
-                                    <Setter Property="Foreground" Value="#a0a0a0"/>
+                                    <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
                                     <Setter Property="FontSize" Value="12"/>
                                     <Setter Property="Padding" Value="8,6"/>
-                                    <Setter Property="BorderBrush" Value="#1a1a4e"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
                                     <Setter Property="BorderThickness" Value="0,0,0,1"/>
                                     <Setter Property="HorizontalContentAlignment" Value="Left"/>
                                 </Style>
@@ -306,7 +306,7 @@
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="{Binding IconKind}" Width="18" Height="18"
                                                                      VerticalAlignment="Center" Margin="0,0,8,0"
-                                                                     Foreground="#00d2ff"/>
+                                                                     Foreground="{StaticResource PrimaryAccentBrush}"/>
                                             <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
@@ -339,25 +339,25 @@
                 </ListView>
             </Border>
 
-            <Border x:Name="DragOverlay" Background="#1a1a2e" Opacity="0.85"
+            <Border x:Name="DragOverlay" Background="{StaticResource SurfaceDarkBrush}" Opacity="0.85"
                     CornerRadius="8" Visibility="Collapsed"
-                    BorderBrush="#00d2ff" BorderThickness="2">
+                    BorderBrush="{StaticResource PrimaryAccentBrush}" BorderThickness="2">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <materialDesign:PackIcon Kind="Upload" Width="64" Height="64"
-                                             Foreground="#00d2ff" HorizontalAlignment="Center"/>
+                                             Foreground="{StaticResource PrimaryAccentBrush}" HorizontalAlignment="Center"/>
                     <TextBlock Text="Drop files here to upload" FontSize="18" FontWeight="SemiBold"
-                               Foreground="#e0e0e0" HorizontalAlignment="Center" Margin="0,12,0,0"/>
+                               Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
                 </StackPanel>
             </Border>
 
             <StackPanel x:Name="EmptyState" VerticalAlignment="Center" HorizontalAlignment="Center"
                         Visibility="Collapsed">
                 <materialDesign:PackIcon Kind="FolderOpen" Width="64" Height="64"
-                                         Foreground="#1a1a4e" HorizontalAlignment="Center"/>
-                <TextBlock Text="This folder is empty" FontSize="16" Foreground="#a0a0a0"
+                                         Foreground="{StaticResource BorderSubtleBrush}" HorizontalAlignment="Center"/>
+                <TextBlock Text="This folder is empty" FontSize="16" Foreground="{StaticResource TextSecondaryBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,4"/>
                 <TextBlock Text="Drop files here or click Upload" FontSize="12"
-                           Foreground="#a0a0a0" HorizontalAlignment="Center" Opacity="0.7"/>
+                           Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Opacity="0.7"/>
             </StackPanel>
         </Grid>
 
@@ -370,14 +370,14 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" x:Name="TransferInfoText" Text="Ready"
-                           FontSize="12" Foreground="#a0a0a0" VerticalAlignment="Center"/>
+                           FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
 
                 <ProgressBar Grid.Column="1" x:Name="TransferProgress" Value="0" Maximum="100"
                              Height="4" Margin="12,0" VerticalAlignment="Center"
-                             Background="#1a1a4e" Foreground="#00d2ff" Visibility="Collapsed"/>
+                             Background="{StaticResource BorderSubtleBrush}" Foreground="{StaticResource PrimaryAccentBrush}" Visibility="Collapsed"/>
 
                 <TextBlock Grid.Column="2" x:Name="TransferSpeedText" Text=""
-                           FontSize="12" Foreground="#a0a0a0" VerticalAlignment="Center"/>
+                           FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
             </Grid>
         </Border>
     </Grid>

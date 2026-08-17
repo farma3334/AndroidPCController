@@ -11,7 +11,7 @@
 
         <Style x:Key="NodeFieldLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="10"/>
-            <Setter Property="Foreground" Value="#9E9E9E"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
             <Setter Property="Margin" Value="0,6,0,2"/>
         </Style>
 
@@ -45,13 +45,13 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
-                    <TextBlock Text="Script:" FontSize="12" Foreground="#9E9E9E" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="Script:" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                     <TextBox Text="{Binding ScriptName, UpdateSourceTrigger=PropertyChanged}"
                              Width="160" Style="{StaticResource NodeTextBox}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
-                    <TextBlock Text="Loops:" FontSize="12" Foreground="#9E9E9E" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="Loops:" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                     <TextBox Text="{Binding LoopCount, UpdateSourceTrigger=PropertyChanged}"
                              Width="44">
                         <TextBox.Style>
@@ -247,12 +247,12 @@
                                                            VerticalAlignment="Center" Margin="6,0,0,0"/>
                                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                                     <Button Content="&#xE70E;" FontFamily="Segoe MDL2 Assets" FontSize="10"
-                                                            Background="Transparent" BorderThickness="0" Foreground="#9E9E9E"
+                                                            Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondaryBrush}"
                                                             Cursor="Hand" ToolTip="Move up"
                                                             Command="{Binding DataContext.MoveNodeUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                             CommandParameter="{Binding}"/>
                                                     <Button Content="&#xE70D;" FontFamily="Segoe MDL2 Assets" FontSize="10"
-                                                            Background="Transparent" BorderThickness="0" Foreground="#9E9E9E"
+                                                            Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondaryBrush}"
                                                             Cursor="Hand" ToolTip="Move down"
                                                             Command="{Binding DataContext.MoveNodeDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                             CommandParameter="{Binding}"/>
@@ -266,7 +266,7 @@
                                         </Border>
 
                                         <StackPanel Margin="10,4,10,10">
-                                            <TextBlock Text="{Binding Description}" FontSize="10" Foreground="#9E9E9E"
+                                            <TextBlock Text="{Binding Description}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"
                                                        TextWrapping="Wrap" Margin="0,2,0,2"/>
 
                                             <Grid Visibility="{Binding HasXY, Converter={StaticResource BoolToVisConverter}}">

@@ -29,7 +29,7 @@ public sealed record NotificationInfo(
         {
             var palette = new[]
             {
-                "#00d2ff", "#7c4dff", "#ff6d00", "#00e676", "#ff1744",
+                "#8B5CF6", "#7c4dff", "#ff6d00", "#00e676", "#ff1744",
                 "#2979ff", "#d500f9", "#00bfa5", "#ff9100", "#536dfe"
             };
             var hash = 0;

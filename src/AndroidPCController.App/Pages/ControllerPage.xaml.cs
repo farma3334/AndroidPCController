@@ -58,15 +58,35 @@ public partial class ControllerPage : UserControl
         _fullscreenWindow?.CloseAndSkipReparent();
     }
 
+    private DateTime _lastClickTime = DateTime.MinValue;
+    private Point _lastClickPos;
+
     private void StreamImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (DataContext is ViewModels.ControllerViewModel vm)
+        if (DataContext is not ViewModels.ControllerViewModel vm) return;
+
+        var position = e.GetPosition(StreamImage);
+        var now = DateTime.UtcNow;
+        var timeSinceLastClick = (now - _lastClickTime).TotalMilliseconds;
+        var dist = Math.Abs(position.X - _lastClickPos.X) + Math.Abs(position.Y - _lastClickPos.Y);
+
+        if (timeSinceLastClick < 350 && dist < 20)
         {
-            var position = e.GetPosition(StreamImage);
+            var relativeX = position.X / StreamImage.ActualWidth;
+            var relativeY = position.Y / StreamImage.ActualHeight;
+            vm.HandleDoubleClick(relativeX, relativeY);
+            _lastClickTime = DateTime.MinValue;
+        }
+        else
+        {
             var relativeX = position.X / StreamImage.ActualWidth;
             var relativeY = position.Y / StreamImage.ActualHeight;
             vm.HandleTap(relativeX, relativeY);
+            _lastClickTime = now;
+            _lastClickPos = position;
         }
+
+        e.Handled = true;
     }
 
     private void StreamImage_MouseMove(object sender, MouseEventArgs e)
@@ -77,6 +97,17 @@ public partial class ControllerPage : UserControl
             var relativeX = position.X / StreamImage.ActualWidth;
             var relativeY = position.Y / StreamImage.ActualHeight;
             vm.HandleMouseMove(relativeX, relativeY);
+        }
+    }
+
+    private void StreamImage_MouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        if (DataContext is ViewModels.ControllerViewModel vm)
+        {
+            var position = e.GetPosition(StreamImage);
+            var relativeX = position.X / StreamImage.ActualWidth;
+            var relativeY = position.Y / StreamImage.ActualHeight;
+            vm.HandleScrollWheel(relativeX, relativeY, e.Delta);
         }
     }
 

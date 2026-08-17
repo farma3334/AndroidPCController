@@ -154,8 +154,8 @@ public partial class AutomationPage : UserControl
             var path = new Path
             {
                 Stroke = new LinearGradientBrush(
-                    Color.FromRgb(0x00, 0xD2, 0xFF),
-                    Color.FromRgb(0x4D, 0xFF, 0xB8),
+                    Color.FromRgb(0x8B, 0x5C, 0xF6),
+                    Color.FromRgb(0x34, 0xD3, 0x99),
                     0),
                 StrokeThickness = 2,
                 Data = new PathGeometry(new[]

@@ -7,20 +7,20 @@
              xmlns:local="clr-namespace:AndroidPCController.App.Pages"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
-             Background="#1a1a2e">
+             Background="{StaticResource SurfaceDarkBrush}">
 
     <UserControl.Resources>
         <Style x:Key="PanelStyle" TargetType="Border">
-            <Setter Property="Background" Value="#16213e"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
         </Style>
 
         <Style x:Key="ControlBtn" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="14,8"/>
             <Setter Property="Margin" Value="6"/>
@@ -36,8 +36,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="border" Property="Opacity" Value="0.5"/>
@@ -49,7 +49,7 @@
         </Style>
 
         <Style x:Key="RecordBtn" TargetType="Button">
-            <Setter Property="Background" Value="#ff5252"/>
+            <Setter Property="Background" Value="{StaticResource DangerRedBrush}"/>
             <Setter Property="Foreground" Value="#ffffff"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="20,10"/>
@@ -73,16 +73,16 @@
         </Style>
 
         <Style x:Key="ComboStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,4"/>
         </Style>
 
         <Style x:Key="FormFieldLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Foreground" Value="#a0a0a0"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
             <Setter Property="Margin" Value="0,0,0,4"/>
         </Style>
     </UserControl.Resources>
@@ -104,7 +104,7 @@
 
                 <Grid Grid.Row="0" Margin="0,0,0,16">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Ellipse x:Name="RecordingDot" Width="14" Height="14" Fill="#ff5252"
+                        <Ellipse x:Name="RecordingDot" Width="14" Height="14" Fill="{StaticResource DangerRedBrush}"
                                  Margin="0,0,10,0" Visibility="Collapsed">
                             <Ellipse.Triggers>
                                 <EventTrigger RoutedEvent="Loaded">
@@ -119,26 +119,26 @@
                             </Ellipse.Triggers>
                         </Ellipse>
                         <TextBlock x:Name="RecordingStatusLabel" Text="Screen Recorder"
-                                   FontSize="22" FontWeight="Bold" Foreground="#e0e0e0"
+                                   FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
 
-                <Border Grid.Row="1" Background="#0a0a1a" CornerRadius="12" Padding="32,24"
+                <Border Grid.Row="1" Background="{StaticResource SurfaceDarkBrush}" CornerRadius="12" Padding="32,24"
                         Margin="0,0,0,16">
                     <StackPanel HorizontalAlignment="Center">
                         <TextBlock x:Name="DurationDisplay" Text="00:00:00"
-                                   FontSize="48" FontWeight="Bold" Foreground="#e0e0e0"
+                                   FontSize="48" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"
                                    HorizontalAlignment="Center"
                                    FontFamily="Cascadia Code,Consolas,Courier New"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
-                            <TextBlock FontSize="14" Foreground="#a0a0a0" Margin="0,0,16,0">
+                            <TextBlock FontSize="14" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,16,0">
                                 <Run Text="FPS: "/>
-                                <Run x:Name="FpsDisplay" Text="--" Foreground="#00d2ff"/>
+                                <Run x:Name="FpsDisplay" Text="--" Foreground="{StaticResource PrimaryAccentBrush}"/>
                             </TextBlock>
-                            <TextBlock FontSize="14" Foreground="#a0a0a0">
+                            <TextBlock FontSize="14" Foreground="{StaticResource TextSecondaryBrush}">
                                 <Run Text="Bitrate: "/>
-                                <Run x:Name="BitrateDisplay" Text="--" Foreground="#00d2ff"/>
+                                <Run x:Name="BitrateDisplay" Text="--" Foreground="{StaticResource PrimaryAccentBrush}"/>
                             </TextBlock>
                         </StackPanel>
                     </StackPanel>
@@ -209,7 +209,7 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="4" VerticalAlignment="Bottom" Margin="16,0,0,0">
-                        <CheckBox Content="Audio" Foreground="#e0e0e0"
+                        <CheckBox Content="Audio" Foreground="{StaticResource TextPrimaryBrush}"
                                   IsChecked="{Binding RecordAudio}" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
@@ -224,21 +224,21 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="Recent Recordings" FontSize="16" FontWeight="Bold"
-                           Foreground="#e0e0e0" Margin="0,0,0,12"/>
+                           Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12"/>
 
                 <ListView x:Name="RecordingsListView" Grid.Row="1"
                           ItemsSource="{Binding RecentRecordings}"
-                          Background="Transparent" Foreground="#e0e0e0"
+                          Background="Transparent" Foreground="{StaticResource TextPrimaryBrush}"
                           BorderThickness="0" FontSize="13">
                     <ListView.Resources>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="#e0e0e0"/>
+                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
                             <Setter Property="Padding" Value="12,8"/>
                             <Setter Property="BorderThickness" Value="0"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#0f3460"/>
+                                    <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -247,11 +247,11 @@
                         <GridView>
                             <GridView.ColumnHeaderContainerStyle>
                                 <Style TargetType="GridViewColumnHeader">
-                                    <Setter Property="Background" Value="#0f3460"/>
-                                    <Setter Property="Foreground" Value="#a0a0a0"/>
+                                    <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
                                     <Setter Property="FontSize" Value="12"/>
                                     <Setter Property="Padding" Value="8,6"/>
-                                    <Setter Property="BorderBrush" Value="#1a1a4e"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
                                     <Setter Property="BorderThickness" Value="0,0,0,1"/>
                                     <Setter Property="HorizontalContentAlignment" Value="Left"/>
                                 </Style>
@@ -262,7 +262,7 @@
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Video" Width="16" Height="16"
                                                                      VerticalAlignment="Center" Margin="0,0,8,0"
-                                                                     Foreground="#00d2ff"/>
+                                                                     Foreground="{StaticResource PrimaryAccentBrush}"/>
                                             <TextBlock Text="{Binding FileName}" VerticalAlignment="Center"
                                                        TextTrimming="CharacterEllipsis"/>
                                         </StackPanel>
@@ -301,14 +301,14 @@
                                                     Click="PlayRecording_Click"
                                                     ToolTip="Play">
                                                 <materialDesign:PackIcon Kind="Play" Width="16" Height="16"
-                                                                         Foreground="#00d2ff"/>
+                                                                         Foreground="{StaticResource PrimaryAccentBrush}"/>
                                             </Button>
                                             <Button Background="Transparent" BorderThickness="0"
                                                     Cursor="Hand" Padding="4" Tag="{Binding FilePath}"
                                                     Click="OpenFolder_Click"
                                                     ToolTip="Open folder">
                                                 <materialDesign:PackIcon Kind="FolderOpen" Width="16" Height="16"
-                                                                         Foreground="#a0a0a0"/>
+                                                                         Foreground="{StaticResource TextSecondaryBrush}"/>
                                             </Button>
                                         </StackPanel>
                                     </DataTemplate>
@@ -331,11 +331,11 @@
                         </Style>
                     </StackPanel.Style>
                     <materialDesign:PackIcon Kind="VideoOff" Width="64" Height="64"
-                                             Foreground="#1a1a4e" HorizontalAlignment="Center"/>
-                    <TextBlock Text="No recordings yet" FontSize="16" Foreground="#a0a0a0"
+                                             Foreground="{StaticResource BorderSubtleBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="No recordings yet" FontSize="16" Foreground="{StaticResource TextSecondaryBrush}"
                                HorizontalAlignment="Center" Margin="0,12,0,4"/>
                     <TextBlock Text="Click Start to begin recording" FontSize="12"
-                               Foreground="#a0a0a0" HorizontalAlignment="Center" Opacity="0.7"/>
+                               Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Opacity="0.7"/>
                 </StackPanel>
             </Grid>
         </Border>

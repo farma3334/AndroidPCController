@@ -538,6 +538,53 @@ public partial class ControllerViewModel : ObservableObject, IAsyncDisposable
         _ = HandleRightClickAsync(relativeX, relativeY);
     }
 
+    public async Task HandleDoubleClickAsync(double relativeX, double relativeY)
+    {
+        if (_currentSession is null) return;
+        if (!IsStreaming) return;
+
+        var x = (int)(relativeX * StreamWidth);
+        var y = (int)(relativeY * StreamHeight);
+
+        try
+        {
+            await _currentSession.InputController.SendDoubleTapAsync(x, y);
+        }
+        catch (Exception ex)
+        {
+            _logService.Error("Controller", $"Double tap failed: {ex.Message}", ex);
+        }
+    }
+
+    public void HandleDoubleClick(double relativeX, double relativeY)
+    {
+        _ = HandleDoubleClickAsync(relativeX, relativeY);
+    }
+
+    public async Task HandleScrollWheelAsync(double relativeX, double relativeY, int delta)
+    {
+        if (_currentSession is null) return;
+        if (!IsStreaming) return;
+
+        var x = (int)(relativeX * StreamWidth);
+        var y = (int)(relativeY * StreamHeight);
+        var scrollAmount = delta > 0 ? -1 : 1;
+
+        try
+        {
+            await _currentSession.InputController.SendScrollAsync(x, y, scrollAmount);
+        }
+        catch (Exception ex)
+        {
+            _logService.Error("Controller", $"Scroll failed: {ex.Message}", ex);
+        }
+    }
+
+    public void HandleScrollWheel(double relativeX, double relativeY, int delta)
+    {
+        _ = HandleScrollWheelAsync(relativeX, relativeY, delta);
+    }
+
     private void OnRecordingStateChanged(object? sender, RecordingStateChangedEventArgs e)
     {
         System.Windows.Application.Current.Dispatcher.Invoke(() =>

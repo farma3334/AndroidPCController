@@ -30,7 +30,18 @@ public static class SettingKeys
     public const string HardwareAcceleration = "Streaming.HardwareAcceleration";
     public const string ClipboardSync = "Privacy.ClipboardSync";
     public const string NotificationSync = "Privacy.NotificationSync";
+    public const string UsageAnalytics = "Privacy.UsageAnalytics";
+    public const string CrashReports = "Privacy.CrashReports";
+    public const string DeviceHistory = "Privacy.DeviceHistory";
     public const string DownloadDirectory = "Files.DownloadDirectory";
     public const string AdbPath = "Advanced.AdbPath";
     public const string DebugLogging = "Advanced.DebugLogging";
+
+    // Input settings
+    public const string MouseSensitivity = "Input.MouseSensitivity";
+    public const string ScrollSensitivity = "Input.ScrollSensitivity";
+    public const string DoubleTapTimeout = "Input.DoubleTapTimeout";
+    public const string LongPressDuration = "Input.LongPressDuration";
+    public const string ShowTouchFeedback = "Input.ShowTouchFeedback";
+    public const string EnableGestures = "Input.EnableGestures";
 }

@@ -7,20 +7,20 @@
              xmlns:local="clr-namespace:AndroidPCController.App.Pages"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
-             Background="#1a1a2e">
+             Background="{StaticResource SurfaceDarkBrush}">
 
     <UserControl.Resources>
         <Style x:Key="PanelStyle" TargetType="Border">
-            <Setter Property="Background" Value="#16213e"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
         </Style>
 
         <Style x:Key="ActionBtn" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,6"/>
             <Setter Property="Margin" Value="3,0"/>
@@ -36,8 +36,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -46,9 +46,9 @@
         </Style>
 
         <Style x:Key="ToggleBtn" TargetType="ToggleButton">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="12,6"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -63,8 +63,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="#0f4f8f"/>
@@ -126,7 +126,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="Apps" FontSize="18" FontWeight="Bold"
-                           Foreground="#e0e0e0" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,16,0"/>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <ToggleButton x:Name="ShowUserApps" Style="{StaticResource ToggleBtn}"
@@ -146,8 +146,8 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <TextBox Width="200" Background="#0f3460" Foreground="#e0e0e0"
-                             BorderBrush="#1a1a4e" BorderThickness="1" Padding="8,4"
+                    <TextBox Width="200" Background="{StaticResource SurfaceLightBrush}" Foreground="{StaticResource TextPrimaryBrush}"
+                             BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1" Padding="8,4"
                              FontSize="12" VerticalContentAlignment="Center"
                              Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
                              materialDesign:HintAssist.Hint="Search apps..."/>
@@ -169,22 +169,22 @@
         <Border Grid.Row="1" Style="{StaticResource PanelStyle}" Padding="0" ClipToBounds="True">
             <Grid>
             <ListView x:Name="AppListView" ItemsSource="{Binding Apps}"
-                      Background="Transparent" Foreground="#e0e0e0"
+                      Background="Transparent" Foreground="{StaticResource TextPrimaryBrush}"
                       BorderThickness="0" FontSize="13"
                       SelectionMode="Single"
                       MouseRightButtonUp="AppListView_ContextMenu">
                 <ListView.Resources>
                     <Style TargetType="ListViewItem">
                         <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="#e0e0e0"/>
+                        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
                         <Setter Property="Padding" Value="12,8"/>
                         <Setter Property="BorderThickness" Value="0"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#0f3460"/>
+                                <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="#0f3460"/>
+                                <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -193,11 +193,11 @@
                     <GridView>
                         <GridView.ColumnHeaderContainerStyle>
                             <Style TargetType="GridViewColumnHeader">
-                                <Setter Property="Background" Value="#0f3460"/>
-                                <Setter Property="Foreground" Value="#a0a0a0"/>
+                                <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
                                 <Setter Property="FontSize" Value="12"/>
                                 <Setter Property="Padding" Value="8,6"/>
-                                <Setter Property="BorderBrush" Value="#1a1a4e"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
                                 <Setter Property="BorderThickness" Value="0,0,0,1"/>
                                 <Setter Property="HorizontalContentAlignment" Value="Left"/>
                             </Style>
@@ -206,17 +206,17 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Border Width="28" Height="28" CornerRadius="4" Background="#0f3460"
+                                        <Border Width="28" Height="28" CornerRadius="4" Background="{StaticResource SurfaceLightBrush}"
                                                 Margin="0,0,10,0" VerticalAlignment="Center">
                                             <materialDesign:PackIcon Kind="Android" Width="18" Height="18"
                                                                      VerticalAlignment="Center" HorizontalAlignment="Center"
-                                                                     Foreground="#00d2ff"/>
+                                                                     Foreground="{StaticResource PrimaryAccentBrush}"/>
                                         </Border>
                                         <StackPanel VerticalAlignment="Center">
                                             <TextBlock Text="{Binding AppName}" FontSize="13" FontWeight="SemiBold"
-                                                       Foreground="#e0e0e0"/>
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                                             <TextBlock Text="{Binding PackageName}" FontSize="11"
-                                                       Foreground="#a0a0a0" TextTrimming="CharacterEllipsis"/>
+                                                       Foreground="{StaticResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
@@ -242,10 +242,10 @@
                                     <Border CornerRadius="8" Padding="8,2" HorizontalAlignment="Left">
                                         <Border.Style>
                                             <Style TargetType="Border">
-                                                <Setter Property="Background" Value="#0f3460"/>
+                                                <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsSystemApp}" Value="True">
-                                                        <Setter Property="Background" Value="#1a1a4e"/>
+                                                        <Setter Property="Background" Value="{StaticResource BorderSubtleBrush}"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -254,11 +254,11 @@
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Text" Value="User"/>
-                                                    <Setter Property="Foreground" Value="#00d2ff"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource PrimaryAccentBrush}"/>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsSystemApp}" Value="True">
                                                             <Setter Property="Text" Value="System"/>
-                                                            <Setter Property="Foreground" Value="#a0a0a0"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -275,11 +275,11 @@
             <StackPanel x:Name="AppEmptyState" VerticalAlignment="Center" HorizontalAlignment="Center"
                         Visibility="Collapsed">
                 <materialDesign:PackIcon Kind="PackageVariantClosed" Width="64" Height="64"
-                                         Foreground="#1a1a4e" HorizontalAlignment="Center"/>
-                <TextBlock Text="No apps found" FontSize="16" Foreground="#a0a0a0"
+                                         Foreground="{StaticResource BorderSubtleBrush}" HorizontalAlignment="Center"/>
+                <TextBlock Text="No apps found" FontSize="16" Foreground="{StaticResource TextSecondaryBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,4"/>
                 <TextBlock Text="Adjust filters or search term" FontSize="12"
-                           Foreground="#a0a0a0" HorizontalAlignment="Center" Opacity="0.7"/>
+                           Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Opacity="0.7"/>
             </StackPanel>
             </Grid>
         </Border>

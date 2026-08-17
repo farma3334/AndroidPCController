@@ -6,21 +6,21 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="900"
-             Background="#1a1a2e">
+             Background="{StaticResource SurfaceDarkBrush}">
 
     <UserControl.Resources>
         <Style x:Key="PanelStyle" TargetType="Border">
-            <Setter Property="Background" Value="#16213e"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Margin" Value="4"/>
         </Style>
 
         <Style x:Key="ActionBtn" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,8"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -35,12 +35,12 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="#0099cc"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -49,8 +49,8 @@
         </Style>
 
         <Style x:Key="AccentBtn" TargetType="Button">
-            <Setter Property="Background" Value="#00d2ff"/>
-            <Setter Property="Foreground" Value="#1a1a2e"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="12,8"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -139,9 +139,9 @@
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="&#xE756;" FontFamily="Segoe MDL2 Assets" FontSize="18"
-                               Foreground="#00d2ff" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                               Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
                     <TextBlock Text="Developer Tools" FontSize="18" FontWeight="Bold"
-                               Foreground="#e0e0e0" VerticalAlignment="Center"/>
+                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
@@ -157,7 +157,7 @@
                             </Style>
                         </Ellipse.Style>
                     </Ellipse>
-                    <TextBlock FontSize="12" Foreground="#9E9E9E" VerticalAlignment="Center">
+                    <TextBlock FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text" Value="No device"/>
@@ -191,14 +191,14 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Text="Device Info" FontSize="14" FontWeight="SemiBold"
-                               Foreground="#00d2ff" Margin="0,0,0,8"/>
+                               Foreground="{StaticResource PrimaryAccentBrush}" Margin="0,0,0,8"/>
 
                     <Grid Grid.Row="1" Margin="0,0,0,4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Android Version" FontSize="12" Foreground="#9E9E9E"/>
+                        <TextBlock Grid.Column="0" Text="Android Version" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
                         <TextBlock Grid.Column="1" Text="{Binding AndroidVersion}" FontSize="12" Foreground="#E0E0E0" FontWeight="SemiBold"/>
                     </Grid>
 
@@ -207,7 +207,7 @@
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="API Level" FontSize="12" Foreground="#9E9E9E"/>
+                        <TextBlock Grid.Column="0" Text="API Level" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
                         <TextBlock Grid.Column="1" Text="{Binding ApiLevel}" FontSize="12" Foreground="#E0E0E0" FontWeight="SemiBold"/>
                     </Grid>
 
@@ -216,7 +216,7 @@
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Build Number" FontSize="12" Foreground="#9E9E9E"/>
+                        <TextBlock Grid.Column="0" Text="Build Number" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
                         <TextBlock Grid.Column="1" Text="{Binding BuildNumber}" FontSize="12" Foreground="#E0E0E0" FontWeight="SemiBold"/>
                     </Grid>
 
@@ -225,7 +225,7 @@
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Security Patch" FontSize="12" Foreground="#9E9E9E"/>
+                        <TextBlock Grid.Column="0" Text="Security Patch" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
                         <TextBlock Grid.Column="1" Text="{Binding SecurityPatch}" FontSize="12" Foreground="#E0E0E0" FontWeight="SemiBold"/>
                     </Grid>
 
@@ -234,7 +234,7 @@
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Kernel" FontSize="12" Foreground="#9E9E9E"/>
+                        <TextBlock Grid.Column="0" Text="Kernel" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
                         <TextBlock Grid.Column="1" Text="{Binding KernelVersion}" FontSize="12" Foreground="#E0E0E0" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
                     </Grid>
                 </Grid>
@@ -250,24 +250,24 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Text="Quick Info" FontSize="14" FontWeight="SemiBold"
-                               Foreground="#00d2ff" Margin="0,0,0,8"/>
+                               Foreground="{StaticResource PrimaryAccentBrush}" Margin="0,0,0,8"/>
 
                     <Grid Grid.Row="1" Margin="0,0,0,6">
-                        <TextBlock Text="Serial" FontSize="11" Foreground="#9E9E9E"/>
+                        <TextBlock Text="Serial" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
                         <TextBlock Text="{Binding Serial}" FontSize="11" Foreground="#E0E0E0"
                                    HorizontalAlignment="Right"/>
                     </Grid>
 
                     <Grid Grid.Row="2" Margin="0,0,0,6">
-                        <TextBlock Text="Package" FontSize="11" Foreground="#9E9E9E"/>
+                        <TextBlock Text="Package" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
                         <TextBlock Text="(set below)" FontSize="11" Foreground="#4A4A6A"
                                    HorizontalAlignment="Right"/>
                     </Grid>
 
-                    <TextBox Grid.Row="3" Background="#0a0a1a" Foreground="#e0e0e0"
-                             BorderBrush="#1a1a4e" BorderThickness="1"
+                    <TextBox Grid.Row="3" Background="{StaticResource SurfaceDarkBrush}" Foreground="{StaticResource TextPrimaryBrush}"
+                             BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1"
                              FontSize="12" Padding="6,4"
-                             CaretBrush="#00d2ff"
+                             CaretBrush="{StaticResource PrimaryAccentBrush}"
                              Text="{Binding PackageName, UpdateSourceTrigger=PropertyChanged}"
                              materialDesign:HintAssist.Hint="Package name"/>
                 </Grid>
@@ -289,7 +289,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Text="Quick Actions" FontSize="14" FontWeight="SemiBold"
-                               Foreground="#00d2ff" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                               Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center" Margin="0,0,16,0"/>
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
                         <Button Style="{StaticResource ActionBtn}" Command="{Binding ClearLogcatCommand}"
@@ -436,7 +436,7 @@
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <Ellipse Width="8" Height="8" Fill="#22C55E" Margin="0,0,6,0"/>
                     <TextBlock Text="{Binding StatusText, FallbackValue='Ready'}" FontSize="11"
-                               Foreground="#9E9E9E" VerticalAlignment="Center"/>
+                               Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">

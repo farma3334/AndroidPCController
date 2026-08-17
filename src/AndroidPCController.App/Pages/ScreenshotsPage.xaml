@@ -7,20 +7,20 @@
              xmlns:local="clr-namespace:AndroidPCController.App.Pages"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
-             Background="#1a1a2e">
+             Background="{StaticResource SurfaceDarkBrush}">
 
     <UserControl.Resources>
         <Style x:Key="PanelStyle" TargetType="Border">
-            <Setter Property="Background" Value="#16213e"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
         </Style>
 
         <Style x:Key="ActionBtn" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,6"/>
             <Setter Property="Margin" Value="3,0"/>
@@ -36,8 +36,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -46,8 +46,8 @@
         </Style>
 
         <Style x:Key="CaptureBtn" TargetType="Button">
-            <Setter Property="Background" Value="#00d2ff"/>
-            <Setter Property="Foreground" Value="#1a1a2e"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="16,8"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -86,7 +86,7 @@
             <Border Grid.Row="0" Style="{StaticResource PanelStyle}" Padding="12" Margin="0,0,0,8">
                 <Grid>
                     <TextBlock Text="Screenshots" FontSize="18" FontWeight="Bold"
-                               Foreground="#e0e0e0" VerticalAlignment="Center"/>
+                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                         <Button x:Name="CaptureButton" Style="{StaticResource CaptureBtn}"
                                 Command="{Binding CaptureCommand}">
@@ -139,15 +139,15 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border x:Name="thumbBorder" Width="180" Height="160" Margin="6"
-                                        CornerRadius="6" BorderBrush="#1a1a4e" BorderThickness="2"
+                                        CornerRadius="6" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="2"
                                         ClipToBounds="True" Cursor="Hand"
                                         MouseLeftButtonDown="Thumbnail_Click">
                                     <Border.Style>
                                         <Style TargetType="Border">
-                                            <Setter Property="Background" Value="#0f3460"/>
+                                            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                    <Setter Property="BorderBrush" Value="#00d2ff"/>
+                                                    <Setter Property="BorderBrush" Value="{StaticResource PrimaryAccentBrush}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -164,7 +164,7 @@
                                         <Border Background="#000000" Opacity="0.6" CornerRadius="0,0,6,6"
                                                 VerticalAlignment="Bottom" Padding="6,3">
                                             <TextBlock Text="{Binding CaptureTime, StringFormat='{}{0:HH:mm:ss}'}"
-                                                       FontSize="10" Foreground="#e0e0e0"/>
+                                                       FontSize="10" Foreground="{StaticResource TextPrimaryBrush}"/>
                                         </Border>
                                     </Grid>
                                 </Border>
@@ -185,18 +185,18 @@
                         </Style>
                     </StackPanel.Style>
                     <materialDesign:PackIcon Kind="CameraOff" Width="64" Height="64"
-                                             Foreground="#1a1a4e" HorizontalAlignment="Center"/>
-                    <TextBlock Text="No screenshots yet" FontSize="16" Foreground="#a0a0a0"
+                                             Foreground="{StaticResource BorderSubtleBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="No screenshots yet" FontSize="16" Foreground="{StaticResource TextSecondaryBrush}"
                                HorizontalAlignment="Center" Margin="0,12,0,4"/>
                     <TextBlock Text="Connect a device and click Capture" FontSize="12"
-                               Foreground="#a0a0a0" HorizontalAlignment="Center" Opacity="0.7"/>
+                               Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Opacity="0.7"/>
                 </StackPanel>
                 </Grid>
             </Border>
         </Grid>
 
         <GridSplitter Grid.Column="1" Width="6" HorizontalAlignment="Center"
-                      Background="#1a1a4e" Cursor="SizeWE"/>
+                      Background="{StaticResource BorderSubtleBrush}" Cursor="SizeWE"/>
 
         <Border Grid.Column="2" Style="{StaticResource PanelStyle}" Padding="16">
             <Grid>
@@ -206,9 +206,9 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="Preview" FontSize="16" FontWeight="Bold"
-                           Foreground="#e0e0e0" Margin="0,0,0,12"/>
+                           Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12"/>
 
-                <Border Grid.Row="1" Background="#0a0a1a" CornerRadius="6" ClipToBounds="True">
+                <Border Grid.Row="1" Background="{StaticResource SurfaceDarkBrush}" CornerRadius="6" ClipToBounds="True">
                     <Grid>
                         <Image x:Name="PreviewImage" Stretch="Uniform"
                                RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -225,9 +225,9 @@
                                 </Style>
                             </StackPanel.Style>
                             <materialDesign:PackIcon Kind="ImageOff" Width="48" Height="48"
-                                                     Foreground="#1a1a4e" HorizontalAlignment="Center"/>
+                                                     Foreground="{StaticResource BorderSubtleBrush}" HorizontalAlignment="Center"/>
                             <TextBlock Text="Select a screenshot" FontSize="13"
-                                       Foreground="#a0a0a0" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                                       Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,8,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -244,9 +244,9 @@
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
-                    <TextBlock x:Name="PreviewFileName" FontSize="12" Foreground="#a0a0a0"
+                    <TextBlock x:Name="PreviewFileName" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"
                                TextTrimming="CharacterEllipsis"/>
-                    <TextBlock x:Name="PreviewDimensions" FontSize="11" Foreground="#a0a0a0" Opacity="0.7"/>
+                    <TextBlock x:Name="PreviewDimensions" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Opacity="0.7"/>
                 </StackPanel>
             </Grid>
         </Border>

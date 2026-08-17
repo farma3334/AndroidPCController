@@ -7,20 +7,20 @@
              xmlns:local="clr-namespace:AndroidPCController.App.Pages"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
-             Background="#1a1a2e">
+             Background="{StaticResource SurfaceDarkBrush}">
 
     <UserControl.Resources>
         <Style x:Key="PanelStyle" TargetType="Border">
-            <Setter Property="Background" Value="#16213e"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
         </Style>
 
         <Style x:Key="ControlButton" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="12,6"/>
             <Setter Property="Margin" Value="4"/>
@@ -36,8 +36,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -52,7 +52,7 @@
             <Setter Property="Cursor" Value="Hand"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#0f3460"/>
+                    <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -74,7 +74,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="Devices" FontSize="18" FontWeight="Bold"
-                           Foreground="#e0e0e0" Margin="4,4,4,12"/>
+                           Foreground="{StaticResource TextPrimaryBrush}" Margin="4,4,4,12"/>
 
                 <Grid Grid.Row="1" Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
@@ -82,7 +82,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="SearchBox" Grid.Column="0"
-                             Background="#0f3460" Foreground="#e0e0e0" BorderBrush="#1a1a4e"
+                             Background="{StaticResource SurfaceLightBrush}" Foreground="{StaticResource TextPrimaryBrush}" BorderBrush="{StaticResource BorderSubtleBrush}"
                              BorderThickness="1" Padding="8,6" FontSize="13"
                              VerticalContentAlignment="Center"
                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
@@ -120,10 +120,10 @@
                                         <Ellipse Grid.Column="0" Width="10" Height="10" Margin="0,0,8,0">
                                             <Ellipse.Style>
                                                 <Style TargetType="Ellipse">
-                                                    <Setter Property="Fill" Value="#ff5252"/>
+                                                    <Setter Property="Fill" Value="{StaticResource DangerRedBrush}"/>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding ConnectionState}" Value="Connected">
-                                                            <Setter Property="Fill" Value="#00e676"/>
+                                                            <Setter Property="Fill" Value="{StaticResource SuccessGreenBrush}"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding ConnectionState}" Value="Unauthorized">
                                                             <Setter Property="Fill" Value="#ffc107"/>
@@ -135,13 +135,13 @@
 
                                         <StackPanel Grid.Column="2" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding Model}" FontSize="14" FontWeight="SemiBold"
-                                                       Foreground="#e0e0e0"/>
-                                            <TextBlock FontSize="11" Foreground="#a0a0a0">
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                            <TextBlock FontSize="11" Foreground="{StaticResource TextSecondaryBrush}">
                                                 <Run Text="{Binding Serial, Mode=OneWay}"/>
                                             </TextBlock>
                                         </StackPanel>
 
-                                        <TextBlock Grid.Column="3" FontSize="11" Foreground="#a0a0a0"
+                                        <TextBlock Grid.Column="3" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"
                                                    VerticalAlignment="Center">
                                             <Run Text="{Binding AndroidVersion, Mode=OneWay}"/>
                                         </TextBlock>
@@ -155,7 +155,7 @@
         </Border>
 
         <GridSplitter Grid.Column="1" Width="6" HorizontalAlignment="Center"
-                      Background="#1a1a4e" Cursor="SizeWE"/>
+                      Background="{StaticResource BorderSubtleBrush}" Cursor="SizeWE"/>
 
         <Border Grid.Column="2" Style="{StaticResource PanelStyle}" Padding="16">
             <Grid>
@@ -165,7 +165,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="Device Details" FontSize="18" FontWeight="Bold"
-                           Foreground="#e0e0e0" Margin="0,0,0,12"/>
+                           Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12"/>
 
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                     <StackPanel DataContext="{Binding SelectedDevice}">
@@ -179,16 +179,16 @@
                             </Style>
                         </StackPanel.Style>
 
-                        <Border Width="64" Height="64" CornerRadius="32" Background="#0f3460"
+                        <Border Width="64" Height="64" CornerRadius="32" Background="{StaticResource SurfaceLightBrush}"
                                 HorizontalAlignment="Center" Margin="0,0,0,12">
                             <materialDesign:PackIcon Kind="Cellphone" Width="36" Height="36"
                                                      VerticalAlignment="Center" HorizontalAlignment="Center"
-                                                     Foreground="#00d2ff"/>
+                                                     Foreground="{StaticResource PrimaryAccentBrush}"/>
                         </Border>
 
                         <TextBlock Text="{Binding Model}" FontSize="18" FontWeight="Bold"
-                                   Foreground="#e0e0e0" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding Manufacturer}" FontSize="13" Foreground="#a0a0a0"
+                                   Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding Manufacturer}" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"
                                    HorizontalAlignment="Center" Margin="0,2,0,16"/>
 
                         <Grid Margin="0,0,0,8">
@@ -196,16 +196,16 @@
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Serial" FontSize="12" Foreground="#a0a0a0"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Serial}" FontSize="12" Foreground="#e0e0e0"/>
+                            <TextBlock Grid.Column="0" Text="Serial" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Serial}" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
                         </Grid>
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Android" FontSize="12" Foreground="#a0a0a0"/>
-                            <TextBlock Grid.Column="1" FontSize="12" Foreground="#e0e0e0">
+                            <TextBlock Grid.Column="0" Text="Android" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="1" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}">
                                 <Run Text="{Binding AndroidVersion, Mode=OneWay}"/>
                                 <Run Text=" (API "/>
                                 <Run Text="{Binding ApiLevel, Mode=OneWay}"/>
@@ -217,16 +217,16 @@
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Connection" FontSize="12" Foreground="#a0a0a0"/>
-                            <TextBlock Grid.Column="1" Text="{Binding ConnectionType}" FontSize="12" Foreground="#e0e0e0"/>
+                            <TextBlock Grid.Column="0" Text="Connection" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding ConnectionType}" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
                         </Grid>
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Screen" FontSize="12" Foreground="#a0a0a0"/>
-                            <TextBlock Grid.Column="1" FontSize="12" Foreground="#e0e0e0">
+                            <TextBlock Grid.Column="0" Text="Screen" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="1" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}">
                                 <Run Text="{Binding ScreenWidth, Mode=OneWay}"/>
                                 <Run Text="x"/>
                                 <Run Text="{Binding ScreenHeight, Mode=OneWay}"/>
@@ -240,8 +240,8 @@
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Battery" FontSize="12" Foreground="#a0a0a0"/>
-                            <TextBlock Grid.Column="1" FontSize="12" Foreground="#e0e0e0">
+                            <TextBlock Grid.Column="0" Text="Battery" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="1" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}">
                                 <Run Text="{Binding BatteryLevel, Mode=OneWay}"/>
                                 <Run Text="% "/>
                                 <Run Text="{Binding BatteryState, Mode=OneWay}"/>
@@ -252,36 +252,36 @@
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="IP Address" FontSize="12" Foreground="#a0a0a0"/>
-                            <TextBlock Grid.Column="1" Text="{Binding IpAddress}" FontSize="12" Foreground="#e0e0e0"/>
+                            <TextBlock Grid.Column="0" Text="IP Address" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding IpAddress}" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
                         </Grid>
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Chipset" FontSize="12" Foreground="#a0a0a0"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Chipset}" FontSize="12" Foreground="#e0e0e0"/>
+                            <TextBlock Grid.Column="0" Text="Chipset" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Chipset}" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
                         </Grid>
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Total RAM" FontSize="12" Foreground="#a0a0a0"/>
-                            <TextBlock Grid.Column="1" Text="{Binding TotalRam}" FontSize="12" Foreground="#e0e0e0"/>
+                            <TextBlock Grid.Column="0" Text="Total RAM" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding TotalRam}" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
                         </Grid>
                         <Grid Margin="0,0,0,16">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Last Seen" FontSize="12" Foreground="#a0a0a0"/>
+                            <TextBlock Grid.Column="0" Text="Last Seen" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
                             <TextBlock Grid.Column="1" Text="{Binding LastSeen, StringFormat='{}{0:g}'}"
-                                       FontSize="12" Foreground="#e0e0e0"/>
+                                       FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
                         </Grid>
 
-                        <Separator Background="#1a1a4e" Margin="0,0,0,12"/>
+                        <Separator Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,12"/>
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <Button Style="{StaticResource ControlButton}" Padding="16,8"
@@ -317,7 +317,7 @@
                             </Button>
                         </StackPanel>
 
-                        <TextBlock Text="{Binding StatusText}" FontSize="12" Foreground="#00d2ff"
+                        <TextBlock Text="{Binding StatusText}" FontSize="12" Foreground="{StaticResource PrimaryAccentBrush}"
                                    HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,12,0,0"/>
                     </StackPanel>
                 </ScrollViewer>
@@ -334,9 +334,9 @@
                         </Style>
                     </StackPanel.Style>
                     <materialDesign:PackIcon Kind="Devices" Width="48" Height="48"
-                                             Foreground="#1a1a4e" HorizontalAlignment="Center"/>
+                                             Foreground="{StaticResource BorderSubtleBrush}" HorizontalAlignment="Center"/>
                     <TextBlock Text="Select a device to view details" FontSize="13"
-                               Foreground="#a0a0a0" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                               Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,8,0,0"/>
                 </StackPanel>
             </Grid>
         </Border>

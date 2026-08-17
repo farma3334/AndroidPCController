@@ -1,7 +1,9 @@
 using System.IO;
+using System.Linq;
 using AndroidPCController.Core.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MaterialDesignThemes.Wpf;
 
 namespace AndroidPCController.App.ViewModels;
 
@@ -68,6 +70,25 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private bool _debugLogging;
 
+    // Input settings
+    [ObservableProperty]
+    private double _mouseSensitivity = 1.0;
+
+    [ObservableProperty]
+    private double _scrollSensitivity = 1.0;
+
+    [ObservableProperty]
+    private int _doubleTapTimeout = 300;
+
+    [ObservableProperty]
+    private int _longPressDuration = 500;
+
+    [ObservableProperty]
+    private bool _showTouchFeedback = true;
+
+    [ObservableProperty]
+    private bool _enableGestures = true;
+
     [ObservableProperty]
     private string _statusMessage = string.Empty;
 
@@ -102,10 +123,21 @@ public partial class SettingsViewModel : ObservableObject
         DefaultCodec = _settingsService.Get(SettingKeys.DefaultCodec, "H264");
         ClipboardSync = _settingsService.Get(SettingKeys.ClipboardSync, true);
         NotificationSync = _settingsService.Get(SettingKeys.NotificationSync, false);
+        UsageAnalytics = _settingsService.Get(SettingKeys.UsageAnalytics, false);
+        CrashReports = _settingsService.Get(SettingKeys.CrashReports, true);
+        DeviceHistory = _settingsService.Get(SettingKeys.DeviceHistory, true);
         DownloadDirectory = _settingsService.Get(SettingKeys.DownloadDirectory,
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", "AndroidPCController"));
         AdbPath = _settingsService.Get(SettingKeys.AdbPath, string.Empty);
         DebugLogging = _settingsService.Get(SettingKeys.DebugLogging, false);
+
+        // Input settings
+        MouseSensitivity = _settingsService.Get(SettingKeys.MouseSensitivity, 1.0);
+        ScrollSensitivity = _settingsService.Get(SettingKeys.ScrollSensitivity, 1.0);
+        DoubleTapTimeout = _settingsService.Get(SettingKeys.DoubleTapTimeout, 300);
+        LongPressDuration = _settingsService.Get(SettingKeys.LongPressDuration, 500);
+        ShowTouchFeedback = _settingsService.Get(SettingKeys.ShowTouchFeedback, true);
+        EnableGestures = _settingsService.Get(SettingKeys.EnableGestures, true);
     }
 
     [RelayCommand]
@@ -125,9 +157,20 @@ public partial class SettingsViewModel : ObservableObject
             _settingsService.Set(SettingKeys.DefaultCodec, DefaultCodec);
             _settingsService.Set(SettingKeys.ClipboardSync, ClipboardSync);
             _settingsService.Set(SettingKeys.NotificationSync, NotificationSync);
+            _settingsService.Set(SettingKeys.UsageAnalytics, UsageAnalytics);
+            _settingsService.Set(SettingKeys.CrashReports, CrashReports);
+            _settingsService.Set(SettingKeys.DeviceHistory, DeviceHistory);
             _settingsService.Set(SettingKeys.DownloadDirectory, DownloadDirectory);
             _settingsService.Set(SettingKeys.AdbPath, AdbPath);
             _settingsService.Set(SettingKeys.DebugLogging, DebugLogging);
+
+            // Input settings
+            _settingsService.Set(SettingKeys.MouseSensitivity, MouseSensitivity);
+            _settingsService.Set(SettingKeys.ScrollSensitivity, ScrollSensitivity);
+            _settingsService.Set(SettingKeys.DoubleTapTimeout, DoubleTapTimeout);
+            _settingsService.Set(SettingKeys.LongPressDuration, LongPressDuration);
+            _settingsService.Set(SettingKeys.ShowTouchFeedback, ShowTouchFeedback);
+            _settingsService.Set(SettingKeys.EnableGestures, EnableGestures);
 
             _settingsService.Save();
             HasUnsavedChanges = false;
@@ -136,11 +179,36 @@ public partial class SettingsViewModel : ObservableObject
 
             if (MinimizeToTray) _trayIconService.Enable();
             else _trayIconService.Disable();
+
+            // Apply theme
+            ApplyTheme(Theme);
         }
         catch (Exception ex)
         {
             StatusMessage = $"Failed to save: {ex.Message}";
             _logService.Error("Settings", $"Save failed: {ex.Message}", ex);
+        }
+    }
+
+    private void ApplyTheme(string theme)
+    {
+        try
+        {
+            var app = System.Windows.Application.Current;
+            var bundledTheme = app.Resources.MergedDictionaries
+                .OfType<MaterialDesignThemes.Wpf.BundledTheme>()
+                .FirstOrDefault();
+            
+            if (bundledTheme != null)
+            {
+                bundledTheme.BaseTheme = theme == "Light" 
+                    ? MaterialDesignThemes.Wpf.BaseTheme.Light 
+                    : MaterialDesignThemes.Wpf.BaseTheme.Dark;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logService.Error("Settings", $"Failed to apply theme: {ex.Message}", ex);
         }
     }
 
@@ -165,6 +233,14 @@ public partial class SettingsViewModel : ObservableObject
         DownloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", "AndroidPCController");
         AdbPath = string.Empty;
         DebugLogging = false;
+
+        // Input settings
+        MouseSensitivity = 1.0;
+        ScrollSensitivity = 1.0;
+        DoubleTapTimeout = 300;
+        LongPressDuration = 500;
+        ShowTouchFeedback = true;
+        EnableGestures = true;
 
         HasUnsavedChanges = true;
         StatusMessage = "Defaults applied. Click Save to confirm.";
@@ -231,4 +307,11 @@ public partial class SettingsViewModel : ObservableObject
     partial void OnDownloadDirectoryChanged(string value) => HasUnsavedChanges = true;
     partial void OnAdbPathChanged(string value) => HasUnsavedChanges = true;
     partial void OnDebugLoggingChanged(bool value) => HasUnsavedChanges = true;
+
+    partial void OnMouseSensitivityChanged(double value) => HasUnsavedChanges = true;
+    partial void OnScrollSensitivityChanged(double value) => HasUnsavedChanges = true;
+    partial void OnDoubleTapTimeoutChanged(int value) => HasUnsavedChanges = true;
+    partial void OnLongPressDurationChanged(int value) => HasUnsavedChanges = true;
+    partial void OnShowTouchFeedbackChanged(bool value) => HasUnsavedChanges = true;
+    partial void OnEnableGesturesChanged(bool value) => HasUnsavedChanges = true;
 }

@@ -6,7 +6,7 @@
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
         ResizeMode="NoResize"
-        Background="#1a1a2e"
+        Background="{StaticResource SurfaceDarkBrush}"
         ShowInTaskbar="False">
     <Grid Margin="16">
         <Grid.RowDefinitions>
@@ -16,19 +16,19 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="Device clipboard — edit and send back to the phone"
-                   FontSize="13" Foreground="#a0a0a0" Margin="0,0,0,10"/>
+                   FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,10"/>
 
         <TextBox x:Name="ClipboardTextBox" Grid.Row="1"
                  TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
-                 Background="#0f3460" Foreground="#e0e0e0" BorderBrush="#1a1a4e"
+                 Background="{StaticResource SurfaceLightBrush}" Foreground="{StaticResource TextPrimaryBrush}" BorderBrush="{StaticResource BorderSubtleBrush}"
                  FontSize="13" Padding="8"/>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
             <Button Content="Copy to phone" Width="120" Margin="0,0,8,0" Padding="8,6"
-                    Background="#00d2ff" Foreground="#1a1a2e" FontWeight="SemiBold" Cursor="Hand"
+                    Background="{StaticResource PrimaryAccentBrush}" Foreground="{StaticResource SurfaceDarkBrush}" FontWeight="SemiBold" Cursor="Hand"
                     Click="SendButton_Click"/>
             <Button Content="Close" Width="90" Padding="8,6"
-                    Background="#0f3460" Foreground="#e0e0e0" Cursor="Hand"
+                    Background="{StaticResource SurfaceLightBrush}" Foreground="{StaticResource TextPrimaryBrush}" Cursor="Hand"
                     Click="CloseButton_Click"/>
         </StackPanel>
     </Grid>

@@ -8,15 +8,15 @@
              xmlns:cvt="clr-namespace:AndroidPCController.App.Converters"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
-             Background="#1a1a2e">
+             Background="{StaticResource SurfaceDarkBrush}">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
         <cvt:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisConverter"/>
         <Style x:Key="ActionBtn" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,6"/>
             <Setter Property="Margin" Value="3,0"/>
@@ -52,12 +52,12 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <TextBlock Text="Notifications" FontSize="22" FontWeight="Bold" Foreground="#e0e0e0"/>
+            <TextBlock Text="Notifications" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
             <TextBlock Text="{Binding StatusText}" Margin="16,6,0,0" VerticalAlignment="Center"
-                       Foreground="#a0a0a0" FontSize="12"/>
+                       Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
             <ProgressBar Grid.Row="0" IsIndeterminate="True" Width="70" Height="4"
                          Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisConverter}}"
-                         Foreground="#00d2ff" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                         Foreground="{StaticResource PrimaryAccentBrush}" Margin="12,0,0,0" VerticalAlignment="Center"/>
             <Button Grid.Row="0" Style="{StaticResource ActionBtn}" Margin="16,0,0,0"
                     Command="{Binding RefreshCommand}">
                 <StackPanel Orientation="Horizontal">
@@ -100,7 +100,7 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="#16213e" BorderBrush="#1a1a4e" BorderThickness="1" CornerRadius="8" Padding="14,10">
+                    <Border Background="{StaticResource SurfaceCardBrush}" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="8" Padding="14,10">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="42"/>
@@ -116,14 +116,14 @@
 
                             <StackPanel Grid.Column="1" Margin="6,0,12,0">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding AppName}" FontWeight="Bold" Foreground="#e0e0e0" FontSize="13"/>
+                                    <TextBlock Text="{Binding AppName}" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" FontSize="13"/>
                                     <Border Background="#2a2a5a" CornerRadius="3" Padding="5,1" Margin="8,0,0,0"
                                             Visibility="{Binding IsOngoing, Converter={StaticResource BoolToVisConverter}}">
-                                        <TextBlock Text="ONGOING" FontSize="9" Foreground="#00d2ff" VerticalAlignment="Center"/>
+                                        <TextBlock Text="ONGOING" FontSize="9" Foreground="{StaticResource PrimaryAccentBrush}" VerticalAlignment="Center"/>
                                     </Border>
                                 </StackPanel>
                                 <TextBlock Text="{Binding Title}" Foreground="#ffffff" FontSize="13" TextWrapping="Wrap" Margin="0,4,0,0"/>
-                                <TextBlock Text="{Binding Text}" Foreground="#a0a0a0" FontSize="12" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                <TextBlock Text="{Binding Text}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,2,0,0"/>
                             </StackPanel>
 
                             <TextBlock Grid.Column="2" Text="{Binding DisplayTime}" Foreground="#707090" FontSize="11"

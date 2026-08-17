@@ -7,20 +7,20 @@
              xmlns:local="clr-namespace:AndroidPCController.App.Pages"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
-             Background="#1a1a2e">
+             Background="{StaticResource SurfaceDarkBrush}">
 
     <UserControl.Resources>
         <Style x:Key="PanelStyle" TargetType="Border">
-            <Setter Property="Background" Value="#16213e"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
         </Style>
 
         <Style x:Key="FilterBtn" TargetType="ToggleButton">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Margin" Value="3,0"/>
@@ -36,8 +36,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="#0f4f8f"/>
@@ -49,9 +49,9 @@
         </Style>
 
         <Style x:Key="ActionBtn" TargetType="Button">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,6"/>
             <Setter Property="Margin" Value="3,0"/>
@@ -67,8 +67,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00d2ff"/>
-                                <Setter Property="Foreground" Value="#1a1a2e"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource SurfaceDarkBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -77,9 +77,9 @@
         </Style>
 
         <Style x:Key="ComboStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="#0f3460"/>
-            <Setter Property="Foreground" Value="#e0e0e0"/>
-            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,4"/>
         </Style>
@@ -108,7 +108,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Text="Logs" FontSize="18" FontWeight="Bold"
-                               Foreground="#e0e0e0" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,16,0"/>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <ToggleButton x:Name="FilterAll" Style="{StaticResource FilterBtn}"
@@ -124,7 +124,7 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="Category:" FontSize="12" Foreground="#a0a0a0"
+                        <TextBlock Text="Category:" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"
                                    VerticalAlignment="Center" Margin="0,0,8,0"/>
                         <ComboBox x:Name="CategoryFilter" Style="{StaticResource ComboStyle}" Width="160"
                                   ItemsSource="{Binding AvailableCategories}"
@@ -140,7 +140,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="Live" FontSize="12" Foreground="#a0a0a0"
+                        <TextBlock Text="Live" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"
                                    VerticalAlignment="Center" Margin="0,0,8,0"/>
                         <ToggleButton x:Name="LiveToggle" Style="{StaticResource FilterBtn}"
                                       IsChecked="{Binding IsLive}" Width="50"/>
@@ -169,19 +169,19 @@
         <Border Grid.Row="1" Style="{StaticResource PanelStyle}" Padding="0" ClipToBounds="True">
             <Grid>
             <ListView x:Name="LogListView" ItemsSource="{Binding Logs}"
-                      Background="Transparent" Foreground="#e0e0e0"
+                      Background="Transparent" Foreground="{StaticResource TextPrimaryBrush}"
                       BorderThickness="0" FontSize="12"
                       SelectionMode="Single">
                 <ListView.Resources>
                     <Style TargetType="ListViewItem">
                         <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="#e0e0e0"/>
+                        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
                         <Setter Property="Padding" Value="10,6"/>
                         <Setter Property="BorderThickness" Value="0"/>
                         <Setter Property="BorderBrush" Value="Transparent"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#0f3460"/>
+                                <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -190,11 +190,11 @@
                     <GridView>
                         <GridView.ColumnHeaderContainerStyle>
                             <Style TargetType="GridViewColumnHeader">
-                                <Setter Property="Background" Value="#0f3460"/>
-                                <Setter Property="Foreground" Value="#a0a0a0"/>
+                                <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
                                 <Setter Property="FontSize" Value="11"/>
                                 <Setter Property="Padding" Value="8,5"/>
-                                <Setter Property="BorderBrush" Value="#1a1a4e"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}"/>
                                 <Setter Property="BorderThickness" Value="0,0,0,1"/>
                                 <Setter Property="HorizontalContentAlignment" Value="Left"/>
                             </Style>
@@ -204,7 +204,7 @@
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Timestamp, StringFormat='{}{0:HH:mm:ss.fff}'}"
                                                FontFamily="Cascadia Code,Consolas,Courier New"
-                                               Foreground="#a0a0a0"/>
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -214,22 +214,22 @@
                                     <Border CornerRadius="4" Padding="6,2" HorizontalAlignment="Left">
                                         <Border.Style>
                                             <Style TargetType="Border">
-                                                <Setter Property="Background" Value="#0f3460"/>
+                                                <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Level}" Value="Debug">
-                                                        <Setter Property="Background" Value="#1a1a4e"/>
+                                                        <Setter Property="Background" Value="{StaticResource BorderSubtleBrush}"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Level}" Value="Information">
-                                                        <Setter Property="Background" Value="#00d2ff20"/>
+                                                        <Setter Property="Background" Value="#208B5CF6"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Level}" Value="Warning">
                                                         <Setter Property="Background" Value="#ffc10730"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Level}" Value="Error">
-                                                        <Setter Property="Background" Value="#ff525230"/>
+                                                        <Setter Property="Background" Value="#30EF4444"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Level}" Value="Critical">
-                                                        <Setter Property="Background" Value="#ff525250"/>
+                                                        <Setter Property="Background" Value="#50EF4444"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -238,15 +238,15 @@
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Text" Value="TRACE"/>
-                                                    <Setter Property="Foreground" Value="#a0a0a0"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Level}" Value="Debug">
                                                             <Setter Property="Text" Value="DEBUG"/>
-                                                            <Setter Property="Foreground" Value="#a0a0a0"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Level}" Value="Information">
                                                             <Setter Property="Text" Value="INFO"/>
-                                                            <Setter Property="Foreground" Value="#00d2ff"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource PrimaryAccentBrush}"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Level}" Value="Warning">
                                                             <Setter Property="Text" Value="WARN"/>
@@ -254,11 +254,11 @@
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Level}" Value="Error">
                                                             <Setter Property="Text" Value="ERROR"/>
-                                                            <Setter Property="Foreground" Value="#ff5252"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource DangerRedBrush}"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Level}" Value="Critical">
                                                             <Setter Property="Text" Value="CRIT"/>
-                                                            <Setter Property="Foreground" Value="#ff5252"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource DangerRedBrush}"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -271,7 +271,7 @@
                         <GridViewColumn Header="Category" Width="120">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Category}" Foreground="#a0a0a0"/>
+                                    <TextBlock Text="{Binding Category}" Foreground="{StaticResource TextSecondaryBrush}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -290,11 +290,11 @@
             <StackPanel x:Name="LogEmptyState" VerticalAlignment="Center" HorizontalAlignment="Center"
                         Visibility="Collapsed">
                 <materialDesign:PackIcon Kind="TextBoxMultipleOutline" Width="64" Height="64"
-                                         Foreground="#1a1a4e" HorizontalAlignment="Center"/>
-                <TextBlock Text="No log entries" FontSize="16" Foreground="#a0a0a0"
+                                         Foreground="{StaticResource BorderSubtleBrush}" HorizontalAlignment="Center"/>
+                <TextBlock Text="No log entries" FontSize="16" Foreground="{StaticResource TextSecondaryBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,4"/>
                 <TextBlock Text="Logs will appear here in real-time" FontSize="12"
-                           Foreground="#a0a0a0" HorizontalAlignment="Center" Opacity="0.7"/>
+                           Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Opacity="0.7"/>
             </StackPanel>
 
             <Border x:Name="ExceptionPanel" Grid.Row="1"
@@ -308,16 +308,16 @@
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Margin="0,0,0,8">
                         <TextBlock Text="Exception Details" FontSize="13" FontWeight="SemiBold"
-                                   Foreground="#ff5252" VerticalAlignment="Center"/>
+                                   Foreground="{StaticResource DangerRedBrush}" VerticalAlignment="Center"/>
                         <Button HorizontalAlignment="Right" Background="Transparent"
                                 BorderThickness="0" Cursor="Hand" Padding="4"
                                 Click="CloseExceptionPanel_Click">
-                            <materialDesign:PackIcon Kind="Close" Width="14" Height="14" Foreground="#a0a0a0"/>
+                            <materialDesign:PackIcon Kind="Close" Width="14" Height="14" Foreground="{StaticResource TextSecondaryBrush}"/>
                         </Button>
                     </Grid>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                         <TextBlock x:Name="ExceptionText" FontFamily="Cascadia Code,Consolas,Courier New"
-                                   FontSize="12" Foreground="#ff5252" TextWrapping="Wrap"/>
+                                   FontSize="12" Foreground="{StaticResource DangerRedBrush}" TextWrapping="Wrap"/>
                     </ScrollViewer>
                 </Grid>
             </Border>
