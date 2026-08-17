@@ -73,6 +73,8 @@ public partial class App : Application
         services.AddSingleton<ISecurityService, SecurityService>();
         services.AddSingleton<IAdbClient, AdbClient>();
         services.AddSingleton<IDeviceManager, DeviceManager>();
+        services.AddSingleton<Services.ScrcpyManager>();
+        services.AddSingleton<Services.TrayIconService>();
 
         services.AddTransient<IDeviceSession>(sp =>
         {
@@ -85,6 +87,7 @@ public partial class App : Application
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<DevicesViewModel>();
         services.AddTransient<ControllerViewModel>();
+        services.AddTransient<AutomationViewModel>();
         services.AddTransient<FilesViewModel>();
         services.AddTransient<AppsViewModel>();
         services.AddTransient<TerminalViewModel>();
@@ -93,6 +96,8 @@ public partial class App : Application
         services.AddTransient<ScreenshotsViewModel>();
         services.AddTransient<ScreenRecorderViewModel>();
         services.AddTransient<DeveloperViewModel>();
+        services.AddTransient<PhoneDesktopViewModel>();
+        services.AddTransient<NotificationsViewModel>();
         services.AddSingleton<MiniPhoneViewModel>();
     }
 

@@ -7,8 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class ScreenshotsViewModel : IAsyncDisposable
+public partial class ScreenshotsViewModel : ObservableObject, IAsyncDisposable
 {
     private readonly IDeviceManager _deviceManager;
     private readonly ISettingsService _settingsService;
@@ -48,6 +47,7 @@ public partial class ScreenshotsViewModel : IAsyncDisposable
         _deviceManager.DeviceConnected += OnDeviceConnected;
         _deviceManager.DeviceDisconnected += OnDeviceDisconnected;
 
+        SetSession(_deviceManager.ActiveSessions.FirstOrDefault());
         LoadExistingScreenshots();
     }
 
@@ -105,26 +105,69 @@ public partial class ScreenshotsViewModel : IAsyncDisposable
     [RelayCommand(CanExecute = nameof(HasSelectedScreenshot))]
     private async Task DeleteAsync()
     {
-        if (SelectedScreenshot is null) return;
+        var toDelete = Screenshots.Where(s => s.IsSelected).ToList();
+        if (toDelete.Count == 0 && SelectedScreenshot is not null)
+            toDelete.Add(SelectedScreenshot);
+        if (toDelete.Count == 0) return;
 
         try
         {
-            if (File.Exists(SelectedScreenshot.FilePath))
-                File.Delete(SelectedScreenshot.FilePath);
+            foreach (var item in toDelete)
+            {
+                if (File.Exists(item.FilePath))
+                    File.Delete(item.FilePath);
 
-            var item = SelectedScreenshot;
-            Screenshots.Remove(item);
+                Screenshots.Remove(item);
 
-            if (PreviewImage is not null && SelectedScreenshot == item)
-                PreviewImage = null;
+                if (PreviewImage is not null && SelectedScreenshot == item)
+                    PreviewImage = null;
 
-            StatusText = $"Deleted: {item.FileName}";
-            _logService.Information("Screenshots", $"Deleted: {item.FilePath}");
+                _logService.Information("Screenshots", $"Deleted: {item.FilePath}");
+            }
+
+            StatusText = $"Deleted {toDelete.Count} screenshot(s)";
         }
         catch (Exception ex)
         {
             StatusText = $"Delete failed: {ex.Message}";
             _logService.Error("Screenshots", $"Delete failed: {ex.Message}", ex);
+        }
+
+        await Task.CompletedTask;
+    }
+
+    [RelayCommand]
+    private void SelectAll()
+    {
+        foreach (var item in Screenshots)
+        {
+            item.IsSelected = true;
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelectedScreenshot))]
+    private async Task OpenSelectedAsync()
+    {
+        if (SelectedScreenshot is null) return;
+
+        try
+        {
+            if (!File.Exists(SelectedScreenshot.FilePath))
+            {
+                StatusText = "File not found.";
+                return;
+            }
+
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = SelectedScreenshot.FilePath,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            StatusText = $"Failed to open: {ex.Message}";
+            _logService.Error("Screenshots", $"Open failed: {ex.Message}", ex);
         }
 
         await Task.CompletedTask;
@@ -258,10 +301,17 @@ public partial class ScreenshotsViewModel : IAsyncDisposable
     }
 }
 
-public sealed class ScreenshotItem
+public partial class ScreenshotItem : ObservableObject
 {
     public required string FilePath { get; init; }
     public required string FileName { get; init; }
     public DateTime CapturedAt { get; init; }
     public long FileSize { get; init; }
+
+    public string ThumbnailPath => FilePath;
+
+    public DateTime CaptureTime => CapturedAt;
+
+    [ObservableProperty]
+    private bool _isSelected;
 }

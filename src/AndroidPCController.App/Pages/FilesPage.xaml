@@ -109,7 +109,7 @@
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource ActionBtn}"
-                            Command="{Binding DeleteSelectedCommand}">
+                            Command="{Binding DeleteCommand}">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Delete" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
                             <TextBlock Text="Delete" FontSize="12" VerticalAlignment="Center"/>

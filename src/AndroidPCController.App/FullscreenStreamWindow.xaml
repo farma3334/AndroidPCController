@@ -1,0 +1,12 @@
+<Window x:Class="AndroidPCController.App.FullscreenStreamWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:AndroidPCController.App.Controls"
+        WindowStyle="None" ResizeMode="NoResize" WindowState="Maximized"
+        Topmost="True" Background="#000000" ShowInTaskbar="False"
+        KeyDown="Window_KeyDown" Closed="Window_Closed"
+        Title="Phone Screen (press Esc to exit)">
+    <Grid>
+        <controls:ScrcpyHost x:Name="Host"/>
+    </Grid>
+</Window>

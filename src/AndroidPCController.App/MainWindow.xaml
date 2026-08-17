@@ -151,6 +151,24 @@
 
                                 <RadioButton Style="{StaticResource SidebarButtonStyle}"
                                              Command="{Binding NavigateCommand}"
+                                             CommandParameter="Notifications">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE7C5;" FontFamily="Segoe MDL2 Assets" Width="24" VerticalAlignment="Center" />
+                                        <TextBlock Text="Notifications" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <RadioButton Style="{StaticResource SidebarButtonStyle}"
+                                             Command="{Binding NavigateCommand}"
+                                             CommandParameter="Automation">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE945;" FontFamily="Segoe MDL2 Assets" Width="24" VerticalAlignment="Center" />
+                                        <TextBlock Text="Automation" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <RadioButton Style="{StaticResource SidebarButtonStyle}"
+                                             Command="{Binding NavigateCommand}"
                                              CommandParameter="Files">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="&#xE7C3;" FontFamily="Segoe MDL2 Assets" Width="24" VerticalAlignment="Center" />

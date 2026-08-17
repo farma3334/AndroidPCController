@@ -6,15 +6,13 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class DeveloperViewModel : IAsyncDisposable
+public partial class DeveloperViewModel : ObservableObject, IAsyncDisposable
 {
     private readonly IAdbClient _adbClient;
     private readonly IDeviceManager _deviceManager;
     private readonly ILogService _logService;
     private bool _disposed;
     private CancellationTokenSource? _logcatCts;
-    private CancellationTokenSource? _recordingCts;
 
     [ObservableProperty]
     private DeviceInfo? _selectedDevice;
@@ -66,6 +64,14 @@ public partial class DeveloperViewModel : IAsyncDisposable
 
         _deviceManager.DeviceConnected += OnDeviceConnected;
         _deviceManager.DeviceDisconnected += OnDeviceDisconnected;
+
+        var firstSession = _deviceManager.ActiveSessions.FirstOrDefault();
+        if (firstSession is not null)
+        {
+            SelectedDevice = firstSession.DeviceInfo;
+            IsDeviceConnected = true;
+            _ = LoadDeviceInfoAsync();
+        }
     }
 
     [RelayCommand]
@@ -215,36 +221,39 @@ public partial class DeveloperViewModel : IAsyncDisposable
     {
         if (SelectedDevice is null) return;
 
-        if (IsRecording)
+        var session = _deviceManager.GetSession(SelectedDevice.Serial);
+        if (session is null)
         {
-            _recordingCts?.Cancel();
-            IsRecording = false;
-            StatusText = "Recording stopped";
+            StatusText = "Connect the device first to record the screen.";
             return;
         }
 
         try
         {
-            IsRecording = true;
-            _recordingCts = new CancellationTokenSource();
-            StatusText = "Recording screen...";
-
-            var dialog = new Microsoft.Win32.SaveFileDialog
+            if (IsRecording)
             {
-                Title = "Save Screen Recording",
-                Filter = "MP4 files (*.mp4)|*.mp4|All files (*.*)|*.*",
-                FileName = $"recording_{DateTime.Now:yyyyMMdd_HHmmss}.mp4"
+                await session.ScreenRecorder.StopAsync();
+                IsRecording = false;
+                StatusText = "Recording stopped and saved";
+                _logService.Information("Developer", "Screen recording stopped");
+                return;
+            }
+
+            var settings = new RecordingSettings
+            {
+                Fps = 30,
+                Bitrate = 12_000_000,
+                Codec = "H264",
+                RecordAudio = false,
+                OutputDirectory = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    "Downloads", "AndroidPCController")
             };
 
-            if (dialog.ShowDialog() == true)
-            {
-                StatusText = "Recording... Click again to stop";
-                _logService.Information("Developer", "Screen recording started");
-            }
-            else
-            {
-                IsRecording = false;
-            }
+            await session.ScreenRecorder.StartAsync(settings);
+            IsRecording = true;
+            StatusText = "Recording... Click again to stop";
+            _logService.Information("Developer", "Screen recording started");
         }
         catch (Exception ex)
         {
@@ -271,9 +280,9 @@ public partial class DeveloperViewModel : IAsyncDisposable
 
             if (dialog.ShowDialog() == true)
             {
-                await _adbClient.ExecuteCommandAsync(SelectedDevice.Serial, "bugreport");
+                await _adbClient.PullBugReportAsync(SelectedDevice.Serial, dialog.FileName);
                 StatusText = "Bug report pulled successfully";
-                _logService.Information("Developer", "Bug report pulled");
+                _logService.Information("Developer", $"Bug report pulled to {dialog.FileName}");
             }
         }
         catch (Exception ex)
@@ -468,8 +477,6 @@ public partial class DeveloperViewModel : IAsyncDisposable
 
         _logcatCts?.Cancel();
         _logcatCts?.Dispose();
-        _recordingCts?.Cancel();
-        _recordingCts?.Dispose();
 
         _deviceManager.DeviceConnected -= OnDeviceConnected;
         _deviceManager.DeviceDisconnected -= OnDeviceDisconnected;

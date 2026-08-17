@@ -6,8 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class LogsViewModel : IAsyncDisposable
+public partial class LogsViewModel : ObservableObject, IAsyncDisposable
 {
     private readonly ILogService _logService;
     private bool _disposed;
@@ -33,10 +32,78 @@ public partial class LogsViewModel : IAsyncDisposable
     [ObservableProperty]
     private int _warningCount;
 
+    [ObservableProperty]
+    private bool _filterAll = true;
+
+    [ObservableProperty]
+    private bool _filterDebug;
+
+    [ObservableProperty]
+    private bool _filterInfo;
+
+    [ObservableProperty]
+    private bool _filterWarning;
+
+    [ObservableProperty]
+    private bool _filterError;
+
+    [ObservableProperty]
+    private ObservableCollection<string> _availableCategories = [];
+
+    [ObservableProperty]
+    private string? _selectedCategory;
+
     public LogsViewModel(ILogService logService)
     {
         _logService = logService;
         _logService.LogAdded += OnLogAdded;
+        SelectedCategory = "All";
+        _ = LoadInitialLogsAsync();
+    }
+
+    partial void OnFilterAllChanged(bool value)
+    {
+        if (!value) return;
+        FilterDebug = FilterInfo = FilterWarning = FilterError = false;
+        FilterLevel = null;
+        _ = LoadInitialLogsAsync();
+    }
+
+    partial void OnFilterDebugChanged(bool value)
+    {
+        if (!value) return;
+        FilterAll = FilterInfo = FilterWarning = FilterError = false;
+        FilterLevel = LogLevel.Debug;
+        _ = LoadInitialLogsAsync();
+    }
+
+    partial void OnFilterInfoChanged(bool value)
+    {
+        if (!value) return;
+        FilterAll = FilterDebug = FilterWarning = FilterError = false;
+        FilterLevel = LogLevel.Information;
+        _ = LoadInitialLogsAsync();
+    }
+
+    partial void OnFilterWarningChanged(bool value)
+    {
+        if (!value) return;
+        FilterAll = FilterDebug = FilterInfo = FilterError = false;
+        FilterLevel = LogLevel.Warning;
+        _ = LoadInitialLogsAsync();
+    }
+
+    partial void OnFilterErrorChanged(bool value)
+    {
+        if (!value) return;
+        FilterAll = FilterDebug = FilterInfo = FilterWarning = false;
+        FilterLevel = LogLevel.Error;
+        _ = LoadInitialLogsAsync();
+    }
+
+    partial void OnSelectedCategoryChanged(string? value)
+    {
+        FilterCategory = value is null or "All" ? string.Empty : value;
         _ = LoadInitialLogsAsync();
     }
 
@@ -104,6 +171,20 @@ public partial class LogsViewModel : IAsyncDisposable
             {
                 Logs.Clear();
                 foreach (var entry in entries) Logs.Add(entry);
+
+                var categories = entries
+                    .Select(e => e.Category)
+                    .Where(c => !string.IsNullOrWhiteSpace(c))
+                    .Distinct()
+                    .OrderBy(c => c, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+                if (AvailableCategories.Count != categories.Count + 1)
+                {
+                    AvailableCategories.Clear();
+                    AvailableCategories.Add("All");
+                    foreach (var category in categories) AvailableCategories.Add(category);
+                }
+
                 UpdateCounts();
             });
         }

@@ -5,11 +5,11 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class SettingsViewModel
+public partial class SettingsViewModel : ObservableObject
 {
     private readonly ISettingsService _settingsService;
     private readonly ILogService _logService;
+    private readonly Services.TrayIconService _trayIconService;
 
     [ObservableProperty]
     private string _theme = "Dark";
@@ -36,13 +36,13 @@ public partial class SettingsViewModel
     private int _defaultBitrate = 8_000_000;
 
     [ObservableProperty]
+    private int _defaultBitrateMbps = 8;
+
+    [ObservableProperty]
     private string _defaultResolution = "Native";
 
     [ObservableProperty]
     private string _defaultCodec = "H264";
-
-    [ObservableProperty]
-    private bool _hardwareAcceleration = true;
 
     [ObservableProperty]
     private bool _clipboardSync = true;
@@ -74,10 +74,17 @@ public partial class SettingsViewModel
     [ObservableProperty]
     private bool _hasUnsavedChanges;
 
-    public SettingsViewModel(ISettingsService settingsService, ILogService logService)
+    public IReadOnlyList<string> AvailableLanguages { get; } = ["en", "fr", "es", "de", "ar", "zh", "hi"];
+
+    public IReadOnlyList<string> AvailableResolutions { get; } = ["Native", "1920x1080", "1280x720", "800x480"];
+
+    public IReadOnlyList<string> AvailableCodecs { get; } = ["H264", "H265"];
+
+    public SettingsViewModel(ISettingsService settingsService, ILogService logService, Services.TrayIconService trayIconService)
     {
         _settingsService = settingsService;
         _logService = logService;
+        _trayIconService = trayIconService;
         LoadSettings();
     }
 
@@ -93,7 +100,6 @@ public partial class SettingsViewModel
         DefaultBitrate = _settingsService.Get(SettingKeys.DefaultBitrate, 8_000_000);
         DefaultResolution = _settingsService.Get(SettingKeys.DefaultResolution, "Native");
         DefaultCodec = _settingsService.Get(SettingKeys.DefaultCodec, "H264");
-        HardwareAcceleration = _settingsService.Get(SettingKeys.HardwareAcceleration, true);
         ClipboardSync = _settingsService.Get(SettingKeys.ClipboardSync, true);
         NotificationSync = _settingsService.Get(SettingKeys.NotificationSync, false);
         DownloadDirectory = _settingsService.Get(SettingKeys.DownloadDirectory,
@@ -117,7 +123,6 @@ public partial class SettingsViewModel
             _settingsService.Set(SettingKeys.DefaultBitrate, DefaultBitrate);
             _settingsService.Set(SettingKeys.DefaultResolution, DefaultResolution);
             _settingsService.Set(SettingKeys.DefaultCodec, DefaultCodec);
-            _settingsService.Set(SettingKeys.HardwareAcceleration, HardwareAcceleration);
             _settingsService.Set(SettingKeys.ClipboardSync, ClipboardSync);
             _settingsService.Set(SettingKeys.NotificationSync, NotificationSync);
             _settingsService.Set(SettingKeys.DownloadDirectory, DownloadDirectory);
@@ -128,6 +133,9 @@ public partial class SettingsViewModel
             HasUnsavedChanges = false;
             StatusMessage = "Settings saved successfully.";
             _logService.Information("Settings", "Settings saved");
+
+            if (MinimizeToTray) _trayIconService.Enable();
+            else _trayIconService.Disable();
         }
         catch (Exception ex)
         {
@@ -149,7 +157,6 @@ public partial class SettingsViewModel
         DefaultBitrate = 8_000_000;
         DefaultResolution = "Native";
         DefaultCodec = "H264";
-        HardwareAcceleration = true;
         ClipboardSync = true;
         NotificationSync = false;
         UsageAnalytics = false;
@@ -206,10 +213,19 @@ public partial class SettingsViewModel
     partial void OnAutoReconnectChanged(bool value) => HasUnsavedChanges = true;
     partial void OnConnectionTimeoutChanged(int value) => HasUnsavedChanges = true;
     partial void OnDefaultFpsChanged(int value) => HasUnsavedChanges = true;
-    partial void OnDefaultBitrateChanged(int value) => HasUnsavedChanges = true;
+    partial void OnDefaultBitrateMbpsChanged(int value)
+    {
+        DefaultBitrate = value * 1_000_000;
+        HasUnsavedChanges = true;
+    }
+
+    partial void OnDefaultBitrateChanged(int value)
+    {
+        DefaultBitrateMbps = value / 1_000_000;
+        HasUnsavedChanges = true;
+    }
     partial void OnDefaultResolutionChanged(string value) => HasUnsavedChanges = true;
     partial void OnDefaultCodecChanged(string value) => HasUnsavedChanges = true;
-    partial void OnHardwareAccelerationChanged(bool value) => HasUnsavedChanges = true;
     partial void OnClipboardSyncChanged(bool value) => HasUnsavedChanges = true;
     partial void OnNotificationSyncChanged(bool value) => HasUnsavedChanges = true;
     partial void OnDownloadDirectoryChanged(string value) => HasUnsavedChanges = true;

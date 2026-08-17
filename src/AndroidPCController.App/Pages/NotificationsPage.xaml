@@ -1,0 +1,137 @@
+<UserControl x:Class="AndroidPCController.App.Pages.NotificationsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:AndroidPCController.App.Pages"
+             xmlns:cvt="clr-namespace:AndroidPCController.App.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="900"
+             Background="#1a1a2e">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+        <cvt:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisConverter"/>
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="#0f3460"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+            <Setter Property="BorderBrush" Value="#1a1a4e"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0f4f8f"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Text="Notifications" FontSize="22" FontWeight="Bold" Foreground="#e0e0e0"/>
+            <TextBlock Text="{Binding StatusText}" Margin="16,6,0,0" VerticalAlignment="Center"
+                       Foreground="#a0a0a0" FontSize="12"/>
+            <ProgressBar Grid.Row="0" IsIndeterminate="True" Width="70" Height="4"
+                         Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisConverter}}"
+                         Foreground="#00d2ff" Margin="12,0,0,0" VerticalAlignment="Center"/>
+            <Button Grid.Row="0" Style="{StaticResource ActionBtn}" Margin="16,0,0,0"
+                    Command="{Binding RefreshCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Refresh" Width="16" Height="16" Margin="0,0,6,0"/>
+                    <TextBlock Text="Refresh"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Row="0" Style="{StaticResource ActionBtn}" Margin="8,0,0,0"
+                    Command="{Binding DismissAllCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="DeleteSweep" Width="16" Height="16" Margin="0,0,6,0"/>
+                    <TextBlock Text="Clear list"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <TextBlock Grid.Row="1" Text="Notification sync must be enabled in Settings > Privacy to see phone notifications."
+                   Foreground="#ff9100" FontSize="12" Margin="0,10,0,10"
+                   Visibility="{Binding IsSyncEnabled, Converter={StaticResource InverseBoolToVisConverter}}"/>
+
+        <ListBox Grid.Row="2" Background="Transparent" BorderThickness="0"
+                 ItemsSource="{Binding Notifications}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0,0,0,8"/>
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="#16213e" BorderBrush="#1a1a4e" BorderThickness="1" CornerRadius="8" Padding="14,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="42"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Width="34" Height="34" CornerRadius="17"
+                                    Background="{Binding IconColor}" VerticalAlignment="Top" Margin="0,2,0,0">
+                                <TextBlock Text="{Binding IconChar}" Foreground="White" FontWeight="Bold"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <StackPanel Grid.Column="1" Margin="6,0,12,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding AppName}" FontWeight="Bold" Foreground="#e0e0e0" FontSize="13"/>
+                                    <Border Background="#2a2a5a" CornerRadius="3" Padding="5,1" Margin="8,0,0,0"
+                                            Visibility="{Binding IsOngoing, Converter={StaticResource BoolToVisConverter}}">
+                                        <TextBlock Text="ONGOING" FontSize="9" Foreground="#00d2ff" VerticalAlignment="Center"/>
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Title}" Foreground="#ffffff" FontSize="13" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                                <TextBlock Text="{Binding Text}" Foreground="#a0a0a0" FontSize="12" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="2" Text="{Binding DisplayTime}" Foreground="#707090" FontSize="11"
+                                       VerticalAlignment="Top" Margin="8,2,0,0"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

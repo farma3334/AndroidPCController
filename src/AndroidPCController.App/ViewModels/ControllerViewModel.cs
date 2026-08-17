@@ -1,13 +1,14 @@
 using System.IO;
+using AndroidPCController.App.Services;
 using AndroidPCController.Core.Interfaces;
 using AndroidPCController.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class ControllerViewModel : IAsyncDisposable
+public partial class ControllerViewModel : ObservableObject, IAsyncDisposable
 {
     private readonly IDeviceManager _deviceManager;
     private readonly ISettingsService _settingsService;
@@ -57,7 +58,47 @@ public partial class ControllerViewModel : IAsyncDisposable
     private string _streamCodec = "H264";
 
     [ObservableProperty]
-    private bool _hardwareAcceleration = true;
+    private int _bitrateMbps = 8;
+
+    [ObservableProperty]
+    private string _resolution = "Native";
+
+    [ObservableProperty]
+    private bool _lowLatency = true;
+
+    [ObservableProperty]
+    private bool _audioEnabled;
+
+    [ObservableProperty]
+    private bool _isScrcpyActive;
+
+    [ObservableProperty]
+    private string _liveFpsText = "--";
+
+    [ObservableProperty]
+    private string _liveBitrateText = "--";
+
+    [ObservableProperty]
+    private string _liveResolutionText = "--";
+
+    [ObservableProperty]
+    private string _liveOverlayText = "";
+
+    public event EventHandler<IntPtr>? ScrcpyWindowReady;
+
+    public event EventHandler? ScrcpyStopped;
+
+    public bool HasDeviceSession => _currentSession is not null;
+
+    private ScrcpyManager? _scrcpyManager;
+
+    public IReadOnlyList<string> AvailableCodecs { get; } = ["H264", "H265"];
+
+    public IReadOnlyList<string> AvailableResolutions { get; } = ["Native", "1920x1080", "1280x720", "800x480"];
+
+    private const int KeycodePower = 26;
+    private const int KeycodeVolumeUp = 24;
+    private const int KeycodeVolumeDown = 25;
 
     public ControllerViewModel(IDeviceManager deviceManager, ISettingsService settingsService, ILogService logService)
     {
@@ -69,16 +110,19 @@ public partial class ControllerViewModel : IAsyncDisposable
 
         _deviceManager.DeviceConnected += OnDeviceConnected;
         _deviceManager.DeviceDisconnected += OnDeviceDisconnected;
+
+        SetSession(_deviceManager.ActiveSessions.FirstOrDefault());
     }
 
     private void LoadSettings()
     {
         StreamFps = _settingsService.Get(SettingKeys.DefaultFps, 60);
-        StreamBitrate = _settingsService.Get(SettingKeys.DefaultBitrate, 8_000_000);
+        StreamBitrate = _settingsService.Get(SettingKeys.DefaultBitrate, 12_000_000);
         StreamCodec = _settingsService.Get(SettingKeys.DefaultCodec, "H264");
-        HardwareAcceleration = _settingsService.Get(SettingKeys.HardwareAcceleration, true);
+        BitrateMbps = StreamBitrate / 1_000_000;
 
         var resolution = _settingsService.Get(SettingKeys.DefaultResolution, "Native");
+        Resolution = resolution;
         if (resolution != "Native" && resolution.Contains('x'))
         {
             var parts = resolution.Split('x');
@@ -87,6 +131,19 @@ public partial class ControllerViewModel : IAsyncDisposable
                 StreamMaxWidth = w;
                 StreamMaxHeight = h;
             }
+        }
+    }
+
+    partial void OnBitrateMbpsChanged(int value) => StreamBitrate = value * 1_000_000;
+
+    partial void OnResolutionChanged(string value)
+    {
+        if (value == "Native" || !value.Contains('x')) return;
+        var parts = value.Split('x');
+        if (int.TryParse(parts[0], out var w) && int.TryParse(parts[1], out var h))
+        {
+            StreamMaxWidth = w;
+            StreamMaxHeight = h;
         }
     }
 
@@ -107,46 +164,14 @@ public partial class ControllerViewModel : IAsyncDisposable
 
         if (IsStreaming) return;
 
-        try
-        {
-            var settings = new StreamSettings
-            {
-                Fps = StreamFps,
-                MaxWidth = StreamMaxWidth,
-                MaxHeight = StreamMaxHeight,
-                Bitrate = StreamBitrate,
-                Codec = StreamCodec,
-                HardwareAcceleration = HardwareAcceleration,
-                LowLatency = true
-            };
-
-            _currentSession.ScreenStreamer.StreamStarted += OnStreamStarted;
-            _currentSession.ScreenStreamer.StreamStopped += OnStreamStopped;
-            _currentSession.ScreenStreamer.FrameReceived += OnFrameReceived;
-
-            await _currentSession.ScreenStreamer.StartAsync(settings);
-            _logService.Information("Controller", $"Stream started: {StreamCodec} {StreamMaxWidth}x{StreamMaxHeight}@{StreamFps}fps");
-        }
-        catch (Exception ex)
-        {
-            _logService.Error("Controller", $"Failed to start stream: {ex.Message}", ex);
-        }
+        await StartScrcpyAsync();
     }
 
     [RelayCommand]
-    private async Task StopStreamAsync()
+    public async Task StopStreamAsync()
     {
-        if (_currentSession is null || !IsStreaming) return;
-
-        try
-        {
-            await _currentSession.ScreenStreamer.StopAsync();
-            _logService.Information("Controller", "Stream stopped");
-        }
-        catch (Exception ex)
-        {
-            _logService.Error("Controller", $"Failed to stop stream: {ex.Message}", ex);
-        }
+        if (!IsScrcpyActive) return;
+        await StopScrcpyAsync();
     }
 
     [RelayCommand]
@@ -194,7 +219,7 @@ public partial class ControllerViewModel : IAsyncDisposable
                 Fps = StreamFps,
                 Bitrate = StreamBitrate,
                 Codec = StreamCodec,
-                RecordAudio = false,
+                RecordAudio = AudioEnabled,
                 OutputDirectory = downloadDir
             };
 
@@ -264,10 +289,16 @@ public partial class ControllerViewModel : IAsyncDisposable
     }
 
     [RelayCommand]
-    private async Task OpenKeyboardAsync()
+    private void OpenKeyboard()
     {
-        _logService.Information("Controller", "Keyboard toggle requested");
-        await Task.CompletedTask;
+        if (_scrcpyManager is null || !IsScrcpyActive)
+        {
+            _logService.Warning("Controller", "Start the stream first to use the keyboard");
+            return;
+        }
+
+        _scrcpyManager.FocusWindow();
+        _logService.Information("Controller", "Keyboard input focused on the live screen");
     }
 
     [RelayCommand]
@@ -307,12 +338,138 @@ public partial class ControllerViewModel : IAsyncDisposable
     private async Task OpenClipboardAsync()
     {
         if (_currentSession is null) return;
+
         try
         {
-            var content = await _currentSession.Clipboard.GetClipboardTextAsync();
-            _logService.Information("Controller", $"Clipboard content: {content ?? "(empty)"}");
+            var content = await _currentSession.Clipboard.GetClipboardTextAsync() ?? string.Empty;
+            var dialog = new Controls.ClipboardDialog(content)
+            {
+                Owner = System.Windows.Application.Current.MainWindow
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                await _currentSession.Clipboard.SetClipboardTextAsync(dialog.ClipboardText);
+                _logService.Information("Controller", "Clipboard synced to device");
+            }
         }
         catch (Exception ex) { _logService.Error("Controller", $"Clipboard failed: {ex.Message}", ex); }
+    }
+
+    [RelayCommand]
+    private async Task PressPowerAsync()
+    {
+        if (_currentSession is null) return;
+        try { await _currentSession.InputController.SendKeyEventAsync(KeycodePower); }
+        catch (Exception ex) { _logService.Error("Controller", $"Power press failed: {ex.Message}", ex); }
+    }
+
+    [RelayCommand]
+    private async Task VolumeUpAsync()
+    {
+        if (_currentSession is null) return;
+        try { await _currentSession.InputController.SendKeyEventAsync(KeycodeVolumeUp); }
+        catch (Exception ex) { _logService.Error("Controller", $"Volume up failed: {ex.Message}", ex); }
+    }
+
+    [RelayCommand]
+    private async Task VolumeDownAsync()
+    {
+        if (_currentSession is null) return;
+        try { await _currentSession.InputController.SendKeyEventAsync(KeycodeVolumeDown); }
+        catch (Exception ex) { _logService.Error("Controller", $"Volume down failed: {ex.Message}", ex); }
+    }
+
+    [RelayCommand]
+    private async Task ApplySettingsAsync()
+    {
+        try
+        {
+            _settingsService.Set(SettingKeys.DefaultFps, StreamFps);
+            _settingsService.Set(SettingKeys.DefaultBitrate, StreamBitrate);
+            _settingsService.Set(SettingKeys.DefaultCodec, StreamCodec);
+            _settingsService.Set(SettingKeys.DefaultResolution, Resolution);
+            _logService.Information("Controller", "Stream settings saved");
+
+            if (IsScrcpyActive)
+            {
+                await StopScrcpyAsync();
+                await StartScrcpyAsync();
+                _logService.Information("Controller", "Stream restarted with new settings");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logService.Error("Controller", $"Failed to save settings: {ex.Message}", ex);
+        }
+    }
+
+    private async Task StartScrcpyAsync()
+    {
+        if (_currentSession is null || IsScrcpyActive) return;
+
+        try
+        {
+            _scrcpyManager ??= App.Services.GetRequiredService<Services.ScrcpyManager>();
+            _scrcpyManager.StatsUpdated += OnScrcpyStatsUpdated;
+            _scrcpyManager.WindowClosed += OnScrcpyWindowClosed;
+
+            var maxSize = 0;
+            if (Resolution != "Native" && Resolution.Contains('x'))
+            {
+                var parts = Resolution.Split('x');
+                if (int.TryParse(parts[0], out var w)) maxSize = w;
+            }
+
+            var options = new ScrcpyOptions
+            {
+                Serial = _currentSession.Serial,
+                MaxFps = StreamFps,
+                BitRate = StreamBitrate,
+                Codec = StreamCodec,
+                MaxSize = maxSize,
+                LowLatency = LowLatency,
+                AudioEnabled = AudioEnabled
+            };
+
+            LiveBitrateText = FormatBitrate(options.BitRate);
+            LiveFpsText = "--";
+            LiveResolutionText = "--";
+            LiveOverlayText = "";
+
+            var hwnd = await _scrcpyManager.StartAsync(options);
+            if (hwnd == IntPtr.Zero)
+            {
+                _logService.Error("Controller", "scrcpy window could not be found. Check that scrcpy is installed and the device is authorized.");
+                return;
+            }
+
+            IsScrcpyActive = true;
+            IsStreaming = true;
+            ScrcpyWindowReady?.Invoke(this, hwnd);
+            _logService.Information("Controller", $"scrcpy started for {_currentSession.Serial}");
+        }
+        catch (Exception ex)
+        {
+            _logService.Error("Controller", $"Failed to start scrcpy: {ex.Message}", ex);
+            await StopScrcpyAsync();
+        }
+    }
+
+    private async Task StopScrcpyAsync()
+    {
+        if (_scrcpyManager is null) return;
+
+        try
+        {
+            await _scrcpyManager.StopAsync();
+        }
+        finally
+        {
+            IsScrcpyActive = false;
+            IsStreaming = false;
+            ScrcpyStopped?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public async Task HandleTapAsync(double relativeX, double relativeY)
@@ -381,38 +538,6 @@ public partial class ControllerViewModel : IAsyncDisposable
         _ = HandleRightClickAsync(relativeX, relativeY);
     }
 
-    private void OnStreamStarted(object? sender, EventArgs e)
-    {
-        System.Windows.Application.Current.Dispatcher.Invoke(() => IsStreaming = true);
-    }
-
-    private void OnStreamStopped(object? sender, EventArgs e)
-    {
-        System.Windows.Application.Current.Dispatcher.Invoke(() =>
-        {
-            IsStreaming = false;
-            CurrentFps = 0;
-            CurrentBitrate = 0;
-            StreamWidth = 0;
-            StreamHeight = 0;
-        });
-    }
-
-    private void OnFrameReceived(object? sender, FrameReceivedEventArgs e)
-    {
-        System.Windows.Application.Current.Dispatcher.Invoke(() =>
-        {
-            StreamWidth = e.Width;
-            StreamHeight = e.Height;
-
-            if (_currentSession?.ScreenStreamer is { } streamer)
-            {
-                CurrentFps = streamer.CurrentFps;
-                CurrentBitrate = streamer.CurrentBitrate;
-            }
-        });
-    }
-
     private void OnRecordingStateChanged(object? sender, RecordingStateChangedEventArgs e)
     {
         System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -422,11 +547,53 @@ public partial class ControllerViewModel : IAsyncDisposable
         });
     }
 
+    private void OnScrcpyStatsUpdated(object? sender, ScrcpyStats stats)
+    {
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (stats.Fps is int fps)
+            {
+                CurrentFps = fps;
+                LiveFpsText = fps.ToString();
+            }
+
+            if (stats.Width is int width && stats.Height is int height)
+            {
+                StreamWidth = width;
+                StreamHeight = height;
+                LiveResolutionText = $"{width}×{height}";
+            }
+
+            LiveOverlayText = $"{LiveFpsText} fps · {LiveBitrateText} · {LiveResolutionText}";
+        });
+    }
+
+    private void OnScrcpyWindowClosed(object? sender, EventArgs e)
+    {
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (_scrcpyManager is { IsRunning: true }) return;
+            LiveFpsText = "--";
+            LiveResolutionText = "--";
+            LiveOverlayText = "";
+        });
+    }
+
+    private static string FormatBitrate(int bitrate)
+    {
+        if (bitrate >= 1_000_000)
+        {
+            return $"{bitrate / 1_000_000.0:F1} Mbps";
+        }
+
+        return bitrate > 0 ? $"{bitrate / 1_000} kbps" : "--";
+    }
+
     private void OnDeviceConnected(object? sender, DeviceConnectedEventArgs e)
     {
         if (_currentSession is null)
         {
-            _ = System.Windows.Application.Current.Dispatcher.InvokeAsync(() => SelectedDevice = e.Device);
+            _ = System.Windows.Application.Current.Dispatcher.InvokeAsync(() => SetSession(e.Session));
         }
     }
 
@@ -434,8 +601,12 @@ public partial class ControllerViewModel : IAsyncDisposable
     {
         if (_currentSession?.Serial == e.Serial)
         {
-            _ = System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+            _ = System.Windows.Application.Current.Dispatcher.InvokeAsync(async () =>
             {
+                if (IsScrcpyActive)
+                {
+                    await StopScrcpyAsync();
+                }
                 IsStreaming = false;
                 IsRecording = false;
                 SelectedDevice = null;
@@ -454,14 +625,19 @@ public partial class ControllerViewModel : IAsyncDisposable
 
         if (_currentSession is not null)
         {
-            _currentSession.ScreenStreamer.StreamStarted -= OnStreamStarted;
-            _currentSession.ScreenStreamer.StreamStopped -= OnStreamStopped;
-            _currentSession.ScreenStreamer.FrameReceived -= OnFrameReceived;
             _currentSession.ScreenRecorder.RecordingStateChanged -= OnRecordingStateChanged;
         }
 
         if (_durationTimer is not null)
             await _durationTimer.DisposeAsync();
+
+        if (_scrcpyManager is not null)
+        {
+            _scrcpyManager.StatsUpdated -= OnScrcpyStatsUpdated;
+            _scrcpyManager.WindowClosed -= OnScrcpyWindowClosed;
+            _scrcpyManager.Dispose();
+            _scrcpyManager = null;
+        }
 
         GC.SuppressFinalize(this);
     }

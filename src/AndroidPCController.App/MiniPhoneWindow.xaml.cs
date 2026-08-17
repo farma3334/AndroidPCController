@@ -14,6 +14,30 @@ public partial class MiniPhoneWindow : Window
         DataContext = App.Services.GetRequiredService<MiniPhoneViewModel>();
     }
 
+    private void MiniPhoneWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is MiniPhoneViewModel vm)
+        {
+            vm.ScrcpyWindowReady += OnScrcpyWindowReady;
+            _ = vm.StartMiniStreamAsync();
+        }
+    }
+
+    private void MiniPhoneWindow_Closing(object? sender, CancelEventArgs e)
+    {
+        if (DataContext is MiniPhoneViewModel vm)
+        {
+            vm.ScrcpyWindowReady -= OnScrcpyWindowReady;
+            MiniScrcpyHost.ReleaseWindow();
+            vm.NotifyMiniClosed();
+        }
+    }
+
+    private void OnScrcpyWindowReady(object? sender, IntPtr hwnd)
+    {
+        MiniScrcpyHost.AttachWindow(hwnd);
+    }
+
     private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount == 2)

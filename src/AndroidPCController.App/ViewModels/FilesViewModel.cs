@@ -9,20 +9,26 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class FilesViewModel : IAsyncDisposable
+public partial class FilesViewModel : ObservableObject, IAsyncDisposable
 {
     private readonly IDeviceManager _deviceManager;
     private readonly ISettingsService _settingsService;
     private readonly ILogService _logService;
     private IDeviceSession? _currentSession;
     private bool _disposed;
+    private IReadOnlyList<AndroidFileInfo> _currentItems = [];
 
     [ObservableProperty]
     private string _currentPath = "/sdcard/";
 
     [ObservableProperty]
     private ObservableCollection<AndroidFileInfo> _files = [];
+
+    [ObservableProperty]
+    private ObservableCollection<BreadcrumbSegment> _breadcrumbSegments = [];
+
+    [ObservableProperty]
+    private string _searchText = string.Empty;
 
     [ObservableProperty]
     private AndroidFileInfo? _selectedFile;
@@ -65,6 +71,8 @@ public partial class FilesViewModel : IAsyncDisposable
 
         _deviceManager.DeviceConnected += OnDeviceConnected;
         _deviceManager.DeviceDisconnected += OnDeviceDisconnected;
+
+        SetSession(_deviceManager.ActiveSessions.FirstOrDefault());
     }
 
     public void SetSession(IDeviceSession? session)
@@ -88,16 +96,9 @@ public partial class FilesViewModel : IAsyncDisposable
 
             var items = await _currentSession.FileTransfer.ListDirectoryAsync(path);
             CurrentPath = path;
-
-            await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
-            {
-                Files.Clear();
-                var sorted = items.OrderByDescending(f => f.IsDirectory).ThenBy(f => f.Name, StringComparer.OrdinalIgnoreCase);
-                foreach (var file in sorted)
-                {
-                    Files.Add(file);
-                }
-            });
+            _currentItems = items.OrderByDescending(f => f.IsDirectory).ThenBy(f => f.Name, StringComparer.OrdinalIgnoreCase).ToList();
+            UpdateBreadcrumbs();
+            ApplyFilterInternal();
 
             StatusText = $"{Files.Count} items in {path}";
         }
@@ -119,6 +120,66 @@ public partial class FilesViewModel : IAsyncDisposable
         var parent = Path.GetDirectoryName(CurrentPath.TrimEnd('/'))?.Replace('\\', '/') ?? "/";
         if (!parent.EndsWith('/')) parent += "/";
         await NavigateToPathAsync(parent);
+    }
+
+    [RelayCommand]
+    private async Task NavigateToBreadcrumbAsync(string? path)
+    {
+        if (string.IsNullOrEmpty(path)) return;
+        await NavigateToPathAsync(path);
+    }
+
+    partial void OnSearchTextChanged(string value) => ApplyFilterInternal();
+
+    private void ApplyFilterInternal()
+    {
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        {
+            Files.Clear();
+            IEnumerable<AndroidFileInfo> filtered = _currentItems;
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                var search = SearchText.Trim();
+                filtered = filtered.Where(f =>
+                    f.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+            }
+            foreach (var file in filtered)
+            {
+                Files.Add(file);
+            }
+        });
+    }
+
+    private void UpdateBreadcrumbs()
+    {
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        {
+            BreadcrumbSegments.Clear();
+            var segments = new List<BreadcrumbSegment>();
+
+            if (CurrentPath != "/")
+            {
+                var path = CurrentPath.TrimEnd('/');
+                var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                var accumulated = "/";
+                segments.Add(new BreadcrumbSegment { Name = "Root", Path = "/" });
+                for (var i = 0; i < parts.Length; i++)
+                {
+                    accumulated += parts[i];
+                    if (i < parts.Length - 1) accumulated += "/";
+                    segments.Add(new BreadcrumbSegment { Name = parts[i], Path = accumulated });
+                }
+            }
+            else
+            {
+                segments.Add(new BreadcrumbSegment { Name = "Root", Path = "/" });
+            }
+
+            foreach (var segment in segments)
+            {
+                BreadcrumbSegments.Add(segment);
+            }
+        });
     }
 
     [RelayCommand]
@@ -302,12 +363,21 @@ public partial class FilesViewModel : IAsyncDisposable
         try
         {
             var oldPath = SelectedFile.FullName;
-            var dir = Path.GetDirectoryName(oldPath)?.Replace('\\', '/') ?? CurrentPath.TrimEnd('/');
             var oldName = Path.GetFileName(oldPath);
-            var newPath = dir + "/" + oldName;
+            var dir = Path.GetDirectoryName(oldPath)?.Replace('\\', '/') ?? CurrentPath.TrimEnd('/');
 
+            var dialog = new Controls.InputDialog("Rename", $"Rename '{oldName}' to:", oldName)
+            {
+                Owner = System.Windows.Application.Current.MainWindow
+            };
+            if (dialog.ShowDialog() != true) return;
+
+            var newName = dialog.InputValue.Trim();
+            if (string.IsNullOrEmpty(newName) || newName == oldName) return;
+
+            var newPath = dir + "/" + newName;
             await _currentSession.FileTransfer.RenameAsync(oldPath, newPath);
-            StatusText = $"Renamed to {oldName}";
+            StatusText = $"Renamed to {newName}";
             _logService.Information("Files", $"Renamed {oldPath} to {newPath}");
             await NavigateToPathAsync(CurrentPath);
         }

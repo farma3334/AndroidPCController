@@ -9,6 +9,10 @@ public sealed class LogService : ILogService
     private int _nextId;
     private const int MaxEntries = 10_000;
 
+    private static readonly string LogFilePath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "AndroidPCController", "logs", "app.log");
+
     public event EventHandler<LogEntryEventArgs>? LogAdded;
 
     public void Log(LogLevel level, string category, string message, Exception? exception = null)
@@ -26,6 +30,17 @@ public sealed class LogService : ILogService
         _entries.Enqueue(entry);
 
         while (_entries.Count > MaxEntries && _entries.TryDequeue(out _)) { }
+
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(LogFilePath)!);
+            File.AppendAllText(LogFilePath,
+                $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} [{level}] {category}: {message}" +
+                (exception is null ? string.Empty : $" | {exception}") + Environment.NewLine);
+        }
+        catch
+        {
+        }
 
         LogAdded?.Invoke(this, new LogEntryEventArgs { Entry = entry });
     }

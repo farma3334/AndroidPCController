@@ -477,6 +477,7 @@ class AgentService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         stopService()
+        connectionManager.destroy()
         scope.cancel()
         instance = null
     }

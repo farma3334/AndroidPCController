@@ -52,7 +52,15 @@ dotnet test
 
 ### Build the Android Agent
 
-Open `android/AndroidPCController.Agent` in Android Studio and build.
+The Gradle wrapper is included, so no global Gradle install is required:
+
+```bash
+cd android/AndroidPCController.Agent
+./gradlew.bat assembleDebug   # Windows
+./gradlew assembleDebug       # Linux/macOS
+```
+
+Or open `android/AndroidPCController.Agent` in Android Studio and build.
 
 ## Project Structure
 
@@ -88,7 +96,12 @@ The application follows a modular clean architecture:
 - **Files** — File transfer operations
 - **Security** — Encryption, validation, sanitization
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architecture documentation.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed architecture documentation.
+
+> **Note:** `tools/platform-tools/adb.exe`, `AdbWinApi.dll` and `AdbWinUsbApi.dll` are intentionally
+> gitignored (large binaries). If they are missing, download
+> [Android platform-tools](https://developer.android.com/tools/releases/platform-tools) and extract
+> them into `tools/platform-tools/` (or install ADB on your PATH) before first run.
 
 ## Configuration
 

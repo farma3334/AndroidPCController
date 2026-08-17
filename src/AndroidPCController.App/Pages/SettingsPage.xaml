@@ -218,7 +218,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
-                            <Slider Grid.Column="0" Minimum="10" Maximum="120"
+                            <Slider Grid.Column="0" Minimum="10" Maximum="240"
                                     Value="{Binding DefaultFps}"
                                     Foreground="#00d2ff" Background="#1a1a4e"/>
                             <TextBlock Grid.Column="1" Text="{Binding DefaultFps}"
@@ -249,9 +249,6 @@
                         <ComboBox Style="{StaticResource ComboStyle}" Width="200" Margin="0,0,0,14"
                                   ItemsSource="{Binding AvailableCodecs}"
                                   SelectedItem="{Binding DefaultCodec}"/>
-
-                        <CheckBox Content="Hardware acceleration" Foreground="#e0e0e0"
-                                  IsChecked="{Binding HardwareAcceleration}"/>
                     </StackPanel>
 
                     <StackPanel x:Name="InputPanel" Visibility="Collapsed">
@@ -268,7 +265,7 @@
                             <TextBox Grid.Column="0" Style="{StaticResource InputStyle}"
                                      Text="{Binding DownloadDirectory}" IsReadOnly="True"/>
                             <Button Grid.Column="1" Style="{StaticResource ActionBtn}" Margin="8,0,0,0"
-                                    Command="{Binding BrowseDownloadDirectoryCommand}">
+                                    Command="{Binding BrowseDownloadDirCommand}">
                                 <materialDesign:PackIcon Kind="FolderOpen" Width="16" Height="16"/>
                             </Button>
                         </Grid>
@@ -311,7 +308,7 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Background="#00d2ff" Foreground="#1a1a2e" FontWeight="SemiBold"
                                 Padding="20,8" Cursor="Hand"
-                                Command="{Binding SaveSettingsCommand}">
+                                Command="{Binding SaveCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="ContentSave" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                 <TextBlock Text="Save" VerticalAlignment="Center"/>

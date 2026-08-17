@@ -87,6 +87,7 @@ local.properties
 tools/platform-tools/adb.exe
 tools/platform-tools/AdbWinApi.dll
 tools/platform-tools/AdbWinUsbApi.dll
+tools/scrcpy/
 
 ## Misc
 *.log

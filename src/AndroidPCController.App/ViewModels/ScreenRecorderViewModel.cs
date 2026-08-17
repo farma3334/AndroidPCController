@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.IO;
 using AndroidPCController.Core.Interfaces;
 using AndroidPCController.Core.Models;
@@ -6,8 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class ScreenRecorderViewModel : IAsyncDisposable
+public partial class ScreenRecorderViewModel : ObservableObject, IAsyncDisposable
 {
     private readonly IDeviceManager _deviceManager;
     private readonly ISettingsService _settingsService;
@@ -59,6 +59,20 @@ public partial class ScreenRecorderViewModel : IAsyncDisposable
     [ObservableProperty]
     private string _recordResolution = "Native";
 
+    [ObservableProperty]
+    private int _recordingBitrate = 8;
+
+    [ObservableProperty]
+    private ObservableCollection<RecordingItem> _recentRecordings = [];
+
+    public IReadOnlyList<string> AvailableResolutions { get; } = ["Native", "1920x1080", "1280x720", "800x480"];
+
+    public IReadOnlyList<int> AvailableFpsValues { get; } = [15, 30, 60, 120];
+
+    public IReadOnlyList<int> AvailableBitrateValues { get; } = [2, 4, 8, 16, 32, 50];
+
+    public IReadOnlyList<string> AvailableCodecs { get; } = ["H264", "H265"];
+
     public ScreenRecorderViewModel(IDeviceManager deviceManager, ISettingsService settingsService, ILogService logService)
     {
         _deviceManager = deviceManager;
@@ -66,9 +80,64 @@ public partial class ScreenRecorderViewModel : IAsyncDisposable
         _logService = logService;
 
         LoadSettings();
+        LoadRecentRecordings();
 
         _deviceManager.DeviceConnected += OnDeviceConnected;
         _deviceManager.DeviceDisconnected += OnDeviceDisconnected;
+
+        SetSession(_deviceManager.ActiveSessions.FirstOrDefault());
+    }
+
+    partial void OnRecordingBitrateChanged(int value) => RecordBitrate = value * 1_000_000;
+
+    private void LoadRecentRecordings()
+    {
+        try
+        {
+            var downloadDir = _settingsService.Get(SettingKeys.DownloadDirectory, string.Empty);
+            if (string.IsNullOrEmpty(downloadDir))
+                downloadDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", "AndroidPCController");
+
+            if (!Directory.Exists(downloadDir)) return;
+
+            var recordings = Directory.GetFiles(downloadDir, "*.mp4")
+                .Select(f => new FileInfo(f))
+                .OrderByDescending(f => f.LastWriteTime)
+                .Take(10)
+                .Select(f => new RecordingItem
+                {
+                    FileName = f.Name,
+                    FilePath = f.FullName,
+                    SizeDisplay = FormatSize(f.Length),
+                    CreatedDate = f.LastWriteTime
+                })
+                .ToList();
+
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                RecentRecordings.Clear();
+                foreach (var recording in recordings)
+                {
+                    RecentRecordings.Add(recording);
+                }
+            });
+        }
+        catch
+        {
+        }
+    }
+
+    private static string FormatSize(long bytes)
+    {
+        string[] sizes = ["B", "KB", "MB", "GB", "TB"];
+        double len = bytes;
+        int order = 0;
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len /= 1024;
+        }
+        return $"{len:0.#} {sizes[order]}";
     }
 
     private void LoadSettings()
@@ -77,6 +146,7 @@ public partial class ScreenRecorderViewModel : IAsyncDisposable
         RecordBitrate = _settingsService.Get(SettingKeys.DefaultBitrate, 8_000_000);
         RecordCodec = _settingsService.Get(SettingKeys.DefaultCodec, "H264");
         RecordResolution = _settingsService.Get(SettingKeys.DefaultResolution, "Native");
+        RecordingBitrate = RecordBitrate / 1_000_000;
     }
 
     public void SetSession(IDeviceSession? session)
@@ -147,6 +217,7 @@ public partial class ScreenRecorderViewModel : IAsyncDisposable
             LastRecordingPath = _currentSession.ScreenRecorder.CurrentFilePath ?? string.Empty;
             StatusText = $"Recording saved: {Path.GetFileName(LastRecordingPath)}";
             _logService.Information("ScreenRecorder", $"Recording stopped. Duration: {RecordingDuration:hh\\:mm\\:ss}");
+            LoadRecentRecordings();
         }
         catch (Exception ex)
         {
@@ -193,6 +264,16 @@ public partial class ScreenRecorderViewModel : IAsyncDisposable
             StatusText = $"Resume failed: {ex.Message}";
             _logService.Error("ScreenRecorder", $"Resume failed: {ex.Message}", ex);
         }
+    }
+
+    [RelayCommand]
+    private async Task PauseResumeAsync()
+    {
+        if (_currentSession is null || !IsRecording) return;
+        if (IsPaused)
+            await ResumeRecordingAsync();
+        else
+            await PauseRecordingAsync();
     }
 
     [RelayCommand]
@@ -289,12 +370,7 @@ public partial class ScreenRecorderViewModel : IAsyncDisposable
 
     private void OnDeviceConnected(object? sender, DeviceConnectedEventArgs e)
     {
-        _currentSession = e.Session;
-        System.Windows.Application.Current.Dispatcher.Invoke(() =>
-        {
-            SelectedDevice = e.Device;
-            IsConnected = true;
-        });
+        System.Windows.Application.Current.Dispatcher.Invoke(() => SetSession(e.Session));
     }
 
     private void OnDeviceDisconnected(object? sender, DeviceDisconnectedEventArgs e)
@@ -330,4 +406,13 @@ public partial class ScreenRecorderViewModel : IAsyncDisposable
 
         GC.SuppressFinalize(this);
     }
+}
+
+public sealed class RecordingItem
+{
+    public string FileName { get; init; } = "";
+    public string FilePath { get; init; } = "";
+    public string SizeDisplay { get; init; } = "";
+    public string DurationDisplay { get; init; } = "";
+    public DateTime CreatedDate { get; init; }
 }

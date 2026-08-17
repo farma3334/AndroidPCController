@@ -45,7 +45,7 @@
             </Setter>
         </Style>
 
-        <Style x:Key="ListItemStyle" TargetType="ContentControl">
+        <Style x:Key="ListItemStyle" TargetType="Border">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Padding" Value="12,10"/>
             <Setter Property="Margin" Value="4,1"/>
@@ -285,22 +285,40 @@
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <Button Style="{StaticResource ControlButton}" Padding="16,8"
-                                    Command="{Binding DataContext.ConnectDeviceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding Serial}">
+                                    Command="{Binding DataContext.ConnectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Link" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                     <TextBlock Text="Connect" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                             <Button Style="{StaticResource ControlButton}" Padding="16,8"
-                                    Command="{Binding DataContext.DisconnectDeviceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding Serial}">
+                                    Command="{Binding DataContext.DisconnectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="LinkOff" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                     <TextBlock Text="Disconnect" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+                            <Button Style="{StaticResource ControlButton}" Padding="14,8"
+                                    Command="{Binding DataContext.RenameCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Rename" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource ControlButton}" Padding="14,8"
+                                    Command="{Binding DataContext.RefreshDeviceInfoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Refresh" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Refresh Info" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding StatusText}" FontSize="12" Foreground="#00d2ff"
+                                   HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,12,0,0"/>
                     </StackPanel>
                 </ScrollViewer>
 

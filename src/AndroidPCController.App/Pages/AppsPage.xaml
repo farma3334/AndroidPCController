@@ -74,6 +74,41 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <ContextMenu x:Key="AppContextMenu">
+            <MenuItem x:Name="LaunchMenuItem" Click="LaunchMenuItem_Click">
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Play" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="Launch"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem x:Name="ForceStopMenuItem" Click="ForceStopMenuItem_Click">
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Stop" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="Force Stop"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+            <Separator/>
+            <MenuItem x:Name="UninstallMenuItem" Click="UninstallMenuItem_Click">
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Delete" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="Uninstall"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem x:Name="ClearDataMenuItem" Click="ClearDataMenuItem_Click">
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Broom" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="Clear Data"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+        </ContextMenu>
     </UserControl.Resources>
 
     <Grid Margin="16">
@@ -114,7 +149,7 @@
                     <TextBox Width="200" Background="#0f3460" Foreground="#e0e0e0"
                              BorderBrush="#1a1a4e" BorderThickness="1" Padding="8,4"
                              FontSize="12" VerticalContentAlignment="Center"
-                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
                              materialDesign:HintAssist.Hint="Search apps..."/>
                     <Button Style="{StaticResource ActionBtn}" Margin="8,0,0,0"
                             Command="{Binding InstallApkCommand}">
@@ -124,7 +159,7 @@
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource ActionBtn}" Margin="4,0,0,0"
-                            Command="{Binding RefreshAppsCommand}">
+                            Command="{Binding RefreshCommand}">
                         <materialDesign:PackIcon Kind="Refresh" Width="14" Height="14"/>
                     </Button>
                 </StackPanel>
@@ -133,7 +168,7 @@
 
         <Border Grid.Row="1" Style="{StaticResource PanelStyle}" Padding="0" ClipToBounds="True">
             <Grid>
-            <ListView x:Name="AppListView" ItemsSource="{Binding FilteredApps}"
+            <ListView x:Name="AppListView" ItemsSource="{Binding Apps}"
                       Background="Transparent" Foreground="#e0e0e0"
                       BorderThickness="0" FontSize="13"
                       SelectionMode="Single"
@@ -249,40 +284,5 @@
             </Grid>
         </Border>
 
-        <ContextMenu x:Name="AppContextMenu">
-            <MenuItem x:Name="LaunchMenuItem" Click="LaunchMenuItem_Click">
-                <MenuItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Play" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Text="Launch"/>
-                    </StackPanel>
-                </MenuItem.Header>
-            </MenuItem>
-            <MenuItem x:Name="ForceStopMenuItem" Click="ForceStopMenuItem_Click">
-                <MenuItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Stop" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Text="Force Stop"/>
-                    </StackPanel>
-                </MenuItem.Header>
-            </MenuItem>
-            <Separator/>
-            <MenuItem x:Name="UninstallMenuItem" Click="UninstallMenuItem_Click">
-                <MenuItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Delete" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Text="Uninstall"/>
-                    </StackPanel>
-                </MenuItem.Header>
-            </MenuItem>
-            <MenuItem x:Name="ClearDataMenuItem" Click="ClearDataMenuItem_Click">
-                <MenuItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Broom" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Text="Clear Data"/>
-                    </StackPanel>
-                </MenuItem.Header>
-            </MenuItem>
-        </ContextMenu>
     </Grid>
 </UserControl>

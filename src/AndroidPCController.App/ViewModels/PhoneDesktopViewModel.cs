@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using AndroidPCController.App.Models;
+using AndroidPCController.App.Services;
 using AndroidPCController.Core.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -7,12 +8,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class PhoneDesktopViewModel
+public partial class PhoneDesktopViewModel : ObservableObject
 {
     private readonly IAdbClient _adbClient;
     private readonly IDeviceManager _deviceManager;
     private readonly ILogService _logService;
+    private readonly ScrcpyManager _scrcpyManager;
+
+    public event EventHandler<IntPtr>? ScrcpyWindowReady;
+    public event EventHandler? ScrcpyStopped;
 
     [ObservableProperty]
     private string _deviceName = "No device connected";
@@ -27,6 +31,9 @@ public partial class PhoneDesktopViewModel
     private bool _isConnected;
 
     [ObservableProperty]
+    private bool _isScrcpyActive;
+
+    [ObservableProperty]
     private string _currentTime = DateTime.Now.ToString("HH:mm");
 
     [ObservableProperty]
@@ -39,20 +46,127 @@ public partial class PhoneDesktopViewModel
         _adbClient = App.Services.GetRequiredService<IAdbClient>();
         _deviceManager = App.Services.GetRequiredService<IDeviceManager>();
         _logService = App.Services.GetRequiredService<ILogService>();
+        _scrcpyManager = App.Services.GetRequiredService<ScrcpyManager>();
 
         _deviceManager.DeviceConnected += OnDeviceConnected;
         _deviceManager.DeviceDisconnected += OnDeviceDisconnected;
 
         LoadDefaultApps();
+        _ = RefreshAppsAsync();
         RefreshDeviceInfo();
     }
 
-    [RelayCommand]
-    private void RefreshApps()
+    public async Task StartScrcpyAsync()
     {
-        LoadDefaultApps();
-        RefreshDeviceInfo();
-        _logService.Debug("PhoneDesktop", "App grid refreshed");
+        if (IsScrcpyActive) return;
+
+        var session = _deviceManager.ActiveSessions.FirstOrDefault();
+        if (session is null)
+        {
+            _logService.Warning("PhoneDesktop", "No device connected. Cannot start screen.");
+            return;
+        }
+
+        try
+        {
+            var options = new ScrcpyOptions
+            {
+                Serial = session.Serial,
+                MaxFps = 60,
+                BitRate = 12_000_000,
+                Codec = "H264"
+            };
+
+            var hwnd = await _scrcpyManager.StartAsync(options);
+            if (hwnd == IntPtr.Zero)
+            {
+                _logService.Error("PhoneDesktop", "scrcpy window could not be found. Check that scrcpy is installed and the device is authorized.");
+                return;
+            }
+
+            IsScrcpyActive = true;
+            ScrcpyWindowReady?.Invoke(this, hwnd);
+            _logService.Information("PhoneDesktop", $"scrcpy started for {session.Serial}");
+        }
+        catch (Exception ex)
+        {
+            _logService.Error("PhoneDesktop", $"Failed to start scrcpy: {ex.Message}", ex);
+        }
+    }
+
+    public async Task StopScrcpyAsync()
+    {
+        if (!IsScrcpyActive && !_scrcpyManager.IsRunning) return;
+
+        try
+        {
+            await _scrcpyManager.StopAsync();
+        }
+        finally
+        {
+            IsScrcpyActive = false;
+            ScrcpyStopped?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    [RelayCommand]
+    private async Task RefreshAppsAsync()
+    {
+        var session = _deviceManager.ActiveSessions.FirstOrDefault();
+        if (session is null)
+        {
+            LoadDefaultApps();
+            RefreshDeviceInfo();
+            return;
+        }
+
+        try
+        {
+            var result = await session.AppManager.GetInstalledAppsAsync(includeSystem: false);
+
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                InstalledApps.Clear();
+                foreach (var app in result.UserApps.Take(40))
+                {
+                    var initial = string.IsNullOrEmpty(app.AppName)
+                        ? "?"
+                        : app.AppName.Substring(0, 1).ToUpperInvariant();
+                    InstalledApps.Add(new AppTile
+                    {
+                        PackageName = app.PackageName,
+                        AppName = app.AppName,
+                        IconChar = initial,
+                        IconColor = PickAppColor(app.PackageName)
+                    });
+                }
+
+                RefreshDeviceInfo();
+            });
+
+            _logService.Information("PhoneDesktop", $"Loaded {InstalledApps.Count} installed apps");
+        }
+        catch (Exception ex)
+        {
+            _logService.Error("PhoneDesktop", $"Failed to load apps: {ex.Message}", ex);
+            LoadDefaultApps();
+        }
+    }
+
+    private static readonly string[] AppColorPalette =
+    [
+        "#00D2FF", "#22C55E", "#F59E0B", "#EF4444", "#A855F7",
+        "#4D7CFF", "#EC4899", "#14B8A6", "#F97316", "#8B5CF6"
+    ];
+
+    private static string PickAppColor(string packageName)
+    {
+        var hash = 0;
+        foreach (var c in packageName)
+        {
+            hash = (hash * 31 + c) & 0x7FFFFFFF;
+        }
+        return AppColorPalette[hash % AppColorPalette.Length];
     }
 
     [RelayCommand]
@@ -214,6 +328,7 @@ public partial class PhoneDesktopViewModel
             IsConnected = true;
             ConnectionStatus = $"Connected · {e.Device.Serial}";
             _ = UpdateBatteryAsync(e.Device.Serial);
+            _ = RefreshAppsAsync();
         });
     }
 

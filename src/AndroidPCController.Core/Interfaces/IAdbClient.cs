@@ -15,9 +15,11 @@ public interface IAdbClient : IAsyncDisposable
     Task<byte[]> ExecuteCommandBytesAsync(string serial, string command, CancellationToken ct = default);
     Task<byte[]> PullFileAsync(string serial, string remotePath, CancellationToken ct = default);
     Task PushFileAsync(string serial, string localPath, string remotePath, IProgress<TransferProgress>? progress = null, CancellationToken ct = default);
+    Task PullBugReportAsync(string serial, string localPath, CancellationToken ct = default);
     Task<IReadOnlyList<AndroidAppInfo>> GetInstalledAppsAsync(string serial, bool includeSystem = false, CancellationToken ct = default);
     Task<string?> GetClipboardAsync(string serial, CancellationToken ct = default);
     Task SetClipboardAsync(string serial, string text, CancellationToken ct = default);
+    Task<IReadOnlyList<NotificationInfo>> GetNotificationsAsync(string serial, CancellationToken ct = default);
     Task<byte[]> TakeScreenshotAsync(string serial, CancellationToken ct = default);
     Task<string> GetBatteryInfoAsync(string serial, CancellationToken ct = default);
     Task<string> GetScreenSizeAsync(string serial, CancellationToken ct = default);

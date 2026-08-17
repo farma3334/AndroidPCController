@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using AndroidPCController.Core.Interfaces;
 using AndroidPCController.Core.Models;
+using AndroidPCController.Core.Notifications;
 using Microsoft.Extensions.Logging;
 
 namespace AndroidPCController.Adb;
@@ -58,13 +59,13 @@ public sealed class AdbClient : IAdbClient
         {
             var props = await GetDevicePropertiesAsync(serial, ct);
 
-            var model = props.GetValueOrDefault("ro.product.model", "Unknown");
-            var manufacturer = props.GetValueOrDefault("ro.product.manufacturer", "Unknown");
-            var androidVersion = props.GetValueOrDefault("ro.build.version.release", "Unknown");
-            var apiLevelStr = props.GetValueOrDefault("ro.build.version.sdk", "0");
+            var model = props.GetValueOrDefault("ro.product.model", "Unknown") ?? "Unknown";
+            var manufacturer = props.GetValueOrDefault("ro.product.manufacturer", "Unknown") ?? "Unknown";
+            var androidVersion = props.GetValueOrDefault("ro.build.version.release", "Unknown") ?? "Unknown";
+            var apiLevelStr = props.GetValueOrDefault("ro.build.version.sdk", "0") ?? "0";
             int.TryParse(apiLevelStr, out int apiLevel);
-            var productName = props.GetValueOrDefault("ro.product.name", "Unknown");
-            var deviceName = props.GetValueOrDefault("ro.product.device", "Unknown");
+            var productName = props.GetValueOrDefault("ro.product.name", "Unknown") ?? "Unknown";
+            var deviceName = props.GetValueOrDefault("ro.product.device", "Unknown") ?? "Unknown";
 
             var screenSize = await GetScreenSizeInternalAsync(serial, ct);
             var screenDensityStr = props.GetValueOrDefault("ro.sf.lcd_density", "0");
@@ -235,6 +236,18 @@ public sealed class AdbClient : IAdbClient
         }
     }
 
+    public async Task PullBugReportAsync(string serial, string localPath, CancellationToken ct = default)
+    {
+        var directory = Path.GetDirectoryName(localPath);
+        if (!string.IsNullOrEmpty(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        await RunAdbCommandAsync($"-s {serial} bugreport \"{localPath}\"",
+            ct: ct, timeout: LongCommandTimeout);
+    }
+
     public async Task PushFileAsync(string serial, string localPath, string remotePath,
         IProgress<TransferProgress>? progress = null, CancellationToken ct = default)
     {
@@ -341,6 +354,19 @@ public sealed class AdbClient : IAdbClient
     {
         var escaped = text.Replace("'", "'\\''");
         await ExecuteCommandAsync(serial, $"service call clipboard 2 i32 1 s16 '{escaped}'", ct);
+    }
+
+    public async Task<IReadOnlyList<NotificationInfo>> GetNotificationsAsync(string serial, CancellationToken ct = default)
+    {
+        try
+        {
+            var output = await ExecuteCommandAsync(serial, "dumpsys notification --noredact", ct);
+            return NotificationInfoParser.Parse(output);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Failed to read notifications from {serial}: {ex.Message}", ex);
+        }
     }
 
     public async Task<byte[]> TakeScreenshotAsync(string serial, CancellationToken ct = default)

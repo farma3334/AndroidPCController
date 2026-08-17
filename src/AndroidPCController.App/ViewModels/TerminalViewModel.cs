@@ -7,8 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class TerminalViewModel : IAsyncDisposable
+public partial class TerminalViewModel : ObservableObject, IAsyncDisposable
 {
     private readonly IDeviceManager _deviceManager;
     private readonly ILogService _logService;
@@ -34,6 +33,12 @@ public partial class TerminalViewModel : IAsyncDisposable
     [ObservableProperty]
     private bool _isConnected;
 
+    [ObservableProperty]
+    private bool _autoScroll = true;
+
+    [ObservableProperty]
+    private ObservableCollection<DeviceInfo> _availableDevices = [];
+
     public TerminalViewModel(IDeviceManager deviceManager, ILogService logService)
     {
         _deviceManager = deviceManager;
@@ -42,35 +47,70 @@ public partial class TerminalViewModel : IAsyncDisposable
         _deviceManager.DeviceConnected += OnDeviceConnected;
         _deviceManager.DeviceDisconnected += OnDeviceDisconnected;
 
+        RefreshDevices();
+
         AppendOutput("Android PC Controller - Terminal");
         AppendOutput("Type commands below. Use Up/Down arrows for history.");
         AppendOutput(new string('=', 50));
     }
 
-    [RelayCommand]
-    private async Task ExecuteCommandAsync()
+    partial void OnSelectedDeviceChanged(DeviceInfo? value)
     {
-        if (string.IsNullOrWhiteSpace(CommandText) || _currentSession is null || IsExecuting) return;
+        if (value is null) return;
+        var session = _deviceManager.GetSession(value.Serial);
+        if (session is not null)
+        {
+            _currentSession = session;
+            SetSession(session);
+        }
+    }
 
-        var command = CommandText.Trim();
+    private void RefreshDevices()
+    {
+        _ = System.Windows.Application.Current.Dispatcher.InvokeAsync(async () =>
+        {
+            AvailableDevices.Clear();
+            IReadOnlyList<DeviceInfo> devices;
+            try
+            {
+                devices = await _deviceManager.GetAvailableDevicesAsync();
+            }
+            catch
+            {
+                devices = [];
+            }
+            foreach (var device in devices)
+            {
+                AvailableDevices.Add(device);
+            }
+        });
+    }
+
+    [RelayCommand]
+    private async Task ExecuteCommandAsync(string? command = null)
+    {
+        var effectiveCommand = (command ?? CommandText).Trim();
+        if (string.IsNullOrWhiteSpace(effectiveCommand) || _currentSession is null || IsExecuting) return;
+
+        var commandText = effectiveCommand;
         CommandText = string.Empty;
 
         try
         {
             IsExecuting = true;
 
-            if (CommandHistory.Count == 0 || CommandHistory[^1] != command)
-                CommandHistory.Add(command);
+            if (CommandHistory.Count == 0 || CommandHistory[^1] != commandText)
+                CommandHistory.Add(commandText);
             _historyIndex = CommandHistory.Count;
 
-            AppendOutput($"\n$ {command}");
-            var result = await _currentSession.ExecuteShellCommandAsync(command);
+            AppendOutput($"\n$ {commandText}");
+            var result = await _currentSession.ExecuteShellCommandAsync(commandText);
             AppendOutput(result);
         }
         catch (Exception ex)
         {
             AppendOutput($"Error: {ex.Message}");
-            _logService.Error("Terminal", $"Command failed: {command} - {ex.Message}", ex);
+            _logService.Error("Terminal", $"Command failed: {commandText} - {ex.Message}", ex);
         }
         finally
         {
@@ -162,13 +202,17 @@ public partial class TerminalViewModel : IAsyncDisposable
     private void OnDeviceConnected(object? sender, DeviceConnectedEventArgs e)
     {
         _currentSession = e.Session;
+        RefreshDevices();
         SetSession(e.Session);
     }
 
     private void OnDeviceDisconnected(object? sender, DeviceDisconnectedEventArgs e)
     {
         if (_currentSession?.Serial == e.Serial)
+        {
             SetSession(null);
+            RefreshDevices();
+        }
     }
 
     public async ValueTask DisposeAsync()

@@ -15,10 +15,11 @@ public partial class AppsPage : UserControl
 
     private void AppListView_ContextMenu(object sender, MouseButtonEventArgs e)
     {
-        if (sender is ListView listView && listView.SelectedItem != null)
+        if (sender is ListView listView && listView.SelectedItem != null &&
+            Resources["AppContextMenu"] is ContextMenu contextMenu)
         {
-            AppContextMenu.PlacementTarget = listView;
-            AppContextMenu.IsOpen = true;
+            contextMenu.PlacementTarget = listView;
+            contextMenu.IsOpen = true;
         }
     }
 

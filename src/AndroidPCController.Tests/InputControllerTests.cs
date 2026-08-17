@@ -264,9 +264,12 @@ public sealed class InputControllerTests
         public Task<byte[]> ExecuteCommandBytesAsync(string serial, string command, CancellationToken ct = default) => Task.FromResult(Array.Empty<byte>());
         public Task<byte[]> PullFileAsync(string serial, string remotePath, CancellationToken ct = default) => Task.FromResult(Array.Empty<byte>());
         public Task PushFileAsync(string serial, string localPath, string remotePath, IProgress<TransferProgress>? progress = null, CancellationToken ct = default) => Task.CompletedTask;
+        public Task PullBugReportAsync(string serial, string localPath, CancellationToken ct = default) => Task.CompletedTask;
         public Task<IReadOnlyList<AndroidAppInfo>> GetInstalledAppsAsync(string serial, bool includeSystem = false, CancellationToken ct = default) => Task.FromResult<IReadOnlyList<AndroidAppInfo>>(Array.Empty<AndroidAppInfo>());
         public Task<string?> GetClipboardAsync(string serial, CancellationToken ct = default) => Task.FromResult<string?>(null);
         public Task SetClipboardAsync(string serial, string text, CancellationToken ct = default) => Task.CompletedTask;
+        public Task<IReadOnlyList<AndroidPCController.Core.Models.NotificationInfo>> GetNotificationsAsync(string serial, CancellationToken ct = default)
+            => Task.FromResult<IReadOnlyList<AndroidPCController.Core.Models.NotificationInfo>>([]);
         public Task<byte[]> TakeScreenshotAsync(string serial, CancellationToken ct = default) => Task.FromResult(Array.Empty<byte>());
         public Task<string> GetBatteryInfoAsync(string serial, CancellationToken ct = default) => Task.FromResult("100");
         public Task<string> GetScreenSizeAsync(string serial, CancellationToken ct = default) => Task.FromResult("1080x2400");
@@ -283,7 +286,9 @@ public sealed class InputControllerTests
         public Task SendTouchEventAsync(string serial, int x, int y, InputEventType type, CancellationToken ct = default) { TouchEvents.Add((serial, x, y)); return Task.CompletedTask; }
         public Task SendSwipeEventAsync(string serial, int x1, int y1, int x2, int y2, int durationMs, CancellationToken ct = default) => Task.CompletedTask;
         public Task SendTextAsync(string serial, string text, CancellationToken ct = default) { SendTexts.Add((serial, text)); Texts.Add(text); return Task.CompletedTask; }
+#pragma warning disable CS0067
         public event EventHandler<DeviceChangedEventArgs>? DeviceChanged;
+#pragma warning restore CS0067
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }

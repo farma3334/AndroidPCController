@@ -7,8 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class AppsViewModel : IAsyncDisposable
+public partial class AppsViewModel : ObservableObject, IAsyncDisposable
 {
     private readonly IDeviceManager _deviceManager;
     private readonly ILogService _logService;
@@ -25,6 +24,9 @@ public partial class AppsViewModel : IAsyncDisposable
 
     [ObservableProperty]
     private string _filterText = string.Empty;
+
+    [ObservableProperty]
+    private bool _showUserApps = true;
 
     [ObservableProperty]
     private bool _showSystemApps;
@@ -54,6 +56,8 @@ public partial class AppsViewModel : IAsyncDisposable
 
         _deviceManager.DeviceConnected += OnDeviceConnected;
         _deviceManager.DeviceDisconnected += OnDeviceDisconnected;
+
+        SetSession(_deviceManager.ActiveSessions.FirstOrDefault());
     }
 
     public void SetSession(IDeviceSession? session)
@@ -63,6 +67,7 @@ public partial class AppsViewModel : IAsyncDisposable
     }
 
     partial void OnFilterTextChanged(string value) => ApplyFilterInternal();
+    partial void OnShowUserAppsChanged(bool value) => ApplyFilterInternal();
     partial void OnShowSystemAppsChanged(bool value) => ApplyFilterInternal();
 
     [RelayCommand]
@@ -285,7 +290,7 @@ public partial class AppsViewModel : IAsyncDisposable
         var filtered = new List<AndroidAppInfo>();
 
         if (ShowSystemApps) filtered.AddRange(_allSystemApps);
-        filtered.AddRange(_allUserApps);
+        if (ShowUserApps) filtered.AddRange(_allUserApps);
 
         if (!string.IsNullOrWhiteSpace(FilterText))
         {

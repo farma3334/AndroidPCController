@@ -184,14 +184,14 @@
                         <TextBlock Text="Resolution" Style="{StaticResource FormFieldLabel}"/>
                         <ComboBox Style="{StaticResource ComboStyle}" Width="140"
                                   ItemsSource="{Binding AvailableResolutions}"
-                                  SelectedItem="{Binding RecordingResolution}"/>
+                                  SelectedItem="{Binding RecordResolution}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1">
                         <TextBlock Text="FPS" Style="{StaticResource FormFieldLabel}"/>
                         <ComboBox Style="{StaticResource ComboStyle}" Width="80"
                                   ItemsSource="{Binding AvailableFpsValues}"
-                                  SelectedItem="{Binding RecordingFps}"/>
+                                  SelectedItem="{Binding RecordFps}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
@@ -205,7 +205,7 @@
                         <TextBlock Text="Codec" Style="{StaticResource FormFieldLabel}"/>
                         <ComboBox Style="{StaticResource ComboStyle}" Width="100"
                                   ItemsSource="{Binding AvailableCodecs}"
-                                  SelectedItem="{Binding RecordingCodec}"/>
+                                  SelectedItem="{Binding RecordCodec}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="4" VerticalAlignment="Bottom" Margin="16,0,0,0">

@@ -143,19 +143,19 @@
                         <TextBlock Text="Live" FontSize="12" Foreground="#a0a0a0"
                                    VerticalAlignment="Center" Margin="0,0,8,0"/>
                         <ToggleButton x:Name="LiveToggle" Style="{StaticResource FilterBtn}"
-                                      IsChecked="{Binding IsLiveMode}" Width="50"/>
+                                      IsChecked="{Binding IsLive}" Width="50"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
                         <Button Style="{StaticResource ActionBtn}"
-                                Command="{Binding ClearLogsCommand}">
+                                Command="{Binding ClearCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="DeleteSweep" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
                                 <TextBlock Text="Clear" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Button Style="{StaticResource ActionBtn}"
-                                Command="{Binding ExportLogsCommand}">
+                                Command="{Binding ExportCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="Export" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
                                 <TextBlock Text="Export" FontSize="12" VerticalAlignment="Center"/>
@@ -168,7 +168,7 @@
 
         <Border Grid.Row="1" Style="{StaticResource PanelStyle}" Padding="0" ClipToBounds="True">
             <Grid>
-            <ListView x:Name="LogListView" ItemsSource="{Binding FilteredLogs}"
+            <ListView x:Name="LogListView" ItemsSource="{Binding Logs}"
                       Background="Transparent" Foreground="#e0e0e0"
                       BorderThickness="0" FontSize="12"
                       SelectionMode="Single">

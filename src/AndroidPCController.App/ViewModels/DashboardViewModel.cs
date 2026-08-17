@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Windows.Threading;
 using AndroidPCController.Core.Interfaces;
 using AndroidPCController.Core.Models;
@@ -105,6 +106,8 @@ public partial class DashboardViewModel : ObservableObject, IAsyncDisposable
         };
         _statsTimer.Tick += async (_, _) => await RefreshDeviceStatsAsync();
         _statsTimer.Start();
+
+        _ = RefreshDevicesInternalAsync();
     }
 
     [RelayCommand]
@@ -473,29 +476,57 @@ public partial class DashboardViewModel : ObservableObject, IAsyncDisposable
     }
 
     [RelayCommand]
-    private void TakeScreenshot()
+    private async Task TakeScreenshotAsync()
     {
         if (string.IsNullOrEmpty(_selectedSerial)) return;
-        _logService.Information("Dashboard", $"Screenshot requested for {_selectedSerial}");
+
+        var session = _deviceManager.GetSession(_selectedSerial);
+        if (session is null)
+        {
+            _logService.Warning("Dashboard", "No active session for the selected device.");
+            return;
+        }
+
+        try
+        {
+            var downloadDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", "AndroidPCController");
+            Directory.CreateDirectory(downloadDir);
+            var path = await session.Screenshot.CaptureAndSaveAsync(downloadDir);
+            _logService.Information("Dashboard", $"Screenshot saved: {path}");
+        }
+        catch (Exception ex)
+        {
+            _logService.Error("Dashboard", $"Screenshot failed: {ex.Message}", ex);
+        }
     }
+
+    public event EventHandler<string>? NavigateRequested;
 
     [RelayCommand]
     private void StartRecording()
     {
-        if (string.IsNullOrEmpty(_selectedSerial)) return;
+        if (string.IsNullOrEmpty(_selectedSerial))
+        {
+            _logService.Warning("Dashboard", "No device selected to record.");
+            return;
+        }
+
         _logService.Information("Dashboard", $"Recording started for {_selectedSerial}");
+        NavigateRequested?.Invoke(this, "ScreenRecorder");
     }
 
     [RelayCommand]
     private void OpenTerminal()
     {
         _logService.Information("Dashboard", "Terminal requested");
+        NavigateRequested?.Invoke(this, "Terminal");
     }
 
     [RelayCommand]
     private void OpenFileBrowser()
     {
         _logService.Information("Dashboard", "File browser requested");
+        NavigateRequested?.Invoke(this, "Files");
     }
 
     [RelayCommand]
@@ -503,6 +534,7 @@ public partial class DashboardViewModel : ObservableObject, IAsyncDisposable
     {
         if (string.IsNullOrEmpty(_selectedSerial)) return;
         _logService.Information("Dashboard", $"Control requested for {_selectedSerial}");
+        NavigateRequested?.Invoke(this, "Controller");
     }
 
     private void OnDeviceConnected(object? sender, DeviceConnectedEventArgs e)

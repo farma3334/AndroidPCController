@@ -3,7 +3,6 @@
   <ItemGroup>
     <ProjectReference Include="..\AndroidPCController.Core\AndroidPCController.Core.csproj" />
     <ProjectReference Include="..\AndroidPCController.Adb\AndroidPCController.Adb.csproj" />
-    <ProjectReference Include="..\AndroidPCController.Devices\AndroidPCController.Devices.csproj" />
   </ItemGroup>
 
   <ItemGroup>

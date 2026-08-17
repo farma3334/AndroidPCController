@@ -9,6 +9,53 @@ public partial class ControllerPage : UserControl
     public ControllerPage()
     {
         InitializeComponent();
+        DataContextChanged += OnDataContextChanged;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is ViewModels.ControllerViewModel vm && !vm.IsStreaming && vm.HasDeviceSession)
+        {
+            vm.StartStreamCommand.Execute(null);
+        }
+    }
+
+    private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (e.OldValue is ViewModels.ControllerViewModel oldVm)
+        {
+            oldVm.ScrcpyWindowReady -= OnScrcpyWindowReady;
+            oldVm.ScrcpyStopped -= OnScrcpyStopped;
+        }
+
+        if (DataContext is ViewModels.ControllerViewModel vm)
+        {
+            vm.ScrcpyWindowReady += OnScrcpyWindowReady;
+            vm.ScrcpyStopped += OnScrcpyStopped;
+        }
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is ViewModels.ControllerViewModel vm)
+        {
+            vm.ScrcpyWindowReady -= OnScrcpyWindowReady;
+            vm.ScrcpyStopped -= OnScrcpyStopped;
+            _ = vm.StopStreamAsync();
+        }
+    }
+
+    private void OnScrcpyWindowReady(object? sender, IntPtr hwnd)
+    {
+        ScrcpyHost.AttachWindow(hwnd);
+    }
+
+    private void OnScrcpyStopped(object? sender, EventArgs e)
+    {
+        ScrcpyHost.DetachWindow();
+        _fullscreenWindow?.CloseAndSkipReparent();
     }
 
     private void StreamImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -44,25 +91,30 @@ public partial class ControllerPage : UserControl
         }
     }
 
-    private bool _isFullscreen;
+    private FullscreenStreamWindow? _fullscreenWindow;
 
     private void FullscreenButton_Click(object sender, RoutedEventArgs e)
     {
-        var window = Window.GetWindow(this);
-        if (window == null) return;
+        if (_fullscreenWindow != null)
+        {
+            _fullscreenWindow.Close();
+            return;
+        }
 
-        if (!_isFullscreen)
+        var hwnd = ScrcpyHost.ChildWindow;
+        if (hwnd == IntPtr.Zero)
+            return;
+
+        _fullscreenWindow = new FullscreenStreamWindow(ScrcpyHost, hwnd)
         {
-            window.WindowState = WindowState.Maximized;
-            window.WindowStyle = WindowStyle.None;
-            FullscreenIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.FullscreenExit;
-        }
-        else
+            Owner = Window.GetWindow(this)
+        };
+        _fullscreenWindow.Exited += () =>
         {
-            window.WindowState = WindowState.Normal;
-            window.WindowStyle = WindowStyle.SingleBorderWindow;
+            _fullscreenWindow = null;
             FullscreenIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Fullscreen;
-        }
-        _isFullscreen = !_isFullscreen;
+        };
+        _fullscreenWindow.Show();
+        FullscreenIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.FullscreenExit;
     }
 }

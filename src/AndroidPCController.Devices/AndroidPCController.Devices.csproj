@@ -3,6 +3,8 @@
   <ItemGroup>
     <ProjectReference Include="..\AndroidPCController.Core\AndroidPCController.Core.csproj" />
     <ProjectReference Include="..\AndroidPCController.Adb\AndroidPCController.Adb.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Files\AndroidPCController.Files.csproj" />
+    <ProjectReference Include="..\AndroidPCController.Streaming\AndroidPCController.Streaming.csproj" />
   </ItemGroup>
 
   <ItemGroup>

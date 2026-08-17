@@ -93,7 +93,7 @@
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource ActionBtn}"
-                            Command="{Binding ExportCommand}">
+                            Command="{Binding ExportLogsCommand}">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Export" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
                             <TextBlock Text="Export" FontSize="12" VerticalAlignment="Center"/>
@@ -140,12 +140,12 @@
                          Padding="8,6" VerticalContentAlignment="Center"
                          CaretBrush="#00d2ff"
                          KeyDown="CommandInput_KeyDown"
-                         Text="{Binding CurrentCommand, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding CommandText, UpdateSourceTrigger=PropertyChanged}"
                          materialDesign:HintAssist.Hint="Enter shell command..."/>
 
                 <Button Grid.Column="2" Style="{StaticResource ActionBtn}" Margin="8,0,0,0"
                         Padding="16,6"
-                        Command="{Binding ExecuteCommand}">
+                        Command="{Binding ExecuteCommandCommand}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Play" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
                         <TextBlock Text="Execute" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>

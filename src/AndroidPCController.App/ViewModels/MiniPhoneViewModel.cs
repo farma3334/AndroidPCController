@@ -1,12 +1,14 @@
+using AndroidPCController.App.Controls;
+using AndroidPCController.App.Services;
 using AndroidPCController.Core.Interfaces;
 using AndroidPCController.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AndroidPCController.App.ViewModels;
 
-[ObservableObject]
-public partial class MiniPhoneViewModel : IAsyncDisposable
+public partial class MiniPhoneViewModel : ObservableObject, IAsyncDisposable
 {
     private readonly IDeviceManager _deviceManager;
     private readonly ILogService _logService;
@@ -28,7 +30,13 @@ public partial class MiniPhoneViewModel : IAsyncDisposable
     [ObservableProperty]
     private bool _isTopmost = true;
 
+    [ObservableProperty]
+    private bool _isScrcpyActive;
+
     private DeviceInfo? _currentDevice;
+    private ScrcpyManager? _scrcpyManager;
+
+    public event EventHandler<IntPtr>? ScrcpyWindowReady;
 
     public MiniPhoneViewModel(IDeviceManager deviceManager, ILogService logService)
     {
@@ -61,6 +69,63 @@ public partial class MiniPhoneViewModel : IAsyncDisposable
                 }
             }
         });
+    }
+
+    public async Task StartMiniStreamAsync()
+    {
+        if (_currentDevice is null)
+        {
+            _logService.Warning("MiniPhone", "No device connected. Connect a device first.");
+            return;
+        }
+
+        try
+        {
+            _scrcpyManager ??= App.Services.GetRequiredService<ScrcpyManager>();
+
+            IntPtr hwnd;
+            if (_scrcpyManager.IsRunning)
+            {
+                hwnd = _scrcpyManager.WindowHandle;
+            }
+            else
+            {
+                var options = new ScrcpyOptions
+                {
+                    Serial = _currentDevice.Serial,
+                    MaxFps = 60,
+                    BitRate = 12_000_000,
+                    Codec = "H264",
+                    MaxSize = 720,
+                    LowLatency = true,
+                    AudioEnabled = false
+                };
+                hwnd = await _scrcpyManager.StartAsync(options);
+            }
+
+            if (hwnd == IntPtr.Zero)
+            {
+                _logService.Error("MiniPhone", "scrcpy window could not be found.");
+                return;
+            }
+
+            IsScrcpyActive = true;
+            ScrcpyWindowReady?.Invoke(this, hwnd);
+            _logService.Information("MiniPhone", $"Live screen attached for {_currentDevice.Serial}");
+        }
+        catch (Exception ex)
+        {
+            _logService.Error("MiniPhone", $"Failed to start live screen: {ex.Message}", ex);
+        }
+    }
+
+    public void NotifyMiniClosed()
+    {
+        IsScrcpyActive = false;
+        if (ScrcpyHost.LiveHosts.Count == 0)
+        {
+            _ = _scrcpyManager?.StopAsync();
+        }
     }
 
     private async Task RefreshBatteryAsync()

@@ -3,7 +3,7 @@ namespace AndroidPCController.Core.Models;
 public sealed class DeviceInfo
 {
     public required string Serial { get; init; }
-    public required string Model { get; init; }
+    public required string Model { get; set; }
     public required string Manufacturer { get; init; }
     public required string AndroidVersion { get; init; }
     public required int ApiLevel { get; init; }

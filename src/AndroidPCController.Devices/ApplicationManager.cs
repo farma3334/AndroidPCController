@@ -134,7 +134,6 @@ public sealed class ApplicationManager : IApplicationManager
 
             string? versionName = null;
             int versionCode = 0;
-            DateTime? installDate = null;
             string? dataDir = null;
             string? sourceDir = null;
 
@@ -145,8 +144,6 @@ public sealed class ApplicationManager : IApplicationManager
                     versionName = trimmed["versionName=".Length..].Trim();
                 else if (trimmed.StartsWith("versionCode="))
                     int.TryParse(trimmed["versionCode=".Length..].Trim(), out versionCode);
-                else if (trimmed.StartsWith("firstInstallTime="))
-                    DateTime.TryParse(trimmed["firstInstallTime=".Length..].Trim(), out DateTime dt);
                 else if (trimmed.StartsWith("dataDir="))
                     dataDir = trimmed["dataDir=".Length..].Trim();
                 else if (trimmed.StartsWith("codePath="))

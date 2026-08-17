@@ -5,11 +5,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:AndroidPCController.App.Pages"
+             xmlns:controls="clr-namespace:AndroidPCController.App.Controls"
+             xmlns:cvt="clr-namespace:AndroidPCController.App.Converters"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="1100"
              Background="#1a1a2e">
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+        <cvt:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisConverter"/>
         <Style x:Key="ToolButton" TargetType="Button">
             <Setter Property="Background" Value="#0f3460"/>
             <Setter Property="Foreground" Value="#e0e0e0"/>
@@ -84,35 +88,45 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Style="{StaticResource SettingsPanel}" Padding="8" Margin="0,0,0,8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource ToolButton}" Content="&#x2190;" Tag="Back"
-                            Command="{Binding BackCommand}"/>
+                            Command="{Binding PressBackCommand}"/>
                     <Button Style="{StaticResource ToolButton}" Tag="Home"
-                            Command="{Binding HomeCommand}">
+                            Command="{Binding PressHomeCommand}">
                         <materialDesign:PackIcon Kind="Home" Width="18" Height="18"/>
                     </Button>
                     <Button Style="{StaticResource ToolButton}" Tag="Recent Apps"
-                            Command="{Binding RecentAppsCommand}">
+                            Command="{Binding PressRecentCommand}">
                         <materialDesign:PackIcon Kind="Application" Width="18" Height="18"/>
                     </Button>
 
                     <Border Width="1" Background="#1a1a4e" Margin="8,4"/>
 
                     <Button Style="{StaticResource ToolButton}" Tag="Rotate"
-                            Command="{Binding RotateCommand}">
+                            Command="{Binding RotateScreenCommand}">
                         <materialDesign:PackIcon Kind="RotateRight" Width="18" Height="18"/>
                     </Button>
                     <Button Style="{StaticResource ToolButton}" Tag="Screenshot"
-                            Command="{Binding ScreenshotCommand}">
+                            Command="{Binding ScreenshotButtonCommand}">
                         <materialDesign:PackIcon Kind="Camera" Width="18" Height="18"/>
                     </Button>
                     <Button Style="{StaticResource ToolButton}" Tag="Record"
-                            Command="{Binding ToggleRecordCommand}">
+                            Command="{Binding RecordButtonCommand}">
                         <materialDesign:PackIcon Kind="Record" Width="18" Height="18"/>
                     </Button>
                     <Button Style="{StaticResource ToolButton}" Tag="Clipboard"
-                            Command="{Binding ClipboardCommand}">
+                            Command="{Binding OpenClipboardCommand}">
                         <materialDesign:PackIcon Kind="ContentCopy" Width="18" Height="18"/>
+                    </Button>
+                    <Button Style="{StaticResource ToolButton}" Tag="Keyboard"
+                            Command="{Binding OpenKeyboardCommand}">
+                        <materialDesign:PackIcon Kind="Keyboard" Width="18" Height="18"/>
                     </Button>
 
                     <Border Width="1" Background="#1a1a4e" Margin="8,4"/>
@@ -137,17 +151,50 @@
                         <materialDesign:PackIcon x:Name="FullscreenIcon" Kind="Fullscreen" Width="18" Height="18"/>
                     </Button>
                 </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                    <Button Padding="16,6" FontWeight="SemiBold" Cursor="Hand"
+                            Foreground="#1a1a2e"
+                            Command="{Binding StartStreamCommand}"
+                            Visibility="{Binding IsStreaming, Converter={StaticResource InverseBoolToVisConverter}}">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#00d2ff" Offset="0"/>
+                                <GradientStop Color="#4dffb8" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Play" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Start" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Padding="16,6" FontWeight="SemiBold" Cursor="Hand"
+                            Background="#ff5252" Foreground="White"
+                            Command="{Binding StopStreamCommand}"
+                            Visibility="{Binding IsStreaming, Converter={StaticResource BoolToVisConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Stop" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Stop" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                </Grid>
             </Border>
 
             <Border Grid.Row="1" Background="#000000" CornerRadius="4"
-                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    MinWidth="480" MinHeight="360" Margin="0,0,0,8">
                 <Border x:Name="StreamContainer" ClipToBounds="True">
                     <Grid>
                         <Image x:Name="StreamImage" Stretch="Uniform"
                                MouseLeftButtonDown="StreamImage_MouseLeftButtonDown"
                                MouseMove="StreamImage_MouseMove"
                                MouseRightButtonDown="StreamImage_MouseRightButtonDown"
-                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               Visibility="{Binding IsScrcpyActive, Converter={StaticResource InverseBoolToVisConverter}}"/>
+
+                        <controls:ScrcpyHost x:Name="ScrcpyHost"
+                                             Visibility="{Binding IsScrcpyActive, Converter={StaticResource BoolToVisConverter}}"/>
 
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
                                     IsHitTestVisible="False">
@@ -170,13 +217,13 @@
                                        Opacity="0.7"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
-                                    VerticalAlignment="Top" Margin="8">
-                            <Border Background="#000000" Opacity="0.6" CornerRadius="4" Padding="6,3">
-                                <TextBlock x:Name="LatencyOverlay" Text="" FontSize="11"
-                                           Foreground="#00d2ff" FontWeight="SemiBold"/>
-                            </Border>
-                        </StackPanel>
+<StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                    VerticalAlignment="Top" Margin="8">
+            <Border Background="#000000" Opacity="0.6" CornerRadius="4" Padding="6,3">
+                <TextBlock Text="{Binding LiveOverlayText}" FontSize="11"
+                           Foreground="#00d2ff" FontWeight="SemiBold"/>
+            </Border>
+        </StackPanel>
 
                         <Ellipse x:Name="RecordingIndicator" Width="12" Height="12" Fill="#ff5252"
                                  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,12,0,0"
@@ -201,11 +248,11 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource StatusTextStyle}">
                         <Run Text="FPS: "/>
-                        <Run x:Name="FpsText" Text="--" Foreground="#00d2ff"/>
+                        <Run Text="{Binding LiveFpsText, Mode=OneWay}" Foreground="#00d2ff"/>
                     </TextBlock>
                     <TextBlock Style="{StaticResource StatusTextStyle}">
                         <Run Text="Bitrate: "/>
-                        <Run x:Name="BitrateText" Text="--" Foreground="#00d2ff"/>
+                        <Run Text="{Binding LiveBitrateText, Mode=OneWay}" Foreground="#00d2ff"/>
                     </TextBlock>
                     <TextBlock Style="{StaticResource StatusTextStyle}">
                         <Run Text="Latency: "/>
@@ -213,7 +260,7 @@
                     </TextBlock>
                     <TextBlock Style="{StaticResource StatusTextStyle}">
                         <Run Text="Resolution: "/>
-                        <Run x:Name="ResolutionText" Text="--" Foreground="#00d2ff"/>
+                        <Run Text="{Binding LiveResolutionText, Mode=OneWay}" Foreground="#00d2ff"/>
                     </TextBlock>
                 </StackPanel>
             </Border>
@@ -235,9 +282,9 @@
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
                         <Slider Grid.Column="0" Style="{StaticResource SliderStyle}"
-                                Minimum="10" Maximum="120"
+                                Minimum="10" Maximum="240"
                                 Value="{Binding Fps, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBlock Grid.Column="1" Text="{Binding Fps}" FontSize="12"
+                        <TextBlock Grid.Column="1" Text="{Binding StreamFps}" FontSize="12"
                                    Foreground="#00d2ff" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
 
@@ -261,7 +308,7 @@
 
                     <TextBlock Text="Codec" FontSize="12" Foreground="#a0a0a0" Margin="0,0,0,4"/>
                     <ComboBox Style="{StaticResource ComboStyle}" Margin="0,0,0,16"
-                              SelectedItem="{Binding Codec}"
+                              SelectedItem="{Binding StreamCodec}"
                               ItemsSource="{Binding AvailableCodecs}"/>
 
                     <Separator Background="#1a1a4e" Margin="0,0,0,14"/>
@@ -269,8 +316,6 @@
                     <TextBlock Text="Options" FontSize="14" FontWeight="SemiBold"
                                Foreground="#e0e0e0" Margin="0,0,0,10"/>
 
-                    <CheckBox Content="Hardware Acceleration" Foreground="#e0e0e0"
-                              IsChecked="{Binding HardwareAcceleration}" Margin="0,0,0,8"/>
                     <CheckBox Content="Low Latency" Foreground="#e0e0e0"
                               IsChecked="{Binding LowLatency}" Margin="0,0,0,8"/>
                     <CheckBox Content="Audio" Foreground="#e0e0e0"

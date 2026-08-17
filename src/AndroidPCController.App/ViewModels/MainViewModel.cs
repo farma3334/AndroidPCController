@@ -14,6 +14,7 @@ public partial class MainViewModel : ObservableObject
     private readonly ILogService _logService;
     private readonly ISettingsService _settingsService;
     private CancellationTokenSource? _devicePollCts;
+    private readonly Dictionary<string, DateTime> _lastAutoConnectAttempt = new();
 
     [ObservableProperty]
     private string _currentPageTitle = "Dashboard";
@@ -60,6 +61,7 @@ public partial class MainViewModel : ObservableObject
             _logService.Information("Main", $"ADB version: {version}");
 
             await RefreshDevicesAsync();
+            TryAutoConnect();
             StartDevicePolling();
 
             StatusBarText = $"Connected | ADB {AdbVersion}";
@@ -72,6 +74,8 @@ public partial class MainViewModel : ObservableObject
     }
 
     public event EventHandler<string>? NavigationRequested;
+
+    public event EventHandler? MinimizeRequested;
 
     [RelayCommand]
     private void Navigate(string page)
@@ -106,11 +110,45 @@ public partial class MainViewModel : ObservableObject
                 IsDeviceConnected = false;
                 ConnectionStatusText = "No device connected";
             }
+
+            await CleanupStaleSessionsAsync(devices);
+            TryAutoConnect();
         }
         catch (Exception ex)
         {
             _logService.Error("Main", "Failed to refresh devices", ex);
             StatusBarText = "Failed to scan devices";
+        }
+    }
+
+    private async Task CleanupStaleSessionsAsync(IReadOnlyList<DeviceInfo> devices)
+    {
+        var presentSerials = devices.Select(d => d.Serial).ToHashSet();
+
+        foreach (var session in _deviceManager.ActiveSessions)
+        {
+            if (!presentSerials.Contains(session.Serial))
+            {
+                _logService.Warning("Main", $"Device {session.Serial} no longer present, disconnecting stale session");
+                await _deviceManager.DisconnectAsync(session.Serial);
+            }
+        }
+    }
+
+    private void TryAutoConnect()
+    {
+        var now = DateTime.UtcNow;
+
+        foreach (var candidate in Devices)
+        {
+            if (candidate.ConnectionState != "device") continue;
+            if (_deviceManager.GetSession(candidate.Serial) is not null) continue;
+            if (_lastAutoConnectAttempt.TryGetValue(candidate.Serial, out var last) &&
+                now - last <= TimeSpan.FromSeconds(30)) continue;
+
+            _lastAutoConnectAttempt[candidate.Serial] = now;
+            _logService.Information("Main", $"Auto-connecting to device: {candidate.Model} ({candidate.Serial})");
+            _ = ConnectDeviceAsync(candidate);
         }
     }
 
@@ -168,6 +206,7 @@ public partial class MainViewModel : ObservableObject
     private void MinimizeToTray()
     {
         _logService.Debug("Main", "Minimized to tray");
+        MinimizeRequested?.Invoke(this, EventArgs.Empty);
     }
 
     [RelayCommand]
