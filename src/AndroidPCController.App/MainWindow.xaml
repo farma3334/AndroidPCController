@@ -18,53 +18,112 @@
     </Window.DataContext>
 
     <Window.Resources>
-        <!-- Animated sidebar nav button -->
+        <!-- Animated sidebar nav button - modern icon-only design -->
         <Style x:Key="AnimatedSidebarButton" TargetType="RadioButton">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#9D9DB2" />
+            <Setter Property="Foreground" Value="#6B6B80" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="Height" Value="42" />
-            <Setter Property="Margin" Value="6,2" />
+            <Setter Property="Height" Value="44" />
+            <Setter Property="Margin" Value="6,3" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="GroupName" Value="Navigation" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
                         <Grid>
-                            <Border x:Name="border"
+                            <!-- Background with rounded corners -->
+                            <Border x:Name="bgBorder"
                                     Background="Transparent"
-                                    CornerRadius="12"
-                                    Padding="0"
-                                    Margin="{TemplateBinding Margin}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="48"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ContentPresenter Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <ContentPresenter Grid.Column="1" x:Name="LabelContent"
-                                                      ContentSource="Content"
-                                                      HorizontalAlignment="Left" VerticalAlignment="Center"
-                                                      Margin="8,0,12,0" Opacity="0"/>
-                                </Grid>
+                                    CornerRadius="10"
+                                    Margin="{TemplateBinding Margin}"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
-                            <Border x:Name="ActiveBar" Width="3" Height="20" CornerRadius="2"
-                                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0"
-                                    Background="Transparent" Opacity="0"/>
+
+                            <!-- Active indicator - glowing bar on left -->
+                            <Border x:Name="ActiveIndicator"
+                                    Width="4"
+                                    Height="0"
+                                    CornerRadius="2"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="{TemplateBinding Margin}"
+                                    Background="#8B5CF6"
+                                    Opacity="0"
+                                    RenderTransformOrigin="0.5,0.5">
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleY="0"/>
+                                </Border.RenderTransform>
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#8B5CF6" BlurRadius="8" ShadowDepth="0" Opacity="0.6"/>
+                                </Border.Effect>
+                            </Border>
+
+                            <!-- Glow effect for active state -->
+                            <Border x:Name="GlowBorder"
+                                    CornerRadius="10"
+                                    Margin="{TemplateBinding Margin}"
+                                    Background="Transparent"
+                                    Opacity="0">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#8B5CF6" BlurRadius="16" ShadowDepth="0" Opacity="0.4"/>
+                                </Border.Effect>
+                            </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#18FFFFFF" />
+                                <Setter TargetName="bgBorder" Property="Background" Value="#18FFFFFF" />
                                 <Setter Property="Foreground" Value="#E2E2F0" />
-                                <Setter TargetName="ActiveBar" Property="Background" Value="#8B5CF6" />
-                                <Setter TargetName="ActiveBar" Property="Opacity" Value="0.6" />
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ActiveIndicator"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0.5" Duration="0:0:0.15"/>
+                                            <DoubleAnimation Storyboard.TargetName="ActiveIndicator"
+                                                             Storyboard.TargetProperty="Height"
+                                                             To="28" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <PowerEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ActiveIndicator"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0" Duration="0:0:0.15"/>
+                                            <DoubleAnimation Storyboard.TargetName="ActiveIndicator"
+                                                             Storyboard.TargetProperty="Height"
+                                                             To="0" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <PowerEase EasingMode="EaseIn"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#208B5CF6" />
+                                <Setter TargetName="bgBorder" Property="Background" Value="#208B5CF6" />
                                 <Setter Property="Foreground" Value="#D8B4FE" />
-                                <Setter TargetName="ActiveBar" Property="Background" Value="#D946EF" />
-                                <Setter TargetName="ActiveBar" Property="Opacity" Value="1" />
+                                <Setter TargetName="ActiveIndicator" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#8B5CF6" Offset="0"/>
+                                            <GradientStop Color="#D946EF" Offset="0.5"/>
+                                            <GradientStop Color="#FB7185" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="ActiveIndicator" Property="Opacity" Value="1" />
+                                <Setter TargetName="ActiveIndicator" Property="Height" Value="28" />
+                                <Setter TargetName="GlowBorder" Property="Opacity" Value="1" />
+                                <Setter TargetName="GlowBorder" Property="Background" Value="#0A8B5CF6" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -137,9 +196,12 @@
 
                 <!-- Animated Sidebar -->
                 <Border x:Name="SidebarBorder" Grid.Column="0"
-                        Background="#0E0E1A"
+                        Background="#0A0A14"
                         BorderBrush="#1A1A2E"
                         BorderThickness="0,0,1,0">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#000000" BlurRadius="24" ShadowDepth="4" Opacity="0.3" Direction="90"/>
+                    </Border.Effect>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -148,17 +210,31 @@
                         </Grid.RowDefinitions>
 
                         <!-- Logo Area -->
-                        <Border Grid.Row="0" Padding="0,14,0,10" HorizontalAlignment="Center">
-                            <Image Source="Assets/logo_small.png"
-                                   Width="36" Height="36"
-                                   RenderOptions.BitmapScalingMode="HighQuality"
-                                   HorizontalAlignment="Center" />
+                        <Border Grid.Row="0" Padding="0,18,0,14" HorizontalAlignment="Center">
+                            <Grid>
+                                <Ellipse Width="44" Height="44" HorizontalAlignment="Center">
+                                    <Ellipse.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#8B5CF6" Offset="0"/>
+                                            <GradientStop Color="#D946EF" Offset="0.5"/>
+                                            <GradientStop Color="#FB7185" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Ellipse.Fill>
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Color="#8B5CF6" BlurRadius="16" ShadowDepth="0" Opacity="0.5"/>
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Image Source="Assets/logo_small.png"
+                                       Width="26" Height="26"
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Grid>
                         </Border>
 
-                        <Separator Grid.Row="0" Margin="10,60,10,0" Background="#1A1A2E" />
+                        <Separator Grid.Row="0" Margin="12,70,12,0" Background="#1A1A2E" />
 
                         <!-- Navigation Items -->
-                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,8,0,0">
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
                             <StackPanel x:Name="NavItems" Margin="0,0">
                                 <RadioButton Style="{StaticResource AnimatedSidebarButton}"
                                              IsChecked="True"
@@ -291,26 +367,53 @@
                             </StackPanel>
                         </ScrollViewer>
 
-                        <!-- Connection Status -->
-                        <Border Grid.Row="2" Padding="8" Background="#07070D" CornerRadius="0,0,12,0">
-                            <StackPanel HorizontalAlignment="Center">
-                                <Ellipse x:Name="StatusIndicator"
-                                         Width="8" Height="8"
-                                         Fill="#EF4444"
-                                         HorizontalAlignment="Center">
-                                    <Ellipse.Style>
-                                        <Style TargetType="Ellipse">
-                                            <Setter Property="Fill" Value="#EF4444" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDeviceConnected}" Value="True">
-                                                    <Setter Property="Fill" Value="#34D399" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Ellipse.Style>
-                                </Ellipse>
-                            </StackPanel>
-                        </Border>
+<!-- Connection Status -->
+                         <Border Grid.Row="2" Padding="12,10" Background="#0A0A14" CornerRadius="0,0,12,0" BorderBrush="#1A1A2E" BorderThickness="0,1,0,0">
+                             <StackPanel HorizontalAlignment="Center">
+                                 <Grid Width="36" Height="36" HorizontalAlignment="Center">
+                                     <Ellipse x:Name="StatusRing"
+                                              Width="36" Height="36"
+                                              Stroke="#333344" StrokeThickness="2">
+                                         <Ellipse.Style>
+                                             <Style TargetType="Ellipse">
+                                                 <Setter Property="Fill" Value="Transparent" />
+                                                 <Style.Triggers>
+                                                     <DataTrigger Binding="{Binding IsDeviceConnected}" Value="True">
+                                                         <Setter Property="Fill" Value="#1534D399" />
+                                                         <Setter Property="Stroke" Value="#34D399" />
+                                                     </DataTrigger>
+                                                 </Style.Triggers>
+                                             </Style>
+                                         </Ellipse.Style>
+                                     </Ellipse>
+                                     <Ellipse x:Name="StatusDot"
+                                              Width="10" Height="10"
+                                              Fill="#EF4444"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center">
+                                         <Ellipse.Style>
+                                             <Style TargetType="Ellipse">
+                                                 <Setter Property="Fill" Value="#EF4444" />
+                                                 <Setter Property="Effect">
+                                                     <Setter.Value>
+                                                         <DropShadowEffect Color="#EF4444" BlurRadius="8" ShadowDepth="0" Opacity="0.6"/>
+                                                     </Setter.Value>
+                                                 </Setter>
+                                                 <Style.Triggers>
+                                                     <DataTrigger Binding="{Binding IsDeviceConnected}" Value="True">
+                                                         <Setter Property="Fill" Value="#34D399" />
+                                                         <Setter Property="Effect">
+                                                             <Setter.Value>
+                                                                 <DropShadowEffect Color="#34D399" BlurRadius="10" ShadowDepth="0" Opacity="0.7"/>
+                                                             </Setter.Value>
+                                                         </Setter>
+                                                     </DataTrigger>
+                                                 </Style.Triggers>
+                                             </Style>
+                                         </Ellipse.Style>
+                                     </Ellipse>
+                                 </Grid>
+                             </StackPanel>
+                         </Border>
                     </Grid>
                 </Border>
 
