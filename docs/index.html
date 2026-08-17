@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Android PC Controller — Your phone, on your PC</title>
+<meta name="description" content="Mirror, control and automate your Android phone from your PC. Real-time streaming, live FPS stats, automation editor, notification sync and more.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238B5CF6'/%3E%3Cstop offset='1' stop-color='%23D946EF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Crect x='9' y='5' width='14' height='22' rx='3' fill='none' stroke='white' stroke-width='2'/%3E%3Crect x='13' y='22' width='6' height='2' rx='1' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="bg-fx" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-fade"></div>
+</div>
+
+<nav id="navbar">
+    <div class="nav-inner container">
+        <a href="#top" class="brand">
+            <span class="brand-mark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            </span>
+            <span class="brand-name">Android&nbsp;PC&nbsp;Controller</span>
+        </a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how">How it works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+        </div>
+        <div class="nav-actions">
+            <a href="#download" class="btn btn-primary btn-sm">Download</a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#download" class="btn btn-primary">Download for Windows</a>
+    </div>
+</nav>
+
+<header class="hero" id="top">
+    <div class="container hero-grid">
+        <div class="hero-copy reveal">
+            <span class="pill"><span class="pill-dot"></span> v1.0 — live stats, automation &amp; notification sync</span>
+            <h1 class="hero-title">Your phone,<br><span class="grad-text">on your PC.</span></h1>
+            <p class="hero-sub">Android PC Controller mirrors your Android screen in real&nbsp;time. Control apps, build automation flows, sync notifications and move files — all from Windows, all locally.</p>
+            <div class="hero-cta">
+                <a href="#download" class="btn btn-primary btn-lg">Download for Windows
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m0 0l-6-6m6 6l6-6"/></svg>
+                </a>
+                <a href="#features" class="btn btn-ghost btn-lg">Explore features</a>
+            </div>
+            <div class="hero-notes">
+                <span>Free forever</span><i></i>
+                <span>No ads</span><i></i>
+                <span>USB &amp; Wi-Fi</span><i></i>
+                <span>Android 8+</span>
+            </div>
+        </div>
+
+        <div class="hero-visual reveal">
+            <div class="phone" id="phone">
+                <div class="phone-frame">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="p-statusbar">
+                            <span>9:41</span>
+                            <span class="p-icons"><i class="p-signal"></i><i class="p-wifi"></i><i class="p-bat"></i></span>
+                        </div>
+                        <div class="p-body">
+                            <div class="p-sidebar">
+                                <span class="p-sb-logo"></span>
+                                <span class="p-sb-item on"></span>
+                                <span class="p-sb-item"></span>
+                                <span class="p-sb-item"></span>
+                                <span class="p-sb-item"></span>
+                                <span class="p-sb-item"></span>
+                            </div>
+                            <div class="p-content">
+                                <div class="p-title">Android PC Controller</div>
+                                <div class="p-stream">
+                                    <div class="p-stream-head">
+                                        <span class="p-live"><i class="p-pulse"></i>Screen mirroring</span>
+                                        <span class="p-livetag">LIVE</span>
+                                    </div>
+                                    <div class="p-fps">58 <small>fps</small></div>
+                                    <div class="p-bars">
+                                        <i style="--h:32%"></i><i style="--h:55%"></i><i style="--h:40%"></i><i style="--h:70%"></i><i style="--h:52%"></i><i style="--h:85%"></i><i style="--h:60%"></i><i style="--h:75%"></i><i style="--h:48%"></i><i style="--h:90%"></i><i style="--h:66%"></i><i style="--h:80%"></i><i style="--h:58%"></i><i style="--h:72%"></i><i style="--h:64%"></i>
+                                    </div>
+                                    <div class="p-chips">
+                                        <span>1080×2448</span><span>2.1 Mbps</span><span>12 ms</span>
+                                    </div>
+                                </div>
+                                <div class="p-apps">
+                                    <span class="p-app" style="--c:#8B5CF6"></span>
+                                    <span class="p-app" style="--c:#22D3EE"></span>
+                                    <span class="p-app" style="--c:#FB7185"></span>
+                                    <span class="p-app" style="--c:#FBBF24"></span>
+                                    <span class="p-app" style="--c:#34D399"></span>
+                                    <span class="p-app" style="--c:#A78BFA"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="float-chip fc-fps"><i class="pulse-dot"></i>58 fps</div>
+                <div class="float-chip fc-bw"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m0 0l-6 6m6-6l6 6"/></svg>2.1 Mbps</div>
+                <div class="float-card fc-notif">
+                    <span class="fc-icon">W</span>
+                    <div>
+                        <strong>WhatsApp</strong>
+                        <span>Sara: on my way!</span>
+                    </div>
+                    <time>now</time>
+                </div>
+                <div class="float-chip fc-auto">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+                    Automation · 3 nodes
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+        <span>scrcpy engine</span><span>USB · Wi-Fi</span><span>Android 8+</span><span>Windows 10/11</span><span>240 FPS</span><span>Low-latency mode</span><span>100% local</span><span>No ads</span>
+        <span>scrcpy engine</span><span>USB · Wi-Fi</span><span>Android 8+</span><span>Windows 10/11</span><span>240 FPS</span><span>Low-latency mode</span><span>100% local</span><span>No ads</span>
+    </div>
+</div>
+
+<section class="section" id="features">
+    <div class="container">
+        <div class="section-head reveal">
+            <span class="eyebrow">Everything in one window</span>
+            <h2>A control room for<br><span class="grad-text">your phone.</span></h2>
+            <p>Stop juggling cables and apps. Every tool you need to use your phone from your desk — bundled into one beautiful desktop app.</p>
+        </div>
+
+        <div class="bento">
+            <div class="card bento-live reveal">
+                <div class="card-head">
+                    <span class="card-icon grad-v">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg>
+                    </span>
+                    <div><h3>Live performance stats</h3><p>Watch FPS, bitrate and resolution in real time — right on the stream.</p></div>
+                </div>
+                <div class="mock-stats">
+                    <div class="ms-fps">58<span>fps</span></div>
+                    <div class="ms-rows">
+                        <div class="ms-row"><span>Bitrate</span><b>2.1 Mbps</b><i style="--w:72%"></i></div>
+                        <div class="ms-row"><span>Latency</span><b>12 ms</b><i style="--w:18%"></i></div>
+                        <div class="ms-row"><span>Resolution</span><b>1080×2448</b><i style="--w:88%"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bento-auto reveal">
+                <div class="card-head">
+                    <span class="card-icon grad-p">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><circle cx="6.5" cy="17.5" r="2.5"/><path d="M10 6.5h7a3 3 0 0 1 3 3v2"/></svg>
+                    </span>
+                    <div><h3>Automation editor</h3><p>Drag, drop, connect. Build phone workflows visually.</p></div>
+                </div>
+                <svg class="mock-nodes" viewBox="0 0 260 150" fill="none">
+                    <path d="M40 35 C 90 35, 90 110, 140 110" stroke="url(#ng1)" stroke-width="2" stroke-dasharray="5 5"/>
+                    <path d="M170 110 C 215 110, 215 35, 230 35" stroke="url(#ng1)" stroke-width="2" stroke-dasharray="5 5"/>
+                    <defs><linearGradient id="ng1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8B5CF6"/><stop offset="1" stop-color="#D946EF"/></linearGradient></defs>
+                    <rect x="10" y="18" width="60" height="34" rx="10" fill="rgba(139,92,246,.18)" stroke="rgba(139,92,246,.6)"/>
+                    <rect x="140" y="93" width="60" height="34" rx="10" fill="rgba(217,70,239,.18)" stroke="rgba(217,70,239,.6)"/>
+                    <rect x="200" y="18" width="60" height="34" rx="10" fill="rgba(34,211,238,.18)" stroke="rgba(34,211,238,.6)"/>
+                    <text x="40" y="39" fill="#EDEDF2" font-size="10" font-family="Inter">Open app</text>
+                    <text x="170" y="114" fill="#EDEDF2" font-size="10" font-family="Inter">Screenshot</text>
+                    <text x="230" y="39" fill="#EDEDF2" font-size="10" font-family="Inter">Notify</text>
+                </svg>
+            </div>
+
+            <div class="card bento-notif reveal">
+                <div class="card-head">
+                    <span class="card-icon grad-b">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+                    </span>
+                    <div><h3>Notification sync</h3><p>Your phone's notifications, live on your desktop.</p></div>
+                </div>
+                <div class="mock-notifs">
+                    <div class="mn"><span class="mn-ic" style="background:#25D366">W</span><div><b>WhatsApp</b><p>Sara: on my way!</p></div><time>now</time></div>
+                    <div class="mn"><span class="mn-ic" style="background:linear-gradient(135deg,#833AB4,#FD1D1D)">I</span><div><b>Instagram</b><p>You have 3 new messages</p></div><time>2m</time></div>
+                    <div class="mn"><span class="mn-ic" style="background:#FB7185">G</span><div><b>Gmail</b><p>Your weekly summary is ready</p></div><time>9m</time></div>
+                </div>
+            </div>
+
+            <div class="card bento-apps reveal">
+                <div class="card-head">
+                    <span class="card-icon grad-y">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+                    </span>
+                    <div><h3>Phone Desktop</h3><p>Every installed app, one click away.</p></div>
+                </div>
+                <div class="mock-appgrid">
+                    <span style="--c:#8B5CF6"></span><span style="--c:#22D3EE"></span><span style="--c:#FB7185"></span><span style="--c:#FBBF24"></span>
+                    <span style="--c:#34D399"></span><span style="--c:#A78BFA"></span><span style="--c:#F472B6"></span><span style="--c:#38BDF8"></span>
+                </div>
+            </div>
+
+            <div class="card bento-files reveal">
+                <div class="card-head">
+                    <span class="card-icon grad-r">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M12 12v6m0 0l3-3m-3 3l-3-3"/></svg>
+                    </span>
+                    <div><h3>Smart file transfer</h3><p>Drag files between phone and PC, with progress.</p></div>
+                </div>
+                <div class="mock-files">
+                    <div class="mf"><span class="mf-ic">IMG</span><div><b>IMG_4821.png</b><i style="--w:64%"></i></div><time>64%</time></div>
+                    <div class="mf"><span class="mf-ic">VID</span><div><b>trip_clip.mp4</b><i style="--w:28%"></i></div><time>28%</time></div>
+                    <div class="mf done"><span class="mf-ic">APK</span><div><b>notes.apk</b><i style="--w:100%"></i></div><time>Done</time></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="card feature reveal">
+                <span class="card-icon grad-v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></span>
+                <h3>Real-time mirroring</h3>
+                <p>Zero-setup screen mirroring powered by the scrcpy engine, with low-latency mode for gaming.</p>
+            </div>
+            <div class="card feature reveal">
+                <span class="card-icon grad-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a7 7 0 0 1 14 0"/><path d="M8 12.5a4 4 0 0 1 8 0"/><circle cx="12" cy="15" r="2.2"/><path d="M12 17v4"/></svg></span>
+                <h3>Wireless connect</h3>
+                <p>Pair over Wi-Fi once and forget the cable. Works on any network, including hotspots.</p>
+            </div>
+            <div class="card feature reveal">
+                <span class="card-icon grad-b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9l2.1 2.1m10 10l2.1 2.1M19.1 4.9L17 7m-10 10l-2.1 2.1"/></svg></span>
+                <h3>Screen recorder</h3>
+                <p>Record your phone screen in crisp quality — gameplay, demos, tutorials — straight to your PC.</p>
+            </div>
+            <div class="card feature reveal">
+                <span class="card-icon grad-y"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="20" rx="2"/><path d="M2 7v10m20-10v10"/></svg></span>
+                <h3>Clipboard sync</h3>
+                <p>Copy on one device, paste on the other. Seamless two-way clipboard, instantly.</p>
+            </div>
+            <div class="card feature reveal">
+                <span class="card-icon grad-r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg></span>
+                <h3>Terminal &amp; ADB</h3>
+                <p>A full shell to your device. Run commands, inspect logs, debug anything, anytime.</p>
+            </div>
+            <div class="card feature reveal">
+                <span class="card-icon grad-g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                <h3>Private &amp; local</h3>
+                <p>Everything runs on your machine. No cloud, no account, no telemetry. Your data stays yours.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="how">
+    <div class="container">
+        <div class="section-head reveal">
+            <span class="eyebrow">Three steps</span>
+            <h2>Running in <span class="grad-text">under a minute.</span></h2>
+        </div>
+        <div class="steps">
+            <div class="step reveal">
+                <span class="step-num">01</span>
+                <span class="step-icon grad-v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="6" height="11" rx="1.5"/><rect x="16" y="9" width="6" height="11" rx="1.5"/><path d="M5 9V7a7 7 0 0 1 14 0v2"/><path d="M8 20h8"/></svg></span>
+                <h3>Connect</h3>
+                <p>Plug in with USB, or pair over Wi-Fi. Enable USB debugging once — we'll handle the rest.</p>
+            </div>
+            <div class="step reveal">
+                <span class="step-num">02</span>
+                <span class="step-icon grad-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span>
+                <h3>Stream</h3>
+                <p>One click and your phone appears on screen — full FPS, full resolution, live stats.</p>
+            </div>
+            <div class="step reveal">
+                <span class="step-num">03</span>
+                <span class="step-icon grad-b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
+                <h3>Control</h3>
+                <p>Launch apps, mirror notifications, transfer files, run automations. It's your phone, minus the phone.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="stats-band">
+    <div class="container stats-grid">
+        <div class="stat reveal"><b class="counter" data-target="240">0</b><span>Max FPS slider</span></div>
+        <div class="stat reveal"><b class="counter" data-target="12">0</b><span>ms stream latency</span></div>
+        <div class="stat reveal"><b class="counter" data-target="10">0</b><span>built-in tools</span></div>
+        <div class="stat reveal"><b class="counter" data-target="100">0</b><span>% local &amp; private</span></div>
+    </div>
+</section>
+
+<section class="section" id="testimonials">
+    <div class="container">
+        <div class="section-head reveal">
+            <span class="eyebrow">Loved by users</span>
+            <h2>They took control <span class="grad-text">of their phone.</span></h2>
+        </div>
+        <div class="testi-grid">
+            <div class="card testi reveal">
+                <div class="stars">★★★★★</div>
+                <p>"It replaced my entire phone workflow at my desk. I answer WhatsApp, move files and check stats without ever picking up the phone."</p>
+                <div class="testi-user"><span class="avatar" style="background:linear-gradient(135deg,#8B5CF6,#D946EF)">K</span><div><b>Karim B.</b><span>Software Engineer</span></div></div>
+            </div>
+            <div class="card testi reveal">
+                <div class="stars">★★★★★</div>
+                <p>"The automation editor alone is worth it. I built my whole morning routine — open apps, screenshots, notifications — in ten minutes."</p>
+                <div class="testi-user"><span class="avatar" style="background:linear-gradient(135deg,#22D3EE,#8B5CF6)">S</span><div><b>Sara L.</b><span>Content Creator</span></div></div>
+            </div>
+            <div class="card testi reveal">
+                <div class="stars">★★★★★</div>
+                <p>"Finally, notifications that actually show up on my PC. And the low-latency mode makes mobile gaming on the big screen feel native."</p>
+                <div class="testi-user"><span class="avatar" style="background:linear-gradient(135deg,#FB7185,#FBBF24)">Y</span><div><b>Youssef T.</b><span>Gamer</span></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="pricing">
+    <div class="container">
+        <div class="section-head reveal">
+            <span class="eyebrow">Simple pricing</span>
+            <h2>Start free. <span class="grad-text">Upgrade when you're ready.</span></h2>
+            <p>One-time payments. No subscriptions, no surprises.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="card price reveal">
+                <h3>Free</h3>
+                <p class="price-amount">$0</p>
+                <p class="price-note">forever</p>
+                <ul>
+                    <li>Real-time screen mirroring</li>
+                    <li>USB &amp; Wi-Fi connection</li>
+                    <li>Screenshots &amp; clipboard sync</li>
+                    <li>Basic file transfer</li>
+                    <li>60 FPS streaming</li>
+                </ul>
+                <a href="#download" class="btn btn-ghost">Get started</a>
+            </div>
+            <div class="card price popular reveal">
+                <span class="popular-tag">Most popular</span>
+                <h3>Pro</h3>
+                <p class="price-amount">$19.99</p>
+                <p class="price-note">one-time</p>
+                <ul>
+                    <li>Everything in Free</li>
+                    <li>Low-latency mode (gaming)</li>
+                    <li>Live FPS / bitrate / resolution stats</li>
+                    <li>Automation editor</li>
+                    <li>Notification sync</li>
+                    <li>Screen recorder</li>
+                </ul>
+                <a href="#download" class="btn btn-primary">Get Pro</a>
+            </div>
+            <div class="card price reveal">
+                <h3>Premium</h3>
+                <p class="price-amount">$39.99</p>
+                <p class="price-note">one-time</p>
+                <ul>
+                    <li>Everything in Pro</li>
+                    <li>Phone Desktop (app launcher)</li>
+                    <li>Smart Control Center</li>
+                    <li>Developer tools &amp; storage analyzer</li>
+                    <li>Mini phone window</li>
+                    <li>Lifetime updates</li>
+                </ul>
+                <a href="#download" class="btn btn-ghost">Go Premium</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="faq">
+    <div class="container faq-wrap">
+        <div class="section-head reveal">
+            <span class="eyebrow">Questions</span>
+            <h2>Everything you're <span class="grad-text">wondering.</span></h2>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item reveal">
+                <button class="faq-q">What do I need to use it?<span class="faq-chev">+</span></button>
+                <div class="faq-a"><p>A Windows 10/11 PC and any Android 8+ phone. Connect over USB or the same Wi-Fi network, and enable USB debugging on the phone — the app guides you through it in one tap.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-q">Is it really free?<span class="faq-chev">+</span></button>
+                <div class="faq-a"><p>Yes — the core streaming experience is free forever, with no ads and no account. Pro and Premium are optional one-time upgrades that unlock advanced tools.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-q">Does it work wirelessly?<span class="faq-chev">+</span></button>
+                <div class="faq-a"><p>Yes. Pair your phone over Wi-Fi once and reconnect any time — no cable needed, even on mobile hotspots.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-q">Is my data private?<span class="faq-chev">+</span></button>
+                <div class="faq-a"><p>Completely. Everything runs locally on your machine — streaming, files, automation. There is no cloud, no account, and no telemetry. Your data never leaves your PC.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-q">Will my phone notifications still work normally?<span class="faq-chev">+</span></button>
+                <div class="faq-a"><p>Yes. The app mirrors notifications to your desktop, and it works alongside your phone's own notification system — including on phones with aggressive notification managers.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-q">Which phones are supported?<span class="faq-chev">+</span></button>
+                <div class="faq-a"><p>Any Android device running Android 8 or newer — Samsung, Xiaomi, Pixel, OnePlus, Infinix, Tecno and more. If it runs Android, it works.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="download">
+    <div class="container">
+        <div class="cta-panel reveal">
+            <div class="orb orb-4"></div>
+            <div class="orb orb-5"></div>
+            <span class="eyebrow dark">Ready when you are</span>
+            <h2>Take control of your phone.</h2>
+            <p>Free forever · No sign-up · Works with every Android 8+ device</p>
+            <div class="hero-cta">
+                <a href="#" class="btn btn-white btn-lg">Download for Windows
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m0 0l-6-6m6 6l6-6"/></svg>
+                </a>
+                <a href="#features" class="btn btn-ghost-dark btn-lg">See what's inside</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container footer-grid">
+        <div class="footer-brand">
+            <a href="#top" class="brand">
+                <span class="brand-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+                </span>
+                <span class="brand-name">Android PC Controller</span>
+            </a>
+            <p>Your phone, on your PC. Built for people who'd rather stay at the keyboard.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Product</h4>
+            <a href="#features">Features</a>
+            <a href="#how">How it works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#download">Download</a>
+        </div>
+        <div class="footer-col">
+            <h4>Resources</h4>
+            <a href="ARCHITECTURE.md">Documentation</a>
+            <a href="#faq">FAQ</a>
+            <a href="#testimonials">Community</a>
+            <a href="https://github.com/farma3334/AndroidPCController" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <div class="footer-col">
+            <h4>Legal</h4>
+            <a href="SECURITY.md">Security</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <span>© <span id="year"></span> Android PC Controller. All rights reserved.</span>
+        <span>Made for Android lovers.</span>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
